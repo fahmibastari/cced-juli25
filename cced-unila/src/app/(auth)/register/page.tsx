@@ -2,9 +2,15 @@
 
 import React from "react";
 import RoleSelection from "./RoleSelection";
-import Form1 from "./form1";
-import MembershipForm from "./form2";
+import RegistrationFormMember from "./RegistrationFormMember";
+import MembershipForm from "./MembershipForm";
 import { Button } from "@/components/ui/button";
+
+type MemberType =
+  | "ALUMNI_UNILA"
+  | "MAHASISWA_UNILA"
+  | "ALUMNI_NON_UNILA"
+  | "MAHASISWA_NON_UNILA";
 
 interface RegistrationData {
   role: string | null;
@@ -13,16 +19,24 @@ interface RegistrationData {
   email: string;
   password: string;
   confirmPassword: string;
-  memberType?: string;
+  memberType?: MemberType;
   nim?: string;
   phone?: string;
 }
 
-export default function Register() {
-  // State untuk mengatur step registrasi (1: Role, 2: Form, 3: MemberType)
-  const [step, setStep] = React.useState(1);
+const STEPS = {
+  ROLE_SELECTION: "ROLE_SELECTION",
+  REGISTRATION_FORM_MEMBER: "REGISTRATION_FORM_MEMBER",
+  MEMBERSHIP_FORM_MEMBER: "MEMBERSHIP_FORM_MEMBER",
+};
 
-  // State untuk menyimpan data registrasi
+type StepType = (typeof STEPS)[keyof typeof STEPS];
+
+export default function Register() {
+  // const [currentStep, setCurrentStep] = React.useState<StepType>(STEPS.ROLE_SELECTION);
+  const [currentStep, setCurrentStep] = React.useState<StepType>(
+    STEPS.ROLE_SELECTION,
+  );
   const [registrationData, setRegistrationData] =
     React.useState<RegistrationData>({
       role: null,
@@ -33,51 +47,52 @@ export default function Register() {
       confirmPassword: "",
     });
 
-  // Handler untuk pemilihan role
-  const handleRoleSelect = (roleId: string) => {
+  const handleContinue = () => {
+    if (currentStep === STEPS.ROLE_SELECTION) {
+      setCurrentStep(STEPS.REGISTRATION_FORM_MEMBER);
+    } else if (currentStep === STEPS.REGISTRATION_FORM_MEMBER) {
+      setCurrentStep(STEPS.MEMBERSHIP_FORM_MEMBER);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep === STEPS.REGISTRATION_FORM_MEMBER) {
+      setCurrentStep(STEPS.ROLE_SELECTION);
+    } else if (currentStep === STEPS.MEMBERSHIP_FORM_MEMBER) {
+      setCurrentStep(STEPS.REGISTRATION_FORM_MEMBER);
+    }
+  };
+
+  const handleRoleSelection = (roleId: string) => {
     setRegistrationData((prev) => ({
       ...prev,
       role: roleId,
     }));
   };
 
-  // Handler untuk melanjutkan ke step berikutnya
-  const handleContinue = () => {
-    setStep((prev) => prev + 1);
-  };
-
-  // Handler untuk kembali ke step sebelumnya
-  const handleBack = () => {
-    setStep((prev) => prev - 1);
-  };
-
-  // Handler untuk submit form registrasi
-  const handleFormSubmit = (formData: {
+  const handleRegistrationFormMember = (formData: {
     username: string;
     fullName: string;
     email: string;
     password: string;
     confirmPassword: string;
   }) => {
-    setRegistrationData((prev) => ({
-      ...prev,
+    const updatedData = {
+      ...registrationData,
       ...formData,
-    }));
+    };
 
-    if (registrationData.role === "member") {
-      handleContinue(); // Lanjut ke member type form
+    setRegistrationData(updatedData);
+
+    if (updatedData.role === "member") {
+      handleContinue();
     } else {
-      // Submit langsung untuk perusahaan
-      handleFinalSubmit({
-        ...registrationData,
-        ...formData,
-      });
+      handleFinalSubmit(updatedData);
     }
   };
 
-  // Handler untuk submit data member
-  const handleMemberSubmit = (memberData: {
-    memberType: string;
+  const handleMemberShipForm = (memberData: {
+    memberType: MemberType;
     nim: string;
     phone: string;
   }) => {
@@ -88,48 +103,45 @@ export default function Register() {
     handleFinalSubmit(finalData);
   };
 
-  // Handler untuk final submit
-  const handleFinalSubmit = (finalData: RegistrationData) => {
-    console.log("Complete registration data:", finalData);
-    // Di sini Anda bisa menambahkan logika untuk mengirim data ke API
+  const handleFinalSubmit = async (finalData: RegistrationData) => {
+    try {
+      console.log("Complete registration data:", finalData);
+      // Add your API call here
+      // const response = await fetch('/api/register', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(finalData),
+      // });
+      // Handle response
+    } catch (error) {
+      console.error("Registration error:", error);
+    }
   };
 
-  // Render step yang sesuai
   const renderStep = () => {
-    switch (step) {
-      case 1:
+    switch (currentStep) {
+      case STEPS.ROLE_SELECTION:
         return (
           <RoleSelection
-            onSelectRole={handleRoleSelect}
+            onSelectRole={handleRoleSelection}
             onContinue={handleContinue}
           />
         );
-      case 2:
+      case STEPS.REGISTRATION_FORM_MEMBER:
         return (
-          <Form1
+          <RegistrationFormMember
             selectedRole={registrationData.role as "member" | "perusahaan"}
-            onSubmit={handleFormSubmit}
+            onSubmit={handleRegistrationFormMember}
             onBack={handleBack}
           />
         );
-      case 3:
+      case STEPS.MEMBERSHIP_FORM_MEMBER:
         return (
-          <div className="w-full max-w-xl mx-auto">
-            <MembershipForm onSubmit={handleMemberSubmit} />
+          <div className="w-full max-w-xl mx-auto mt-24">
+            <MembershipForm onSubmit={handleMemberShipForm} />
             <div className="flex justify-between mt-4">
               <Button onClick={handleBack} variant="outline">
                 Back
-              </Button>
-              <Button
-                onClick={() =>
-                  handleMemberSubmit({
-                    memberType: registrationData.memberType || "",
-                    nim: registrationData.nim || "",
-                    phone: registrationData.phone || "",
-                  })
-                }
-              >
-                Submit
               </Button>
             </div>
           </div>
@@ -139,5 +151,9 @@ export default function Register() {
     }
   };
 
-  return <>{renderStep()}</>;
+  return (
+    <>
+      <div>{renderStep()}</div>
+    </>
+  );
 }

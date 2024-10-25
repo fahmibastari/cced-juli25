@@ -18,7 +18,7 @@ interface RegistrationFormProps {
   onBack: () => void;
 }
 
-const RegistrationForm: React.FC<RegistrationFormProps> = ({
+const RegistrationFormMember: React.FC<RegistrationFormProps> = ({
   selectedRole,
   onSubmit,
   onBack,
@@ -207,4 +207,4 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
   );
 };
 
-export default RegistrationForm;
+export default RegistrationFormMember;
