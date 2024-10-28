@@ -1,48 +1,49 @@
-"use client";
+'use client'
 
-import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { UserIcon, BriefcaseIcon } from "lucide-react";
-import Link from "next/link";
+import { Button, buttonVariants } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Role } from '@prisma/client'
+import { BriefcaseIcon, UserIcon } from 'lucide-react'
+import Link from 'next/link'
+import React from 'react'
 
 interface RoleOption {
-  id: string;
-  title: string;
-  icon: React.ReactNode;
-  description: string;
+  id: Role
+  title: string
+  icon: React.ReactNode
+  description: string
 }
 
 interface RoleSelectionProps {
-  onSelectRole: (roleId: string) => void;
-  onContinue: () => void;
+  onSelectRole: (roleId: Role) => void
+  onSubmit: () => void
 }
 
 const RoleSelection: React.FC<RoleSelectionProps> = ({
   onSelectRole,
-  onContinue,
+  onSubmit,
 }) => {
-  const [selectedRole, setSelectedRole] = React.useState<string | null>(null);
+  const [selectedRole, setSelectedRole] = React.useState<Role | null>(null)
 
   const roles: RoleOption[] = [
     {
-      id: "member",
-      title: "Member",
+      id: Role.MEMBER,
+      title: 'Member',
       icon: <UserIcon className="h-12 w-12" />,
-      description: "Akun personal biasa",
+      description: 'Akun personal biasa',
     },
     {
-      id: "perusahaan",
-      title: "Perusahaan",
+      id: Role.COMPANY,
+      title: 'Perusahaan',
       icon: <BriefcaseIcon className="h-12 w-12" />,
-      description: "Akun business/perusahaan",
+      description: 'Akun business/perusahaan',
     },
-  ];
+  ]
 
-  const handleRoleSelect = (roleId: string) => {
-    setSelectedRole(roleId);
-    onSelectRole(roleId);
-  };
+  const handleRoleSelect = (roleId: Role) => {
+    setSelectedRole(roleId)
+    onSelectRole(roleId)
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
@@ -51,35 +52,37 @@ const RoleSelection: React.FC<RoleSelectionProps> = ({
           <div className="space-y-6">
             <div className="text-center">
               <h1 className="text-2xl font-bold">Daftar Akun</h1>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="mt-1 text-sm text-gray-500">
                 Pilih jenis akun yang kamu buat.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {roles.map((role) => (
                 <button
                   key={role.id}
                   onClick={() => handleRoleSelect(role.id)}
-                  className={`relative p-6 rounded-lg border-2 transition-all duration-200 hover:border-primary ${
+                  className={`relative rounded-lg border-2 p-6 transition-all duration-200 hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
                     selectedRole === role.id
-                      ? "border-primary bg-primary/5"
-                      : "border-gray-200 hover:bg-gray-50"
+                      ? 'border-primary bg-primary/5'
+                      : 'border-gray-200 hover:bg-gray-50'
                   }`}
+                  type="button"
+                  aria-pressed={selectedRole === role.id}
                 >
-                  <div className="flex flex-col items-center text-center space-y-3">
+                  <div className="flex flex-col items-center space-y-3 text-center">
                     <div
-                      className={`p-3 rounded-full ${
+                      className={`rounded-full p-3 transition-colors ${
                         selectedRole === role.id
-                          ? "text-primary"
-                          : "text-gray-400"
+                          ? 'text-primary'
+                          : 'text-gray-400'
                       }`}
                     >
                       {role.icon}
                     </div>
                     <div>
                       <h3 className="font-medium">{role.title}</h3>
-                      <p className="text-sm text-gray-500 mt-1">
+                      <p className="mt-1 text-sm text-gray-500">
                         {role.description}
                       </p>
                     </div>
@@ -88,23 +91,21 @@ const RoleSelection: React.FC<RoleSelectionProps> = ({
               ))}
             </div>
 
-            <div className="flex justify-between items-center mt-8">
+            <div className="mt-8 flex items-center justify-between">
               <p className="text-sm text-gray-500">
-                Sudah punya akun?{" "}
-                {/* <Button variant="link" className="p-0">
-                  Login akun kamu
-                </Button> */}
+                Sudah punya akun?{' '}
                 <Link
-                  href={"/login"}
-                  className={`${buttonVariants({ variant: "link" })} ml-0 pl-0`}
+                  href="/login"
+                  className={`${buttonVariants({ variant: 'link' })} ml-0 pl-0`}
                 >
                   Login akun kamu
                 </Link>
               </p>
               <Button
-                onClick={onContinue}
+                onClick={onSubmit}
                 disabled={!selectedRole}
                 className="px-8"
+                type="button"
               >
                 Lanjut
               </Button>
@@ -113,7 +114,7 @@ const RoleSelection: React.FC<RoleSelectionProps> = ({
         </CardContent>
       </Card>
     </div>
-  );
-};
+  )
+}
 
-export default RoleSelection;
+export default RoleSelection

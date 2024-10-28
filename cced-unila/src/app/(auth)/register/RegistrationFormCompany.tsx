@@ -17,7 +17,7 @@ interface RegistrationFormProps {
   onBack: () => void
 }
 
-const RegistrationFormMember: React.FC<RegistrationFormProps> = ({
+const RegistrationFormCompany: React.FC<RegistrationFormProps> = ({
   onSubmit,
   onBack,
 }) => {
@@ -81,7 +81,7 @@ const RegistrationFormMember: React.FC<RegistrationFormProps> = ({
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
       <Card className="w-full max-w-lg shadow-lg">
         <CardHeader>
-          <CardTitle className="text-xl">Form Registrasi Member</CardTitle>
+          <CardTitle className="text-xl">Form Registrasi Perusahaan</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -202,4 +202,4 @@ const RegistrationFormMember: React.FC<RegistrationFormProps> = ({
   )
 }
 
-export default RegistrationFormMember
+export default RegistrationFormCompany

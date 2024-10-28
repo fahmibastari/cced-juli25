@@ -1,12 +1,5 @@
-"use client";
+import LoginForm from '@/components/auth/login-form'
 
-import LoginPage from "./login1";
-
-export default function Login() {
-  const handleLogin = (email: string, password: string) => {
-    console.log("Login attempt:", email, password);
-    // Handle login logic here
-  };
-
-  return <LoginPage onLogin={handleLogin} />;
+export default function Page() {
+  return <LoginForm />
 }

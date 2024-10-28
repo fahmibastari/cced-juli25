@@ -1,29 +1,50 @@
-"use client";
+'use client'
 
-import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
-// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import Image from "next/image";
-import Link from "next/link";
+import login from '@/actions/login'
+import FormError from '@/components/auth/form-error'
+import { Button, buttonVariants } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { signInSchema } from '@/lib/zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { EyeIcon, EyeOffIcon } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
 
-interface LoginPageProps {
-  onLogin: (email: string, password: string) => void;
-}
-
-const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [showPassword, setShowPassword] = React.useState(false);
-  // const [language, setLanguage] = React.useState('English');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onLogin(email, password);
-  };
-
+export default function LoginPage() {
+  const [showPassword, setShowPassword] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const form = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  })
+  function handleClickShowPassword() {
+    setShowPassword(!showPassword)
+  }
+  async function onSubmit(values: z.infer<typeof signInSchema>) {
+    setErrorMessage('')
+    try {
+      const result = await login(values)
+      if (result.error) {
+        setErrorMessage(result.error)
+      }
+    } catch {
+      setErrorMessage('Something went wrong!')
+    }
+  }
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-[400px] space-y-8">
@@ -37,116 +58,103 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
             height={1600}
           />
         </div>
-
         <Card className="border-none shadow-lg">
           <CardContent className="pt-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="mb-14 text-center">
-                <h1 className="text-2xl font-semibold text-gray-700  mb-0 pb-0">
-                  👋Hello and Welcome Back!
-                </h1>
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <Input
-                    type="email"
-                    placeholder="Enter an email address"
-                    className="bg-gray-100 border-0"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+              >
+                <div className="mb-14 text-center">
+                  <h1 className="mb-0 pb-0 text-2xl font-semibold text-gray-700">
+                    👋Hello and Welcome Back!
+                  </h1>
                 </div>
-
-                <div className="relative">
-                  <Input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Password"
-                    className="bg-gray-100 border-0"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-2 top-1/2 -translate-y-1/2"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOffIcon className="h-4 w-4" />
-                    ) : (
-                      <EyeIcon className="h-4 w-4" />
+                <div className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            disabled={form.formState.isSubmitting}
+                            placeholder="Enter an email address"
+                            className="border-0 bg-gray-100"
+                            type="email"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
                     )}
-                  </Button>
-                </div>
-
-                <div className="flex justify-end">
+                  />
+                  <div className="relative">
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              disabled={form.formState.isSubmitting}
+                              placeholder="Password"
+                              className="border-0 bg-gray-100"
+                              type={showPassword ? 'text' : 'password'}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-2 top-1/2 -translate-y-1/2"
+                      onClick={handleClickShowPassword}
+                    >
+                      {showPassword ? (
+                        <EyeOffIcon className="h-4 w-4" />
+                      ) : (
+                        <EyeIcon className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                  <div className="flex justify-end">
+                    <Button
+                      variant="link"
+                      className="p-0 text-green-500 hover:text-green-600"
+                    >
+                      Forgot Password?
+                    </Button>
+                  </div>
+                  <FormError message={errorMessage} />
                   <Button
-                    variant="link"
-                    className="p-0 text-green-500 hover:text-green-600"
+                    type="submit"
+                    disabled={form.formState.isSubmitting}
+                    className="w-full bg-green-500 text-white hover:bg-green-600"
                   >
-                    Forgot Password?
+                    Sign In
                   </Button>
                 </div>
-
-                <Button
-                  type="submit"
-                  className="w-full bg-green-500 hover:bg-green-600 text-white"
-                >
-                  Sign In
-                </Button>
-              </div>
-              <div className="text-center">
-                <p className="text-sm text-gray-600 mx-0 pt-0 mt-0">
-                  Don&lsquo;t have an account?{" "}
-                  <Link
-                    href={"/register"}
-                    className={`${buttonVariants({ variant: "link" })} mx-0 text-sm p-0 text-green-500 hover:text-green-600`}
-                  >
-                    Sign up
-                  </Link>
-                </p>
-              </div>
-            </form>
+                <div className="text-center">
+                  <p className="mx-0 mt-0 pt-0 text-sm text-gray-600">
+                    Don&lsquo;t have an account?{' '}
+                    <Link
+                      href={'/register'}
+                      className={`${buttonVariants({ variant: 'link' })} mx-0 p-0 text-sm text-green-500 hover:text-green-600`}
+                    >
+                      Sign up
+                    </Link>
+                  </p>
+                </div>
+              </form>
+            </Form>
           </CardContent>
         </Card>
-
-        {/* Language Selector */}
-        {/* <div className="flex justify-end">
-          <Select value={language} onValueChange={setLanguage}>
-            <SelectTrigger className="w-[120px] border-none bg-white">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="English">English</SelectItem>
-              <SelectItem value="Spanish">Spanish</SelectItem>
-              <SelectItem value="Indonesia">Indonesia</SelectItem>
-            </SelectContent>
-          </Select>
-        </div> */}
-
-        {/* 
-        <p className="text-center text-xs text-gray-500">
-          This page is protected by reCAPTCHA and is subject to { " " }
-          <Link
-            href={"https://policies.google.com/privacy"}
-            className={`${buttonVariants({ variant: "link" })} mx-0 px-0 text-xs`}
-          >
-            Google&apos;s Privacy Policy
-          </Link>
-          {' '}and{' '}
-          <Link
-            href={"https://policies.google.com/terms"}
-            className={`${buttonVariants({ variant: "link" })} mx-0 px-0 text-xs`}
-          >
-            Terms of Service
-          </Link>
-          .
-        </p> */}
       </div>
     </div>
-  );
-};
-
-export default LoginPage;
+  )
+}

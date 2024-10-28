@@ -1,122 +1,236 @@
-"use client";
+'use client'
 
-import React from "react";
-import RoleSelection from "./RoleSelection";
-import RegistrationFormMember from "./RegistrationFormMember";
-import MembershipForm from "./MembershipForm";
-import { Button } from "@/components/ui/button";
+import DetailCompanyForm from './DetailCompanyForm'
+import MembershipForm from './MembershipForm'
+import RegistrationFormCompany from './RegistrationFormCompany'
+import RegistrationFormMember from './RegistrationFormMember'
+import RoleSelection from './RoleSelection'
+import register from '@/actions/register'
+import { Role } from '@prisma/client'
+import { signIn } from 'next-auth/react'
+import React from 'react'
 
 type MemberType =
-  | "ALUMNI_UNILA"
-  | "MAHASISWA_UNILA"
-  | "ALUMNI_NON_UNILA"
-  | "MAHASISWA_NON_UNILA";
+  | 'ALUMNI_UNILA'
+  | 'MAHASISWA_UNILA'
+  | 'ALUMNI_NON_UNILA'
+  | 'MAHASISWA_NON_UNILA'
 
-interface RegistrationData {
-  role: string | null;
-  username: string;
-  fullName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  memberType?: MemberType;
-  nim?: string;
-  phone?: string;
+// Base interface for common registration data
+interface BaseRegistrationData {
+  role: Role | null
+  username: string
+  fullName: string
+  email: string
+  password: string
+  confirmPassword: string
 }
 
-const STEPS = {
-  ROLE_SELECTION: "ROLE_SELECTION",
-  REGISTRATION_FORM_MEMBER: "REGISTRATION_FORM_MEMBER",
-  MEMBERSHIP_FORM_MEMBER: "MEMBERSHIP_FORM_MEMBER",
-};
+// Member-specific registration data
+interface MemberRegistrationData extends BaseRegistrationData {
+  memberType?: MemberType
+  nim?: string
+  phone?: string
+}
 
-type StepType = (typeof STEPS)[keyof typeof STEPS];
+// Company-specific registration data
+interface CompanyRegistrationData extends BaseRegistrationData {
+  logo?: File
+  companyName?: string
+  industry?: string
+  ownership?: string
+  phoneNumber?: string
+  companyPhone?: string
+  website?: string
+  emailPublic?: string
+  bio?: string
+}
+
+// Define steps as const to ensure type safety
+const STEPS = {
+  ROLE_SELECTION: 'ROLE_SELECTION',
+  REGISTRATION_FORM_MEMBER: 'REGISTRATION_FORM_MEMBER',
+  REGISTRATION_FORM_COMPANY: 'REGISTRATION_FORM_COMPANY',
+  MEMBERSHIP_FORM_MEMBER: 'MEMBERSHIP_FORM_MEMBER',
+  DETAIL_COMPANY_FORM: 'DETAIL_COMPANY_FORM',
+} as const
+
+type StepType = (typeof STEPS)[keyof typeof STEPS]
 
 export default function Register() {
-  // const [currentStep, setCurrentStep] = React.useState<StepType>(STEPS.ROLE_SELECTION);
   const [currentStep, setCurrentStep] = React.useState<StepType>(
     STEPS.ROLE_SELECTION,
-  );
-  const [registrationData, setRegistrationData] =
-    React.useState<RegistrationData>({
+  )
+
+  const [registrationDataMember, setRegistrationDataMember] =
+    React.useState<MemberRegistrationData>({
       role: null,
-      username: "",
-      fullName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
+      username: '',
+      fullName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    })
+
+  const [registrationDataCompany, setRegistrationDataCompany] =
+    React.useState<CompanyRegistrationData>({
+      role: null,
+      username: '',
+      fullName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    })
 
   const handleContinue = () => {
-    if (currentStep === STEPS.ROLE_SELECTION) {
-      setCurrentStep(STEPS.REGISTRATION_FORM_MEMBER);
-    } else if (currentStep === STEPS.REGISTRATION_FORM_MEMBER) {
-      setCurrentStep(STEPS.MEMBERSHIP_FORM_MEMBER);
+    switch (currentStep) {
+      case STEPS.ROLE_SELECTION:
+        if (registrationDataMember.role === Role.MEMBER) {
+          setCurrentStep(STEPS.REGISTRATION_FORM_MEMBER)
+        } else if (registrationDataCompany.role === Role.COMPANY) {
+          setCurrentStep(STEPS.REGISTRATION_FORM_COMPANY)
+        }
+        break
+      case STEPS.REGISTRATION_FORM_MEMBER:
+        setCurrentStep(STEPS.MEMBERSHIP_FORM_MEMBER)
+        break
+      case STEPS.REGISTRATION_FORM_COMPANY:
+        setCurrentStep(STEPS.DETAIL_COMPANY_FORM)
+        break
     }
-  };
-
+  }
   const handleBack = () => {
-    if (currentStep === STEPS.REGISTRATION_FORM_MEMBER) {
-      setCurrentStep(STEPS.ROLE_SELECTION);
-    } else if (currentStep === STEPS.MEMBERSHIP_FORM_MEMBER) {
-      setCurrentStep(STEPS.REGISTRATION_FORM_MEMBER);
+    switch (currentStep) {
+      case STEPS.REGISTRATION_FORM_MEMBER:
+      case STEPS.REGISTRATION_FORM_COMPANY:
+        setCurrentStep(STEPS.ROLE_SELECTION)
+        break
+      case STEPS.MEMBERSHIP_FORM_MEMBER:
+        setCurrentStep(STEPS.REGISTRATION_FORM_MEMBER)
+        break
+      case STEPS.DETAIL_COMPANY_FORM:
+        setCurrentStep(STEPS.REGISTRATION_FORM_COMPANY)
+        break
     }
-  };
+  }
 
-  const handleRoleSelection = (roleId: string) => {
-    setRegistrationData((prev) => ({
+  const handleRoleSelection = (roleId: Role) => {
+    // Reset both states when changing roles
+    setRegistrationDataMember((prev) => ({
       ...prev,
-      role: roleId,
-    }));
-  };
+      role: null,
+    }))
+    setRegistrationDataCompany((prev) => ({
+      ...prev,
+      role: null,
+    }))
+
+    // Then set the correct role
+    if (roleId === Role.MEMBER) {
+      setRegistrationDataMember((prev) => ({
+        ...prev,
+        role: roleId,
+      }))
+    } else {
+      setRegistrationDataCompany((prev) => ({
+        ...prev,
+        role: roleId,
+      }))
+    }
+  }
 
   const handleRegistrationFormMember = (formData: {
-    username: string;
-    fullName: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
+    username: string
+    fullName: string
+    email: string
+    password: string
+    confirmPassword: string
   }) => {
-    const updatedData = {
-      ...registrationData,
+    setRegistrationDataMember((prev) => ({
+      ...prev,
       ...formData,
-    };
+    }))
+    handleContinue()
+  }
 
-    setRegistrationData(updatedData);
-
-    if (updatedData.role === "member") {
-      handleContinue();
-    } else {
-      handleFinalSubmit(updatedData);
-    }
-  };
+  const handleRegistrationFormCompany = (formData: {
+    username: string
+    fullName: string
+    email: string
+    password: string
+    confirmPassword: string
+  }) => {
+    setRegistrationDataCompany((prev) => ({
+      ...prev,
+      ...formData,
+    }))
+    handleContinue()
+  }
 
   const handleMemberShipForm = (memberData: {
-    memberType: MemberType;
-    nim: string;
-    phone: string;
+    memberType: MemberType
+    nim: string
+    phone: string
   }) => {
     const finalData = {
-      ...registrationData,
+      ...registrationDataMember,
       ...memberData,
-    };
-    handleFinalSubmit(finalData);
-  };
-
-  const handleFinalSubmit = async (finalData: RegistrationData) => {
-    try {
-      console.log("Complete registration data:", finalData);
-      // Add your API call here
-      // const response = await fetch('/api/register', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(finalData),
-      // });
-      // Handle response
-    } catch (error) {
-      console.error("Registration error:", error);
     }
-  };
+    handleFinalSubmit(finalData)
+  }
+
+  const handleDetailCompanyForm = (companyData: {
+    logo: File | null
+    companyName: string
+    industry: string
+    ownership: string
+    phoneNumber: string
+    companyPhone: string
+    website: string
+    emailPublic: string
+    bio: string
+  }) => {
+    const finalData = {
+      ...registrationDataCompany,
+      ...companyData,
+    }
+    handleFinalSubmit(finalData)
+  }
+
+  const handleFinalSubmit = async (
+    finalData: MemberRegistrationData | CompanyRegistrationData,
+  ) => {
+    try {
+      const formData = new FormData()
+      ;(
+        Object.keys(finalData) as Array<
+          keyof (MemberRegistrationData | CompanyRegistrationData)
+        >
+      ).forEach((key) => {
+        const value = finalData[key]
+        if (value !== null && value !== undefined) {
+          formData.append(key, value as string | Blob)
+        }
+      })
+
+      const response = await register(formData)
+
+      if (response.success) {
+        await signIn('credentials', {
+          email: finalData.email,
+          password: finalData.password,
+          redirectTo: '/dashboard',
+        })
+      } else {
+        console.error(
+          'Registration errors:',
+          response.errors || response.message,
+        )
+      }
+    } catch (error) {
+      console.error('Registration error:', error)
+    }
+  }
 
   const renderStep = () => {
     switch (currentStep) {
@@ -124,36 +238,42 @@ export default function Register() {
         return (
           <RoleSelection
             onSelectRole={handleRoleSelection}
-            onContinue={handleContinue}
+            onSubmit={handleContinue}
           />
-        );
+        )
       case STEPS.REGISTRATION_FORM_MEMBER:
         return (
           <RegistrationFormMember
-            selectedRole={registrationData.role as "member" | "perusahaan"}
             onSubmit={handleRegistrationFormMember}
             onBack={handleBack}
           />
-        );
+        )
+      case STEPS.REGISTRATION_FORM_COMPANY:
+        return (
+          <RegistrationFormCompany
+            onSubmit={handleRegistrationFormCompany}
+            onBack={handleBack}
+          />
+        )
       case STEPS.MEMBERSHIP_FORM_MEMBER:
         return (
-          <div className="w-full max-w-xl mx-auto mt-24">
-            <MembershipForm onSubmit={handleMemberShipForm} />
-            <div className="flex justify-between mt-4">
-              <Button onClick={handleBack} variant="outline">
-                Back
-              </Button>
-            </div>
-          </div>
-        );
+          <MembershipForm onSubmit={handleMemberShipForm} onBack={handleBack} />
+        )
+      case STEPS.DETAIL_COMPANY_FORM:
+        return (
+          <DetailCompanyForm
+            onSubmit={handleDetailCompanyForm}
+            onBack={handleBack}
+          />
+        )
       default:
-        return null;
+        return null
     }
-  };
+  }
 
   return (
     <>
       <div>{renderStep()}</div>
     </>
-  );
+  )
 }

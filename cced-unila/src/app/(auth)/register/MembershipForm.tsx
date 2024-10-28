@@ -1,64 +1,68 @@
-"use client";
+'use client'
 
-import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import React, { useState } from 'react'
 
 type MemberType =
-  | "ALUMNI_UNILA"
-  | "MAHASISWA_UNILA"
-  | "ALUMNI_NON_UNILA"
-  | "MAHASISWA_NON_UNILA";
+  | 'ALUMNI_UNILA'
+  | 'MAHASISWA_UNILA'
+  | 'ALUMNI_NON_UNILA'
+  | 'MAHASISWA_NON_UNILA'
 
 interface MembershipFormProps {
   onSubmit: (data: {
-    memberType: MemberType;
-    nim: string;
-    phone: string;
-  }) => void;
+    memberType: MemberType
+    nim: string
+    phone: string
+  }) => void
+  onBack: () => void
 }
 
-const MembershipForm: React.FC<MembershipFormProps> = ({ onSubmit }) => {
-  const [memberType, setMemberType] = useState<MemberType | null>(null);
-  const [nim, setNim] = useState("");
-  const [phone, setPhone] = useState("");
-  const [errors, setErrors] = useState<Record<string, string>>({});
+const MembershipForm: React.FC<MembershipFormProps> = ({
+  onSubmit,
+  onBack,
+}) => {
+  const [memberType, setMemberType] = useState<MemberType | null>(null)
+  const [nim, setNim] = useState('')
+  const [phone, setPhone] = useState('')
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {};
+    const newErrors: Record<string, string> = {}
 
     if (!memberType) {
-      newErrors.memberType = "Please select a member type";
+      newErrors.memberType = 'Please select a member type'
     }
     if (!nim.trim()) {
-      newErrors.nim = "NIM/NPM is required";
+      newErrors.nim = 'NIM/NPM is required'
     }
     if (!phone.trim()) {
-      newErrors.phone = "Phone number is required";
+      newErrors.phone = 'Phone number is required'
     } else if (!/^\d{10,13}$/.test(phone)) {
-      newErrors.phone = "Please enter a valid phone number (10-13 digits)";
+      newErrors.phone = 'Please enter a valid phone number (10-13 digits)'
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (validateForm() && memberType) {
       onSubmit({
         memberType,
         nim,
         phone,
-      });
+      })
     }
-  };
+  }
 
   return (
-    <Card className="w-full max-w-xl mx-auto">
+    <Card className="mx-auto w-full max-w-xl">
       <CardContent className="space-y-6 pt-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
@@ -68,22 +72,22 @@ const MembershipForm: React.FC<MembershipFormProps> = ({ onSubmit }) => {
             )}
             <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
               {[
-                { id: "ALUMNI_UNILA", label: "Alumni UNILA" },
-                { id: "MAHASISWA_UNILA", label: "Mahasiswa UNILA" },
-                { id: "ALUMNI_NON_UNILA", label: "Alumni Non UNILA" },
-                { id: "MAHASISWA_NON_UNILA", label: "Mahasiswa Non UNILA" },
+                { id: 'ALUMNI_UNILA', label: 'Alumni UNILA' },
+                { id: 'MAHASISWA_UNILA', label: 'Mahasiswa UNILA' },
+                { id: 'ALUMNI_NON_UNILA', label: 'Alumni Non UNILA' },
+                { id: 'MAHASISWA_NON_UNILA', label: 'Mahasiswa Non UNILA' },
               ].map((type) => (
                 <Button
                   key={type.id}
                   type="button"
                   onClick={() => setMemberType(type.id as MemberType)}
-                  variant={memberType === type.id ? "default" : "secondary"}
+                  variant={memberType === type.id ? 'default' : 'secondary'}
                   className="h-auto whitespace-normal py-2 text-sm"
                 >
-                  {type.label.split(" ").map((word, i) => (
+                  {type.label.split(' ').map((word, i) => (
                     <React.Fragment key={i}>
                       {word}
-                      {i < type.label.split(" ").length - 1 && <br />}
+                      {i < type.label.split(' ').length - 1 && <br />}
                     </React.Fragment>
                   ))}
                 </Button>
@@ -116,14 +120,18 @@ const MembershipForm: React.FC<MembershipFormProps> = ({ onSubmit }) => {
               placeholder="Masukkan no handphone aktif yang dapat di hubungi melalui WhatsApp"
             />
           </div>
-
-          <Button type="submit" className="w-full">
-            Submit
-          </Button>
+          <div className="flex justify-between pt-4">
+            <Button type="button" variant="outline" onClick={onBack}>
+              Kembali
+            </Button>
+            <Button type="submit" className="bg-green-500 hover:bg-green-600">
+              Submit
+            </Button>
+          </div>
         </form>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default MembershipForm;
+export default MembershipForm
