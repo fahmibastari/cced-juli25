@@ -51,7 +51,7 @@ const NavMenu = () => {
               <NavigationMenuContent>
                 <ul className="grid w-[480px] gap-3 p-4">
                   <ListItem href="/blog/berita" title="Berita">
-                    Kumpulan berita terkini
+                    Kumpulan berita terkini anu
                   </ListItem>
                   <ListItem href="/blog/artikel" title="Artikel">
                     Artikel-artikel menarik
