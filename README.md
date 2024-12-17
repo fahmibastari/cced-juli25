@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CCED UNILA - Profil UPT Pengembangan Karir dan Kewirausahaan
 
-## Getting Started
+![Logo](https://via.placeholder.com/150) <!-- Gantilah dengan link logo resmi jika tersedia -->
 
-First, run the development server:
+## Deskripsi Proyek
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+**CCED UNILA** adalah aplikasi berbasis web yang menampilkan profil **UPT Pengembangan Karir dan Kewirausahaan Universitas Lampung**. Aplikasi ini memberikan informasi lengkap terkait tujuan, fungsi, serta program-program yang dijalankan oleh UPT dalam mendukung lulusan dan mahasiswa untuk berkembang di dunia kerja maupun kewirausahaan.
+
+Dengan tampilan modern, responsif, dan ramah pengguna, aplikasi ini diharapkan menjadi sumber informasi utama bagi mahasiswa, alumni, dan pihak terkait.
+
+---
+
+## Fitur Utama
+
+1. **Informasi Lengkap Profil UPT**
+   - Penjelasan mengenai peran, fungsi, dan program yang dijalankan.
+2. **Desain Modern dan Responsif**
+   - Dibangun menggunakan **Tailwind CSS** untuk memastikan tampilan yang bersih, menarik, dan mobile-friendly.
+3. **Link Kontak Cepat**
+   - Integrasi langsung ke:
+     - **YouTube Channel** UPT Pengembangan Karir dan Kewirausahaan
+     - **WhatsApp** untuk komunikasi langsung
+     - **Instagram** sebagai platform informasi terbaru
+
+---
+
+## Teknologi yang Digunakan
+
+- **HTML5** - Struktur dasar halaman.
+- **Tailwind CSS** - Framework CSS untuk styling yang cepat dan efisien.
+- **GitHub** - Digunakan sebagai platform kolaborasi dan versi kontrol.
+
+---
+
+## Konten Halaman
+
+1. **Tentang Kami**
+   - Penjelasan mengenai peran dan tujuan UPT dalam membantu lulusan Universitas Lampung memasuki dunia kerja serta membangun minat kewirausahaan.
+   
+2. **Fungsi UPT**
+   - Perencanaan, pelaksanaan, dan pengendalian:
+     - Pendataan lulusan melalui *tracer study*
+     - Pembinaan kewirausahaan bagi mahasiswa dan alumni
+     - Konsultasi dan perekrutan karir
+
+3. **Program Utama**
+   - **Pendataan**: Penelusuran dan pelaporan data lulusan.
+   - **Menyiapkan Alumni**: Membekali lulusan untuk berkompetisi di dunia kerja.
+   - **Menyukseskan Program**: Mendukung program pemerintah dalam pemetaan kebutuhan dunia kerja.
+
+4. **Kontak dan Media Sosial**
+   - YouTube: [CCED UNILA](https://www.youtube.com/@cced_unila)
+   - WhatsApp: [Klik di sini](https://api.whatsapp.com/send?phone=6285769510880&text=Tabik%20Pun!!!%20Halo%20Ibu%20Shinta,%20perkenalkan%20Nama%20Saya%20)
+   - Instagram: [@cced_unila](https://www.instagram.com/cced_unila)
+
+---
+
+## Cara Menggunakan Proyek Ini
+
+1. **Clone repositori ini** ke perangkat lokal Anda:
+   ```bash
+   git clone https://github.com/username/cced-unila.git
+   ```
+2. **Buka file HTML** di browser favorit Anda:
+   - Akses `index.html` dengan browser seperti Chrome, Firefox, atau Edge.
+
+---
+
+## Struktur Folder
+
+```plaintext
+cced-unila/
+│
+├── index.html       # Halaman utama
+├── README.md        # Dokumentasi proyek
+└── assets/          # Folder opsional untuk menyimpan gambar, logo, atau file pendukung
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tangkapan Layar
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Halaman Utama
+![Tangkapan Layar Halaman Utama](https://via.placeholder.com/800x400) <!-- Ganti dengan screenshot asli -->
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Kontak dan Media Sosial
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Jika Anda memiliki pertanyaan atau ingin mendapatkan informasi lebih lanjut, hubungi kami melalui:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **YouTube**: [CCED UNILA](https://www.youtube.com/@cced_unila)
+- **WhatsApp**: [Klik di sini](https://api.whatsapp.com/send?phone=6285769510880&text=Tabik%20Pun!!!%20Halo%20Ibu%20Shinta,%20perkenalkan%20Nama%20Saya%20)
+- **Instagram**: [@cced_unila](https://www.instagram.com/cced_unila)
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Kontribusi
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Kami membuka kesempatan bagi siapa saja yang ingin berkontribusi dalam pengembangan proyek ini. Ikuti langkah-langkah berikut:
+
+1. Fork repositori ini.
+2. Buat branch baru untuk fitur atau perbaikan Anda:
+   ```bash
+   git checkout -b fitur-anda
+   ```
+3. Commit perubahan Anda:
+   ```bash
+   git commit -m "Menambahkan fitur baru"
+   ```
+4. Push ke branch Anda:
+   ```bash
+   git push origin fitur-anda
+   ```
+5. Buat **Pull Request**.
+
+Kontribusi Anda sangat dihargai! 😊
+
+---
+
+## Lisensi
+
+Proyek ini dilisensikan di bawah **MIT License**. Lihat file [LICENSE](LICENSE) untuk detail lebih lanjut.
+
+---
+
+## Kredit
+
+Proyek ini dikembangkan oleh **Wildan Mukmin** sebagai bagian dari upaya mendukung mahasiswa dan alumni dalam pengembangan karir dan kewirausahaan. Contact me **+62 851-8310-2667**
+
+---
+
+&copy; 2024 UPT Pengembangan Karir dan Kewirausahaan, Universitas Lampung. Semua Hak Dilindungi. 🚀
