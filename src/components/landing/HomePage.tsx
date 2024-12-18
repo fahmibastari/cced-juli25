@@ -4,9 +4,9 @@
 import Link from "next/link";
 import { Label } from "../ui/label";
 import { Button, buttonVariants } from "../ui/button";
-import CardNewsArticle from "./utils/CardSmallNewsArticle";
-import CardBigNewsArticle from "./utils/CardBigNewsArticle";
-import { dummyArticleData, dummyFiturData, dummyKegiatanData, dummyManfaatData } from "@/data/dummyFiturData";
+import CardNewsArticle from "./utils/CardNewsArticle";
+import CardBigNewsArticle from "./utils/CardFeaturedNewsArticle";
+import { dummyArticleData, dummyFiturData, dummyKegiatanData, dummyManfaatData } from "@/data/FiturData";
 import CardSmall from "./utils/CardSmall";
 import { useEffect, useState } from "react";
 import { getFeaturedNews, getNews } from "@/data/news";
@@ -58,7 +58,7 @@ export default function HomePage() {
             <h2 className="mb-8 text-center text-3xl font-bold text-[#025908]">
               Fitur Unggulan
             </h2>
-            <div className="grid gap-8 md:grid-cols-3">
+            <div className="grid gap-8 md:grid-cols-3 m-4">
               {dummyFiturData.map((data, index) => (
                 <CardSmall
                   key={index}
@@ -162,7 +162,7 @@ export default function HomePage() {
             <h2 className="mb-8 text-center text-3xl font-bold text-[#025908]">
               Kegiatan Terbaru
             </h2>
-            <div className="grid gap-8 md:grid-cols-3">
+            <div className="grid gap-8 md:grid-cols-3 m-4">
               {dummyKegiatanData.map((data, index) => (
                 <CardSmall
                   key={index}

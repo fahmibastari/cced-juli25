@@ -1,9 +1,21 @@
 export const publicRoutes = [
     "/",
-    // "/about",
-    "/skills",
-    "/projects",
-    "/contact",
+    "/blog",
+    "/blog/news",
+    "/blog/article",
+    "/kegiatan",
+    "/kegiatan/event",
+    "/kegiatan/kewirausahaan",
+    "/kegiatan/sertifikat",
+    "/kegiatan/absensi",
+    "/assessment",
+    "/assessment/kepribadian",
+    "/assessment/minat-bakat",
+    "/about",
+    "/about/profile",
+    "/about/struktur",
+    "/about/faq",
+    "/about/contact",
 ];
 
 export const authRoutes = [

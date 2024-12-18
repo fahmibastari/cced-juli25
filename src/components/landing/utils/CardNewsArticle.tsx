@@ -32,7 +32,7 @@ const CardNewsArticle = ({
         <div className="relative aspect-video">
           <Image
             src={thumbnail || '/default-thumbnail.jpg'}
-            alt={"anu"}
+            alt={thumbnail || 'default thumbnail'}
             width={500}
             height={500}
             className="h-64 w-full rounded-sm object-cover p-4"
