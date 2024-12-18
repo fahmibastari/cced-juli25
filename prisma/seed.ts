@@ -11,11 +11,11 @@ async function main() {
     thumbnail: faker.image.url(),
     slug: faker.helpers.slugify(faker.lorem.words(3).toLowerCase()),
     isPublished: faker.datatype.boolean(),
-    publishedAt: faker.datatype.boolean() ? new Date() : null
+    publishedAt: faker.datatype.boolean() ? new Date() : null,
   }))
 
   await prisma.news.createMany({
-    data: newsData
+    data: newsData,
   })
 
   // Seed Articles
@@ -28,15 +28,15 @@ async function main() {
     tags: JSON.stringify([
       faker.word.noun(),
       faker.word.noun(),
-      faker.word.noun()
+      faker.word.noun(),
     ]),
     category: faker.word.noun(),
     isPublished: faker.datatype.boolean(),
-    publishedAt: faker.datatype.boolean() ? new Date() : null
+    publishedAt: faker.datatype.boolean() ? new Date() : null,
   }))
 
   await prisma.article.createMany({
-    data: articleData
+    data: articleData,
   })
 }
 

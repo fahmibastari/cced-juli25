@@ -15,17 +15,17 @@ const ListItem = forwardRef<ElementRef<'a'>, ComponentPropsWithoutRef<'a'>>(
             )}
             {...props}
           >
-            <div className="text-xl font-medium leading-none text-[#025908]">
+            <div className='text-xl font-medium leading-none text-[#025908]'>
               {title}
             </div>
-            <p className="line-clamp-2 pb-4 pt-2 text-sm leading-snug text-muted-foreground text-slate-900">
+            <p className='line-clamp-2 pb-4 pt-2 text-sm leading-snug text-muted-foreground text-slate-900'>
               {children}
             </p>
           </a>
         </NavigationMenuLink>
       </li>
     )
-  },
+  }
 )
 
 ListItem.displayName = 'ListItem'

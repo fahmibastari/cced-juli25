@@ -36,14 +36,15 @@ Dengan tampilan modern, responsif, dan ramah pengguna, aplikasi ini diharapkan m
 
 1. **Tentang Kami**
    - Penjelasan mengenai peran dan tujuan UPT dalam membantu lulusan Universitas Lampung memasuki dunia kerja serta membangun minat kewirausahaan.
-   
 2. **Fungsi UPT**
+
    - Perencanaan, pelaksanaan, dan pengendalian:
-     - Pendataan lulusan melalui *tracer study*
+     - Pendataan lulusan melalui _tracer study_
      - Pembinaan kewirausahaan bagi mahasiswa dan alumni
      - Konsultasi dan perekrutan karir
 
 3. **Program Utama**
+
    - **Pendataan**: Penelusuran dan pelaporan data lulusan.
    - **Menyiapkan Alumni**: Membekali lulusan untuk berkompetisi di dunia kerja.
    - **Menyukseskan Program**: Mendukung program pemerintah dalam pemetaan kebutuhan dunia kerja.
@@ -81,6 +82,7 @@ cced-unila/
 ## Tangkapan Layar
 
 ### Halaman Utama
+
 ![Tangkapan Layar Halaman Utama](https://via.placeholder.com/800x400) <!-- Ganti dengan screenshot asli -->
 
 ---
