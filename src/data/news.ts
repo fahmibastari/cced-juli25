@@ -1,38 +1,51 @@
-import { PrismaClient } from '@prisma/client'
+import { db } from '@/lib/db' // Asumsi `db` sudah diinisialisasi di file ini
 
-const prisma = new PrismaClient()
-
-export const getNews = async () => {
+// Fungsi untuk mendapatkan berita unggulan
+export const getFeaturedNews = async () => {
   try {
-    const news = await prisma.news.findMany({
+    const news = await db.news.findFirst({
       where: {
         isPublished: true,
       },
       orderBy: {
         publishedAt: 'desc',
       },
-      take: 10, // Batasi hanya 10 berita terbaru
     })
+
+    // Periksa jika `news` null, log pesan informatif
+    if (!news) {
+      console.log('No featured news found.')
+      return null
+    }
+
     return news
   } catch (error) {
-    console.log(error)
-    return []
+    console.error('Error fetching featured news:', error)
+    return null // Kembalikan null jika terjadi error
   }
 }
 
-export const getFeaturedNews = async () => {
+// Fungsi untuk mendapatkan daftar berita terbaru
+export const getNews = async () => {
   try {
-    const news = await prisma.news.findFirst({
+    const news = await db.news.findMany({
       where: {
         isPublished: true,
       },
       orderBy: {
         publishedAt: 'desc',
       },
+      take: 10, // Ambil maksimal 10 berita
     })
+
+    // Periksa jika hasilnya kosong, log pesan informatif
+    if (!news.length) {
+      console.log('No news found.')
+    }
+
     return news
   } catch (error) {
-    console.log(error)
-    return null // Mengembalikan null jika tidak ada berita yang ditemukan
+    console.error('Error fetching news:', error)
+    return [] // Kembalikan array kosong jika terjadi error
   }
 }

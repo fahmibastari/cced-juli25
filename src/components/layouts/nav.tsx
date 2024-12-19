@@ -33,16 +33,16 @@ const Nav = () => {
           className='md:hidden block focus:outline-none p-2'
           onClick={toggleMenu}
         >
-          <Menu />
+          <Menu className='text-[#025908]' />
         </button>
 
         {/* Desktop Navigation */}
-        <div className='hidden md:flex items-center justify-center px-4 py-4'>
+        <div className='hidden md:flex md:mx-16 md:flex-wrap items-center justify-center px-4 py-4'>
           <NavigationMenu className='mr-28'>
             <NavigationMenuList className='flex items-center gap-4 py-4'>
               {/* Blog */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger className='bg-transparent text-2xl font-bold text-[#025908] hover:text-green-600'>
+                <NavigationMenuTrigger className='bg-transparent lg:text-2xl md:text-xl font-bold text-[#025908] hover:text-green-600'>
                   Blog
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
@@ -61,7 +61,7 @@ const Nav = () => {
 
               {/* Kegiatan */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger className='bg-transparent text-2xl font-bold text-[#025908] hover:text-green-600'>
+                <NavigationMenuTrigger className='bg-transparent lg:text-2xl md:text-xl font-bold text-[#025908] hover:text-green-600'>
                   Kegiatan
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
@@ -88,7 +88,7 @@ const Nav = () => {
 
               {/* Assessment */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger className='bg-transparent text-2xl font-bold text-[#025908] hover:text-green-600'>
+                <NavigationMenuTrigger className='bg-transparent lg:text-2xl md:text-xl font-bold text-[#025908] hover:text-green-600'>
                   Assessment
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
@@ -107,7 +107,7 @@ const Nav = () => {
 
               {/* About Us */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger className='bg-transparent text-2xl font-bold text-[#025908] hover:text-green-600'>
+                <NavigationMenuTrigger className='bg-transparent lg:text-2xl md:text-xl font-bold text-[#025908] hover:text-green-600'>
                   About Us
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
@@ -139,7 +139,7 @@ const Nav = () => {
                   legacyBehavior
                   passHref
                 >
-                  <NavigationMenuLink className='bg-transparent text-2xl font-bold text-[#025908] hover:text-green-600'>
+                  <NavigationMenuLink className='bg-transparent lg:text-2xl md:text-xl font-bold text-[#025908] hover:text-green-600'>
                     Tracer Study
                   </NavigationMenuLink>
                 </Link>

@@ -1,6 +1,6 @@
 import { News } from '@prisma/client'
 
-export const dummyData: News[] = [
+export const news: News[] = [
   {
     id: '9f78a5d8-58f6-4f9b-92a5-7a88e4d8d9d1',
     title: 'Breaking News: Major Event in Tech World',
