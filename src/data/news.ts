@@ -1,9 +1,9 @@
-import { db } from '@/lib/db' // Asumsi `db` sudah diinisialisasi di file ini
+import prisma from '@/lib/prisma' // Asumsi `db` sudah diinisialisasi di file ini
 
 // Fungsi untuk mendapatkan berita unggulan
 export const getFeaturedNews = async () => {
   try {
-    const news = await db.news.findFirst({
+    const news = await prisma.news.findFirst({
       where: {
         isPublished: true,
       },
@@ -28,7 +28,7 @@ export const getFeaturedNews = async () => {
 // Fungsi untuk mendapatkan daftar berita terbaru
 export const getNews = async () => {
   try {
-    const news = await db.news.findMany({
+    const news = await prisma.news.findMany({
       where: {
         isPublished: true,
       },

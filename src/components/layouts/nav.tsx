@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import {
@@ -166,6 +167,7 @@ const Nav = () => {
             >
               Perusahaan
             </Link>
+            {/* <ButtonLogout/> */}
           </div>
         </div>
       </div>

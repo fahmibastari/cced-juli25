@@ -32,20 +32,18 @@ enum MemberType {
 }
 
 model User {
-  id            String          @id @default(cuid())
-  name          String?
-  email         String          @unique
+  id            String    @id @default(cuid())
+  username      String?
+  fullname      String?
+  email         String    @unique
   emailVerified DateTime?
   password      String
-  role          Role @default(MEMBER)
+  role          Role      @default(MEMBER)
   accounts      Account[]
-  company  Company?
-  member   Member?
+  company       Company?
+  member        Member?
   imageId       String?   @unique
-  // sessions      Session[]
-  // Optional for WebAuthn support
-  // Authenticator Authenticator[]
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -53,24 +51,23 @@ model User {
 }
 
 model Account {
-  userId            String
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
   type              String
   provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?
+  id_token          String? @db.Text
   session_state     String?
- 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
-  @@id([provider, providerAccountId])
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
 }
 
 model File {
@@ -182,7 +179,7 @@ model News {
   id          String    @id @default(uuid())
   title       String
   content     String
-  thumbnail   String 
+  thumbnail   String
   slug        String
   isPublished Boolean   @default(false)
   publishedAt DateTime?
@@ -234,5 +231,3 @@ model JobApplication {
   job    Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
   member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
 }
-
-
