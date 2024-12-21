@@ -15,12 +15,20 @@ interface Response {
   errors?: Record<string, string[]>
 }
 
+type MemberType =
+  | 'ALUMNI_UNILA'
+  | 'MAHASISWA_UNILA'
+  | 'ALUMNI_NON_UNILA'
+  | 'MAHASISWA_NON_UNILA'
+
 export default async function register(formData: FormData): Promise<Response> {
   try {
     const validatedFields = registerSchema.parse(Object.fromEntries(formData))
 
+    // Hash password
     const hashedPassword = await bcrypt.hash(validatedFields.password, 10)
 
+    // Create user
     const user = await prisma.user.create({
       data: {
         username: validatedFields.username,
@@ -31,6 +39,7 @@ export default async function register(formData: FormData): Promise<Response> {
       },
     })
 
+    // Handle role-specific registration
     if (validatedFields.role === Role.MEMBER) {
       await handleMemberRegistration(user.id, validatedFields)
     } else if (validatedFields.role === Role.COMPANY) {
@@ -56,10 +65,25 @@ export default async function register(formData: FormData): Promise<Response> {
         errors: normalizedErrors,
       }
     }
+
+    console.error('Unexpected error during registration:', error)
+    return {
+      success: false,
+      message: 'Terjadi kesalahan saat mendaftar. Silakan coba lagi nanti.',
+    }
   }
 }
 
-async function handleMemberRegistration(userId: string, fields: any) {
+interface MemberFields {
+  memberType: MemberType
+  nim: string
+  phone: string
+}
+
+async function handleMemberRegistration(
+  userId: string,
+  fields: MemberFields
+): Promise<void> {
   await prisma.member.create({
     data: {
       userId,
@@ -70,7 +94,22 @@ async function handleMemberRegistration(userId: string, fields: any) {
   })
 }
 
-async function handleCompanyRegistration(userId: string, fields: any) {
+interface CompanyFields {
+  logo: File
+  companyName: string
+  industry: string
+  ownership: string
+  phoneNumber: string
+  companyPhone: string
+  website: string
+  emailPublic: string
+  bio: string
+}
+
+async function handleCompanyRegistration(
+  userId: string,
+  fields: CompanyFields
+): Promise<void> {
   if (!fields.logo) {
     throw new Error('Logo is required for company registration')
   }
