@@ -110,10 +110,6 @@ async function handleCompanyRegistration(
   userId: string,
   fields: CompanyFields
 ): Promise<void> {
-  if (!fields.logo) {
-    throw new Error('Logo is required for company registration')
-  }
-
   const logoFile = await saveFile('company-logos', fields.logo)
 
   await prisma.company.create({

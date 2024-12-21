@@ -223,10 +223,10 @@ export default function Register() {
           redirectTo: `/dashboard`,
         })
       } else {
-        // console.error(
-        //   'Registration errors:',
-        //   response.errors || response.message,
-        // )
+        console.error(
+          'Registration errors:',
+          response.errors || response.message
+        )
       }
     } catch (error) {
       console.error('Registration error:', error)
