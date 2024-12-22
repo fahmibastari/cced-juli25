@@ -2,13 +2,14 @@
 
 import { signIn } from '@/auth'
 import { getUserByEmail } from '@/data/user'
+import { generateVerificationToken } from '@/lib/tokens'
 import { signInSchema } from '@/lib/zod'
 import { AuthError } from 'next-auth'
 import * as z from 'zod'
 
 export default async function login(
   values: z.infer<typeof signInSchema>
-): Promise<{ error?: string }> {
+): Promise<{ error?: string; success?: string }> {
   const validatedFields = signInSchema.safeParse(values)
 
   if (!validatedFields.success) {
@@ -19,8 +20,16 @@ export default async function login(
 
   const existingUser = await getUserByEmail(email)
 
-  if (!existingUser) {
+  if (!existingUser || !existingUser?.email || !existingUser?.password) {
     return { error: 'Invalid credentials!' }
+  }
+
+  if (!existingUser.emailVerified) {
+    const verificationToken = await generateVerificationToken(
+      existingUser.email
+    )
+    console.log(verificationToken)
+    return { success: 'Confirmation Email Sent!' }
   }
 
   try {

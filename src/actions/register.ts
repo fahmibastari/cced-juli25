@@ -7,6 +7,7 @@ import { registerSchema } from '@/lib/zod'
 import { Role } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import { ZodError } from 'zod'
+import { generateVerificationToken } from '@/lib/tokens'
 
 interface Response {
   success: boolean
@@ -38,6 +39,9 @@ export default async function register(formData: FormData): Promise<Response> {
         role: validatedFields.role,
       },
     })
+
+    const verificationToken = await generateVerificationToken(user.email)
+    console.log(verificationToken)
 
     // Handle role-specific registration
     if (validatedFields.role === Role.MEMBER) {

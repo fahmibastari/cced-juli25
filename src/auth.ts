@@ -6,8 +6,18 @@ import { getUserById } from './data/user'
 import { Role } from '@prisma/client'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  pages: {
+    signIn: '/login',
+  },
   callbacks: {
     // callback ini jenis nya ada 4 jwt, session, signin, dan redirect.
+    async signIn({ user, account }) {
+      const existingUser = await getUserById(user.id ?? '')
+      if (!existingUser?.emailVerified) {
+        return false
+      }
+      return true
+    },
     async session({ token, session }) {
       if (token.sub && session.user) {
         session.user.id = token.sub
