@@ -28,7 +28,7 @@ export default async function login(
     const verificationToken = await generateVerificationToken(
       existingUser.email
     )
-    console.log(verificationToken)
+    console.log(verificationToken) // jangan lupa hapus ini
     return { success: 'Confirmation Email Sent!' }
   }
 

@@ -8,6 +8,7 @@ import { Role } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import { ZodError } from 'zod'
 import { generateVerificationToken } from '@/lib/tokens'
+import { sendVerificationEmail } from '@/lib/mail'
 
 interface Response {
   success: boolean
@@ -40,14 +41,11 @@ export default async function register(formData: FormData): Promise<Response> {
       },
     })
 
-    const verificationToken = await generateVerificationToken(user.email)
-    console.log(verificationToken)
-
     // Handle role-specific registration
     if (validatedFields.role === Role.MEMBER) {
-      await handleMemberRegistration(user.id, validatedFields)
+      await handleMemberRegistration(user.id, validatedFields, user.email)
     } else if (validatedFields.role === Role.COMPANY) {
-      await handleCompanyRegistration(user.id, validatedFields)
+      await handleCompanyRegistration(user.id, validatedFields, user.email)
     }
 
     return {
@@ -86,7 +84,8 @@ interface MemberFields {
 
 async function handleMemberRegistration(
   userId: string,
-  fields: MemberFields
+  fields: MemberFields,
+  email: string
 ): Promise<void> {
   await prisma.member.create({
     data: {
@@ -96,6 +95,8 @@ async function handleMemberRegistration(
       phone: fields.phone,
     },
   })
+  const verificationToken = await generateVerificationToken(email)
+  await sendVerificationEmail(verificationToken.email, verificationToken.token)
 }
 
 interface CompanyFields {
@@ -112,7 +113,8 @@ interface CompanyFields {
 
 async function handleCompanyRegistration(
   userId: string,
-  fields: CompanyFields
+  fields: CompanyFields,
+  email: string
 ): Promise<void> {
   const logoFile = await saveFile('company-logos', fields.logo)
 
@@ -130,4 +132,6 @@ async function handleCompanyRegistration(
       bio: fields.bio,
     },
   })
+  const verificationToken = await generateVerificationToken(email)
+  await sendVerificationEmail(verificationToken.email, verificationToken.token)
 }
