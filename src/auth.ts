@@ -12,7 +12,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     // callback ini jenis nya ada 4 jwt, session, signin, dan redirect.
     async signIn({ user, account }) {
-      console.log(account) // jangan lupa hapus ini
+      console.log({ user, account }) // jangan lupa hapus ini
       const existingUser = await getUserById(user.id ?? '')
       if (!existingUser?.emailVerified) {
         return false

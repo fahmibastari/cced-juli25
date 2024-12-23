@@ -142,9 +142,9 @@ const DesktopNav = () => {
 
         <Link
           className='bg-transparent text-xl font-bold text-[#025908] hover:text-green-600'
-          href='/perusahaan'
+          href='/logout'
         >
-          Perusahaan
+          Logout
         </Link>
         {/* <ButtonLogout/> */}
       </div>

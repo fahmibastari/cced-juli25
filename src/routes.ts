@@ -16,9 +16,10 @@ export const publicRoutes = [
   '/about/struktur',
   '/about/faq',
   '/about/contact',
+  '/auth/new-verification',
 ]
 
-export const authRoutes = ['/login', '/register']
+export const authRoutes = ['/login', '/register', 'logout']
 
 export const apiAuthPrefix = '/api/auth'
 

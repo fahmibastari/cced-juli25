@@ -140,9 +140,9 @@ const MobileNav = () => {
 
         <Link
           className='bg-transparent text-xs font-bold text-[#025908]'
-          href='/perusahaan'
+          href='/logout'
         >
-          Perusahaan
+          Logout
         </Link>
       </div>
     </div>
