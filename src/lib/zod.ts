@@ -14,6 +14,18 @@ export const signInSchema = z.object({
     .min(1, 'Password is required'),
 })
 
+export const forgotPasswordSchema = z.object({
+  email: z
+    .string({ required_error: 'Email is required' })
+    .min(1, 'Email is required')
+    .email('Invalid email'),
+})
+
+export const resetPasswordSchema = z.object({
+  password: z
+    .string({ required_error: 'Password is required' })
+    .min(8, 'Password is required'),
+})
 // Base user schema
 const userSchema = z.object({
   role: z.nativeEnum(Role).nullable(),

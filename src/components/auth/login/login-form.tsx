@@ -128,7 +128,7 @@ export default function LoginPage() {
                       variant='link'
                       className='p-0 text-green-500 hover:text-green-600'
                     >
-                      Forgot Password?
+                      <Link href={'/forgot-password'}>Forgot Password?</Link>
                     </Button>
                   </div>
                   <FormError message={errorMessage} />
