@@ -30,7 +30,7 @@ export const resetPasswordSchema = z.object({
 const userSchema = z.object({
   role: z.nativeEnum(Role).nullable(),
   username: z.string().min(3),
-  fullName: z.string().min(3),
+  fullname: z.string().min(3),
   email: z.string().email(),
   password: z.string().min(8),
   confirmPassword: z.string().min(8),
@@ -64,10 +64,10 @@ export const companySchema = userSchema
     companyName: z.string().min(3),
     industry: z.string().min(3),
     ownership: z.string().min(3),
-    phoneNumber: z.string().min(10),
+    phone: z.string().min(10),
     companyPhone: z.string().min(10),
     website: z.string().url(),
-    emailPublic: z.string().email(),
+    publicMail: z.string().email(),
     bio: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {

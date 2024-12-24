@@ -4,13 +4,12 @@ import { signIn } from '@/auth'
 import { getUserByEmail } from '@/data/user'
 import { generateVerificationToken } from '@/lib/tokens'
 import { signInSchema } from '@/lib/zod'
+import { DEFAULT_LOGIN_REDIRECT } from '@/routes'
 import { AuthError } from 'next-auth'
 import * as z from 'zod'
 
-export default async function login(
-  values: z.infer<typeof signInSchema>
-): Promise<{ error?: string; success?: string }> {
-  const validatedFields = signInSchema.safeParse(values)
+export const login = async (data: z.infer<typeof signInSchema>) => {
+  const validatedFields = signInSchema.safeParse(data)
 
   if (!validatedFields.success) {
     return { error: 'Invalid fields!' }
@@ -36,19 +35,17 @@ export default async function login(
     await signIn('credentials', {
       email,
       password,
-      redirectTo: '/dashboard',
+      redirectTo: DEFAULT_LOGIN_REDIRECT,
     })
-    return {}
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
+  } catch (e) {
+    if (e instanceof AuthError) {
+      switch (e.type) {
         case 'CredentialsSignin':
-          return { error: 'Invalid credentials!' }
+          return { error: 'Invalid Credentials' }
         default:
-          return { error: 'Something went wrong!' }
+          return { error: 'Something went wrong' }
       }
     }
-
-    throw error
+    throw e
   }
 }

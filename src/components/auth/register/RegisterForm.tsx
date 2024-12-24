@@ -5,9 +5,9 @@ import MembershipForm from '../../../components/auth/register/MembershipForm'
 import RegistrationFormCompany from '../../../components/auth/register/RegistrationFormCompany'
 import RegistrationFormMember from '../../../components/auth/register/RegistrationFormMember'
 import RoleSelection from '../../../components/auth/register/RoleSelection'
-import register from '@/actions/register'
+// import { registerMember, registerCompany } from '@/actions/register'
 import { Role } from '@prisma/client'
-import { signIn } from 'next-auth/react'
+// import { signIn } from 'next-auth/react'
 import React from 'react'
 
 type MemberType =
@@ -213,21 +213,21 @@ export default function Register() {
         }
       })
 
-      const response = await register(formData)
+      // const response = await registerMember(formData)
 
-      if (response.success) {
-        await signIn('credentials', {
-          email: finalData.email,
-          password: finalData.password,
-          role: finalData.role,
-          redirectTo: `/dashboard`,
-        })
-      } else {
-        console.error(
-          'Registration errors:',
-          response.errors || response.message
-        )
-      }
+      // if (response.success) {
+      //   await signIn('credentials', {
+      //     email: finalData.email,
+      //     password: finalData.password,
+      //     role: finalData.role,
+      //     redirectTo: `/dashboard`,
+      //   })
+      // } else {
+      //   console.error(
+      //     'Registration errors:',
+      //     response.errors || response.message
+      //   )
+      // }
     } catch (error) {
       console.error('Registration error:', error)
     }

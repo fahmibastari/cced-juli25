@@ -3,135 +3,124 @@
 
 import prisma from '@/lib/prisma'
 import { saveFile } from '@/lib/file-handler'
-import { registerSchema } from '@/lib/zod'
-import { Role } from '@prisma/client'
+import { companySchema, memberSchema } from '@/lib/zod'
 import bcrypt from 'bcryptjs'
-import { ZodError } from 'zod'
 import { generateVerificationToken } from '@/lib/tokens'
 import { sendVerificationEmail } from '@/lib/mail'
+import * as z from 'zod'
+import { getUserByEmail } from '@/data/user'
 
-interface Response {
-  success: boolean
-  message?: string
-  role?: Role
-  errors?: Record<string, string[]>
-}
+export const registerMember = async (value: z.infer<typeof memberSchema>) => {
+  const validatedFields = memberSchema.safeParse(value)
+  if (!validatedFields.success) {
+    return { error: 'Please fill all the fields' }
+  }
 
-type MemberType =
-  | 'ALUMNI_UNILA'
-  | 'MAHASISWA_UNILA'
-  | 'ALUMNI_NON_UNILA'
-  | 'MAHASISWA_NON_UNILA'
+  const { data } = validatedFields
 
-export default async function register(formData: FormData): Promise<Response> {
-  try {
-    const validatedFields = registerSchema.parse(Object.fromEntries(formData))
+  const { username, fullname, email, password, role, memberType, nim, phone } =
+    data
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(validatedFields.password, 10)
+  const emailExists = await getUserByEmail(email)
+  if (emailExists) {
+    return { error: 'Email already exists' }
+  }
+  // Hash password
+  const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Create user
-    const user = await prisma.user.create({
-      data: {
-        username: validatedFields.username,
-        fullname: validatedFields.fullName,
-        email: validatedFields.email,
-        password: hashedPassword,
-        role: validatedFields.role,
-      },
-    })
+  // Create user
+  const user = await prisma.user.create({
+    data: {
+      username,
+      fullname,
+      email,
+      password: hashedPassword,
+      role,
+    },
+  })
 
-    // Handle role-specific registration
-    if (validatedFields.role === Role.MEMBER) {
-      await handleMemberRegistration(user.id, validatedFields, user.email)
-    } else if (validatedFields.role === Role.COMPANY) {
-      await handleCompanyRegistration(user.id, validatedFields, user.email)
-    }
+  await prisma.member.create({
+    data: {
+      userId: user.id,
+      memberType,
+      nim,
+      phone,
+    },
+  })
+  const verificationToken = await generateVerificationToken(email)
+  await sendVerificationEmail(verificationToken.email, verificationToken.token)
 
-    return {
-      success: true,
-      message: 'Pendaftaran berhasil!',
-      role: validatedFields.role,
-    }
-  } catch (error) {
-    if (error instanceof ZodError) {
-      const normalizedErrors: Record<string, string[]> = Object.fromEntries(
-        Object.entries(error.flatten().fieldErrors).map(([key, value]) => [
-          key,
-          value || [],
-        ])
-      )
-
-      return {
-        success: false,
-        errors: normalizedErrors,
-      }
-    }
-
-    console.error('Unexpected error during registration:', error)
-    return {
-      success: false,
-      message: 'Terjadi kesalahan saat mendaftar. Silakan coba lagi nanti.',
-    }
+  return {
+    success: true,
+    message: 'Pendaftaran berhasil!',
+    role,
   }
 }
 
-interface MemberFields {
-  memberType: MemberType
-  nim: string
-  phone: string
-}
+export const registerCompany = async (value: z.infer<typeof companySchema>) => {
+  const validatedFields = companySchema.safeParse(value)
+  if (!validatedFields.success) {
+    return { error: 'Please fill all the fields' }
+  }
 
-async function handleMemberRegistration(
-  userId: string,
-  fields: MemberFields,
-  email: string
-): Promise<void> {
-  await prisma.member.create({
+  const { data } = validatedFields
+
+  const {
+    username,
+    fullname,
+    email,
+    password,
+    role,
+    logo,
+    companyName,
+    industry,
+    ownership,
+    phone,
+    companyPhone,
+    website,
+    publicMail,
+    bio,
+  } = data
+  const logoFile = await saveFile('company-logos', logo)
+
+  const emailExists = await getUserByEmail(email)
+  if (emailExists) {
+    return { error: 'Email already exists' }
+  }
+  // Hash password
+  const hashedPassword = await bcrypt.hash(password, 10)
+
+  // Create user
+  const user = await prisma.user.create({
     data: {
-      userId,
-      memberType: fields.memberType,
-      nim: fields.nim,
-      phone: fields.phone,
+      username,
+      fullname,
+      email,
+      password: hashedPassword,
+      role,
     },
   })
-  const verificationToken = await generateVerificationToken(email)
-  await sendVerificationEmail(verificationToken.email, verificationToken.token)
-}
-
-interface CompanyFields {
-  logo: File
-  companyName: string
-  industry: string
-  ownership: string
-  phoneNumber: string
-  companyPhone: string
-  website: string
-  emailPublic: string
-  bio: string
-}
-
-async function handleCompanyRegistration(
-  userId: string,
-  fields: CompanyFields,
-  email: string
-): Promise<void> {
-  const logoFile = await saveFile('company-logos', fields.logo)
 
   await prisma.company.create({
     data: {
-      userId,
+      userId: user.id,
       logoId: logoFile.id,
-      companyName: fields.companyName,
-      industry: fields.industry,
-      ownership: fields.ownership,
-      phone: fields.phoneNumber,
-      companyPhone: fields.companyPhone,
-      website: fields.website,
-      publicMail: fields.emailPublic,
-      bio: fields.bio,
+      companyName,
+      industry,
+      ownership,
+      phone,
+      companyPhone,
+      website,
+      publicMail,
+      bio,
     },
   })
   const verificationToken = await generateVerificationToken(email)
   await sendVerificationEmail(verificationToken.email, verificationToken.token)
+
+  return {
+    success: true,
+    message: 'Pendaftaran berhasil!',
+    role,
+  }
 }
