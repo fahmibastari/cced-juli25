@@ -27,8 +27,8 @@ export const login = async (data: z.infer<typeof signInSchema>) => {
     const verificationToken = await generateVerificationToken(
       existingUser.email
     )
-    console.log(verificationToken) // jangan lupa hapus ini
     return { success: 'Confirmation Email Sent!' }
+    console.log(verificationToken)
   }
 
   try {
@@ -37,6 +37,7 @@ export const login = async (data: z.infer<typeof signInSchema>) => {
       password,
       redirectTo: DEFAULT_LOGIN_REDIRECT,
     })
+    return
   } catch (e) {
     if (e instanceof AuthError) {
       switch (e.type) {
