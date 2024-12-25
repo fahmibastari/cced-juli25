@@ -1,10 +1,25 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import React, { useState } from 'react'
+import { memberSchema } from '@/lib/zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { startTransition, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+import { FormSuccess } from '../form-succsess'
+import { FormError } from '../form-error'
+import { CardWrapper } from '../card-wrapper'
+import { Role } from '@prisma/client'
+import { registerMember } from '@/actions/register'
 
 type MemberType =
   | 'ALUMNI_UNILA'
@@ -13,124 +28,145 @@ type MemberType =
   | 'MAHASISWA_NON_UNILA'
 
 interface MembershipFormProps {
-  onSubmit: (data: {
-    memberType: MemberType
-    nim: string
-    phone: string
-  }) => void
   onBack: () => void
+  data: {
+    role: Role
+    username: string
+    fullname: string
+    email: string
+    password: string
+  }
 }
 
-const MembershipForm: React.FC<MembershipFormProps> = ({
-  onSubmit,
-  onBack,
-}) => {
-  const [memberType, setMemberType] = useState<MemberType | null>(null)
-  const [nim, setNim] = useState('')
-  const [phone, setPhone] = useState('')
-  const [errors, setErrors] = useState<Record<string, string>>({})
+const MembershipForm = ({ onBack, data }: MembershipFormProps) => {
+  const [memberType, setMemberType] = useState<MemberType>('MAHASISWA_UNILA')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
+  const [isPending, setIsPending] = useState(false)
+  const form = useForm<z.infer<typeof memberSchema>>({
+    resolver: zodResolver(memberSchema),
+    defaultValues: {
+      role: data.role || 'MEMBER',
+      username: data.username || '',
+      fullname: data.fullname || '',
+      email: data.email || '',
+      password: data.password || '',
+      confirmPassword: data.password || '',
+      memberType: memberType || 'MAHASISWA_UNILA',
+    },
+  })
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {}
-
-    if (!memberType) {
-      newErrors.memberType = 'Please select a member type'
-    }
-    if (!nim.trim()) {
-      newErrors.nim = 'NIM/NPM is required'
-    }
-    if (!phone.trim()) {
-      newErrors.phone = 'Phone number is required'
-    } else if (!/^\d{10,13}$/.test(phone)) {
-      newErrors.phone = 'Please enter a valid phone number (10-13 digits)'
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (validateForm() && memberType) {
-      onSubmit({
-        memberType,
-        nim,
-        phone,
+  const handleSubmit = (data: z.infer<typeof memberSchema>) => {
+    setErrorMessage('')
+    setSuccessMessage('')
+    startTransition(() => {
+      setIsPending(true)
+      registerMember(data).then((data) => {
+        setSuccessMessage(data?.message ?? '')
+        setErrorMessage(data?.error ?? '')
+        setIsPending(false)
       })
-    }
+    })
   }
-
   return (
-    <Card className='mx-auto w-full max-w-xl'>
-      <CardContent className='space-y-6 pt-6'>
-        <form onSubmit={handleSubmit} className='space-y-6'>
-          <div className='space-y-2'>
-            <Label>Jenis Member</Label>
-            {errors.memberType && (
-              <p className='text-sm text-red-500'>{errors.memberType}</p>
-            )}
-            <div className='grid grid-cols-2 gap-2 md:grid-cols-4'>
-              {[
-                { id: 'ALUMNI_UNILA', label: 'Alumni UNILA' },
-                { id: 'MAHASISWA_UNILA', label: 'Mahasiswa UNILA' },
-                { id: 'ALUMNI_NON_UNILA', label: 'Alumni Non UNILA' },
-                { id: 'MAHASISWA_NON_UNILA', label: 'Mahasiswa Non UNILA' },
-              ].map((type) => (
-                <Button
-                  key={type.id}
-                  type='button'
-                  onClick={() => setMemberType(type.id as MemberType)}
-                  variant={memberType === type.id ? 'default' : 'secondary'}
-                  className='h-auto whitespace-normal py-2 text-sm'
-                >
+    <CardWrapper
+      headerLabel='Register'
+      description='Fill the form below to create an account'
+      paragraphSwitchButton='Already have an account? '
+      switchButtonLabel='Sign In'
+      switchButtonHref='/login'
+    >
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-6'>
+          <div className='grid grid-cols-2 gap-4 md:grid-cols-4'>
+            {[
+              { id: 'ALUMNI_UNILA', label: 'Alumni UNILA' },
+              { id: 'MAHASISWA_UNILA', label: 'Mahasiswa UNILA' },
+              { id: 'ALUMNI_NON_UNILA', label: 'Alumni Non UNILA' },
+              { id: 'MAHASISWA_NON_UNILA', label: 'Mahasiswa Non UNILA' },
+            ].map((type) => (
+              <Button
+                key={type.id}
+                type='button'
+                onClick={() => setMemberType(type.id as MemberType)}
+                variant={memberType === type.id ? 'default' : 'secondary'}
+                className={`h-auto whitespace-normal py-3 px-4 text-sm text-center rounded-lg transition-all duration-200 ${
+                  memberType === type.id
+                    ? 'bg-green-500 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <div className='flex flex-col'>
                   {type.label.split(' ').map((word, i) => (
-                    <React.Fragment key={i}>
-                      {word}
-                      {i < type.label.split(' ').length - 1 && <br />}
-                    </React.Fragment>
+                    <span key={i}>{word}</span>
                   ))}
-                </Button>
-              ))}
+                </div>
+              </Button>
+            ))}
+          </div>
+
+          <div className='space-y-6'>
+            <FormField
+              control={form.control}
+              name='nim'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>NIM</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      disabled={form.formState.isSubmitting}
+                      placeholder='Masukkan NIM/NPM'
+                      className='border-2 border-gray-100 shadow-sm'
+                      type='text'
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='phone'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nomor Telepon</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      disabled={form.formState.isSubmitting}
+                      placeholder='fullname'
+                      className='border-2 border-gray-100 shadow-sm'
+                      type='text'
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {errorMessage && <FormError message={errorMessage} />}
+            {successMessage && <FormSuccess message={successMessage} />}
+            <div className='flex justify-between pt-4'>
+              <Button
+                type='button'
+                disabled={form.formState.isSubmitting || isPending}
+                className='w-full bg-slate-500 text-white hover:bg-slate-600 mx-6'
+                onClick={onBack}
+              >
+                {isPending ? 'Loading...' : 'kembali'}
+              </Button>
+              <Button
+                type='submit'
+                disabled={form.formState.isSubmitting || isPending}
+                className='w-full bg-green-500 text-white hover:bg-green-600 mx-6'
+              >
+                {isPending ? 'Loading...' : 'lanjut'}
+              </Button>
             </div>
           </div>
-
-          <div className='space-y-2'>
-            <Label htmlFor='nim'>NIM / NPM</Label>
-            {errors.nim && <p className='text-sm text-red-500'>{errors.nim}</p>}
-            <Input
-              type='text'
-              id='nim'
-              value={nim}
-              onChange={(e) => setNim(e.target.value)}
-              placeholder='Masukkan NIM/NPM'
-            />
-          </div>
-
-          <div className='space-y-2'>
-            <Label htmlFor='phone'>No Telpon</Label>
-            {errors.phone && (
-              <p className='text-sm text-red-500'>{errors.phone}</p>
-            )}
-            <Input
-              type='tel'
-              id='phone'
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder='Masukkan no handphone aktif yang dapat di hubungi melalui WhatsApp'
-            />
-          </div>
-          <div className='flex justify-between pt-4'>
-            <Button type='button' variant='outline' onClick={onBack}>
-              Kembali
-            </Button>
-            <Button type='submit' className='bg-green-500 hover:bg-green-600'>
-              Submit
-            </Button>
-          </div>
         </form>
-      </CardContent>
-    </Card>
+      </Form>
+    </CardWrapper>
   )
 }
 

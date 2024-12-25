@@ -27,7 +27,7 @@ export const CardWrapper = ({
   paragraphSwitchButton,
 }: CardWrapperProps) => {
   return (
-    <Card className='w-full max-w-lg bg-white p-4 my-16'>
+    <Card className='w-full max-w-2xl bg-white p-4 my-16'>
       <CardHeader className='space-y-1 flex flex-col gap-3 items-center mb-14 text-center'>
         <CardTitle className='mb-0 pb-0 text-2xl font-semibold text-gray-700'>
           {headerLabel}

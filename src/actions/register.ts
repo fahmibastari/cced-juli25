@@ -9,6 +9,7 @@ import { generateVerificationToken } from '@/lib/tokens'
 import { sendVerificationEmail } from '@/lib/mail'
 import * as z from 'zod'
 import { getUserByEmail } from '@/data/user'
+import { Role } from '@prisma/client'
 
 export const registerMember = async (value: z.infer<typeof memberSchema>) => {
   const validatedFields = memberSchema.safeParse(value)
@@ -35,7 +36,7 @@ export const registerMember = async (value: z.infer<typeof memberSchema>) => {
       fullname,
       email,
       password: hashedPassword,
-      role,
+      role: role as Role,
     },
   })
 
@@ -97,7 +98,7 @@ export const registerCompany = async (value: z.infer<typeof companySchema>) => {
       fullname,
       email,
       password: hashedPassword,
-      role,
+      role: role as Role,
     },
   })
 

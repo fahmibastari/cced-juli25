@@ -27,19 +27,29 @@ export const resetPasswordSchema = z.object({
     .min(8, 'Password is required'),
 })
 // Base user schema
-const userSchema = z.object({
-  role: z.nativeEnum(Role).nullable(),
-  username: z.string().min(3),
-  fullname: z.string().min(3),
-  email: z.string().email(),
-  password: z.string().min(8),
-  confirmPassword: z.string().min(8),
-})
+export const userSchema = z
+  .object({
+    role: z.nativeEnum(Role).nullable(),
+    username: z.string().min(3),
+    fullname: z.string().min(3),
+    email: z.string().email(),
+    password: z.string().min(8),
+    confirmPassword: z.string().min(8),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords must match',
+    path: ['confirmPassword'],
+  })
 
 // Member schema extending userSchema
-export const memberSchema = userSchema
-  .extend({
-    role: z.literal(Role.MEMBER),
+export const memberSchema = z
+  .object({
+    role: z.nativeEnum(Role).nullable(),
+    username: z.string().min(3),
+    fullname: z.string().min(3),
+    email: z.string().email(),
+    password: z.string().min(8),
+    confirmPassword: z.string().min(8),
     memberType: z.nativeEnum(MemberType),
     nim: z.string().min(10),
     phone: z.string().min(10),
@@ -49,10 +59,21 @@ export const memberSchema = userSchema
     path: ['confirmPassword'],
   })
 
+export const registrationFormMember = z.object({
+  memberType: z.nativeEnum(MemberType),
+  nim: z.string().min(10),
+  phone: z.string().min(10),
+})
+
 // Company schema extending userSchema
-export const companySchema = userSchema
-  .extend({
-    role: z.literal(Role.COMPANY),
+export const companySchema = z
+  .object({
+    role: z.nativeEnum(Role).nullable(),
+    username: z.string().min(3),
+    fullname: z.string().min(3),
+    email: z.string().email(),
+    password: z.string().min(8),
+    confirmPassword: z.string().min(8),
     logo: z
       .instanceof(File)
       .refine((file) => file.type.startsWith('image/'), {
