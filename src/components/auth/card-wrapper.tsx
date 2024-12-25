@@ -33,7 +33,7 @@ export const CardWrapper = ({
       className={`w-fullbg-white p-4 my-16 ${!!size ? size : 'w-full max-w-2xl'} `}
     >
       <CardHeader className='space-y-1 flex flex-col gap-3 items-center mb-14 text-center'>
-        <CardTitle className='mb-0 pb-0 text-2xl font-semibold text-gray-700'>
+        <CardTitle className='mb-0 pb-0 font-semibold text-4xl text-[#025908]'>
           {headerLabel}
         </CardTitle>
         <CardDescription>{description}</CardDescription>
