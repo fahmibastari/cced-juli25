@@ -7,6 +7,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -64,6 +65,7 @@ export default function LoginPage() {
               name='email'
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -83,6 +85,7 @@ export default function LoginPage() {
                 name='password'
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Password</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -100,7 +103,7 @@ export default function LoginPage() {
                 type='button'
                 variant='ghost'
                 size='icon'
-                className='absolute right-2 top-1/2 -translate-y-1/2'
+                className='absolute right-2 top-3/4 -translate-y-1/2'
                 onClick={handleClickShowPassword}
               >
                 {showPassword ? (

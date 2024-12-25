@@ -53,7 +53,7 @@ export const registerMember = async (value: z.infer<typeof memberSchema>) => {
 
   return {
     success: true,
-    message: 'Pendaftaran berhasil!',
+    message: 'Account created successfully Please Verifiy your email',
     role,
   }
 }
@@ -72,7 +72,6 @@ export const registerCompany = async (value: z.infer<typeof companySchema>) => {
     email,
     password,
     role,
-    logo,
     companyName,
     industry,
     ownership,
@@ -81,8 +80,13 @@ export const registerCompany = async (value: z.infer<typeof companySchema>) => {
     website,
     publicMail,
     bio,
+    logo,
   } = data
-  const logoFile = await saveFile('company-logos', logo)
+  const logoFile = logo ? await saveFile('company-logos', logo) : undefined
+
+  if (!logoFile) {
+    return { error: 'Logo is required' }
+  }
 
   const emailExists = await getUserByEmail(email)
   if (emailExists) {
@@ -121,7 +125,7 @@ export const registerCompany = async (value: z.infer<typeof companySchema>) => {
 
   return {
     success: true,
-    message: 'Pendaftaran berhasil!',
+    message: 'Account created successfully Please Verifiy your email',
     role,
   }
 }

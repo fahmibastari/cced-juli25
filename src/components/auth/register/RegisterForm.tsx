@@ -1,47 +1,21 @@
 'use client'
 
 import { useState } from 'react'
-import DetailCompanyForm from '../../../components/auth/register/DetailCompanyForm'
-import MembershipForm from '../../../components/auth/register/MembershipForm'
-import RegistrationFormCompany from '../../../components/auth/register/RegistrationFormCompany'
-import RegistrationFormMember from '../../../components/auth/register/RegistrationFormMember'
-import RoleSelection from '../../../components/auth/register/RoleSelection'
+import DetailCompanyForm from '@/components/auth/register/DetailCompanyForm'
+import MembershipForm from '@/components/auth/register/MembershipForm'
+import RegistrationFormCompany from '@/components/auth/register/RegistrationFormCompany'
+import RegistrationFormMember from '@/components/auth/register/RegistrationFormMember'
+import RoleSelection from '@/components/auth/register/RoleSelection'
 import { Role } from '@prisma/client'
 
-type MemberType =
-  | 'ALUMNI_UNILA'
-  | 'MAHASISWA_UNILA'
-  | 'ALUMNI_NON_UNILA'
-  | 'MAHASISWA_NON_UNILA'
-
 // Base interface for common registration data
-interface BaseRegistrationData {
+interface RegistrationData {
   role: Role
   username: string
   fullname: string
   email: string
   password: string
   confirmPassword: string
-}
-
-// Member-specific registration data
-interface MemberRegistrationData extends BaseRegistrationData {
-  memberType?: MemberType
-  nim?: string
-  phone?: string
-}
-
-// Company-specific registration data
-interface CompanyRegistrationData extends BaseRegistrationData {
-  logo?: File
-  companyName?: string
-  industry?: string
-  ownership?: string
-  phoneNumber?: string
-  companyPhone?: string
-  website?: string
-  emailPublic?: string
-  bio?: string
 }
 
 // Define steps as const to ensure type safety
@@ -58,32 +32,21 @@ type StepType = (typeof STEPS)[keyof typeof STEPS]
 export default function Register() {
   const [currentStep, setCurrentStep] = useState<StepType>(STEPS.ROLE_SELECTION)
 
-  const [registrationDataMember, setRegistrationDataMember] =
-    useState<MemberRegistrationData>({
-      role: 'MEMBER',
-      username: '',
-      fullname: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    })
-
-  const [registrationDataCompany, setRegistrationDataCompany] =
-    useState<CompanyRegistrationData>({
-      role: 'COMPANY',
-      username: '',
-      fullname: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    })
+  const [registrationData, setRegistrationData] = useState<RegistrationData>({
+    role: 'MEMBER',
+    username: '',
+    fullname: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  })
 
   const handleContinue = () => {
     switch (currentStep) {
       case STEPS.ROLE_SELECTION:
-        if (registrationDataMember.role === Role.MEMBER) {
+        if (registrationData.role === Role.MEMBER) {
           setCurrentStep(STEPS.REGISTRATION_FORM_MEMBER)
-        } else if (registrationDataCompany.role === Role.COMPANY) {
+        } else if (registrationData.role === Role.COMPANY) {
           setCurrentStep(STEPS.REGISTRATION_FORM_COMPANY)
         }
         break
@@ -111,60 +74,29 @@ export default function Register() {
   }
 
   const handleRoleSelection = (roleId: Role) => {
-    // Reset both states when changing roles
-    setRegistrationDataMember((prev) => ({
-      ...prev,
-      role: 'MEMBER',
-    }))
-    setRegistrationDataCompany((prev) => ({
-      ...prev,
-      role: 'COMPANY',
-    }))
-
-    // Then set the correct role
-    if (roleId === Role.MEMBER) {
-      setRegistrationDataMember((prev) => ({
-        ...prev,
-        role: roleId,
-      }))
-    } else {
-      setRegistrationDataCompany((prev) => ({
-        ...prev,
-        role: roleId,
-      }))
-    }
+    // First reset the registration data
+    setRegistrationData({
+      role: roleId,
+      username: '',
+      fullname: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    })
   }
 
-  const handleRegistrationFormMember = (formData: {
+  const handleRegistrationForm = (formData: {
     username: string
     fullname: string
     email: string
     password: string
     confirmPassword: string
   }) => {
-    setRegistrationDataMember((prev) => ({
+    setRegistrationData((prev) => ({
       ...prev,
       ...formData,
     }))
     handleContinue()
-  }
-
-  const handleRegistrationFormCompany = (formData: {
-    username: string
-    fullname: string
-    email: string
-    password: string
-    confirmPassword: string
-  }) => {
-    setRegistrationDataCompany((prev) => ({
-      ...prev,
-      ...formData,
-    }))
-    handleContinue()
-  }
-
-  const handleDetailCompanyForm = () => {
-    console.log('anu')
   }
 
   const renderStep = () => {
@@ -179,30 +111,23 @@ export default function Register() {
       case STEPS.REGISTRATION_FORM_MEMBER:
         return (
           <RegistrationFormMember
-            onSubmit={handleRegistrationFormMember}
+            onSubmit={handleRegistrationForm}
             onBack={handleBack}
-            data={registrationDataMember}
+            data={registrationData}
           />
         )
       case STEPS.REGISTRATION_FORM_COMPANY:
         return (
           <RegistrationFormCompany
-            onSubmit={handleRegistrationFormCompany}
+            onSubmit={handleRegistrationForm}
             onBack={handleBack}
-            data={registrationDataCompany}
+            data={registrationData}
           />
         )
       case STEPS.MEMBERSHIP_FORM_MEMBER:
-        return (
-          <MembershipForm onBack={handleBack} data={registrationDataMember} />
-        )
+        return <MembershipForm onBack={handleBack} data={registrationData} />
       case STEPS.DETAIL_COMPANY_FORM:
-        return (
-          <DetailCompanyForm
-            onSubmit={handleDetailCompanyForm}
-            onBack={handleBack}
-          />
-        )
+        return <DetailCompanyForm onBack={handleBack} data={registrationData} />
       default:
         return null
     }

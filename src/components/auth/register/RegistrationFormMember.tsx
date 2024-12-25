@@ -13,7 +13,6 @@ import { Input } from '@/components/ui/input'
 import { userSchema } from '@/lib/zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { EyeIcon, EyeOffIcon } from 'lucide-react'
-import Link from 'next/link'
 import { startTransition, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -213,14 +212,6 @@ const RegistrationFormMember = ({
                 ) : (
                   <EyeIcon className='h-4 w-4' />
                 )}
-              </Button>
-            </div>
-            <div className='flex justify-end'>
-              <Button
-                variant='link'
-                className='p-0 text-green-500 hover:text-green-600'
-              >
-                <Link href={'/forgot-password'}>Forgot Password?</Link>
               </Button>
             </div>
             {errorMessage && <FormError message={errorMessage} />}

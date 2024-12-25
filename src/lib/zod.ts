@@ -59,12 +59,6 @@ export const memberSchema = z
     path: ['confirmPassword'],
   })
 
-export const registrationFormMember = z.object({
-  memberType: z.nativeEnum(MemberType),
-  nim: z.string().min(10),
-  phone: z.string().min(10),
-})
-
 // Company schema extending userSchema
 export const companySchema = z
   .object({
@@ -81,14 +75,15 @@ export const companySchema = z
       })
       .refine((file) => sizeInMB(file.size) <= MAX_FILE_SIZE, {
         message: `Logo must be less than or equal to ${MAX_FILE_SIZE} MB`,
-      }),
+      })
+      .optional(),
     companyName: z.string().min(3),
     industry: z.string().min(3),
     ownership: z.string().min(3),
     phone: z.string().min(10),
     companyPhone: z.string().min(10),
-    website: z.string().url(),
-    publicMail: z.string().email(),
+    website: z.string(),
+    publicMail: z.string(),
     bio: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {

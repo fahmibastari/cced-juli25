@@ -16,6 +16,7 @@ interface CardWrapperProps {
   switchButtonLabel: string
   switchButtonHref: string
   paragraphSwitchButton: string
+  size?: string
 }
 
 export const CardWrapper = ({
@@ -25,9 +26,12 @@ export const CardWrapper = ({
   switchButtonLabel,
   switchButtonHref,
   paragraphSwitchButton,
+  size,
 }: CardWrapperProps) => {
   return (
-    <Card className='w-full max-w-2xl bg-white p-4 my-16'>
+    <Card
+      className={`w-fullbg-white p-4 my-16 ${!!size ? size : 'w-full max-w-2xl'} `}
+    >
       <CardHeader className='space-y-1 flex flex-col gap-3 items-center mb-14 text-center'>
         <CardTitle className='mb-0 pb-0 text-2xl font-semibold text-gray-700'>
           {headerLabel}

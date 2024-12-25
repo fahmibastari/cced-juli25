@@ -53,6 +53,8 @@ const MembershipForm = ({ onBack, data }: MembershipFormProps) => {
       password: data.password || '',
       confirmPassword: data.password || '',
       memberType: memberType || 'MAHASISWA_UNILA',
+      nim: '',
+      phone: '',
     },
   })
 

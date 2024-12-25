@@ -3,13 +3,13 @@
 import { Button } from '@/components/ui/button'
 import { Role } from '@prisma/client'
 import { BriefcaseIcon, UserIcon } from 'lucide-react'
-import React from 'react'
+import { ReactNode, useState } from 'react'
 import { CardWrapper } from '../card-wrapper'
 
 interface RoleOption {
   id: Role
   title: string
-  icon: React.ReactNode
+  icon: ReactNode
   description: string
 }
 
@@ -18,11 +18,8 @@ interface RoleSelectionProps {
   onSubmit: () => void
 }
 
-const RoleSelection: React.FC<RoleSelectionProps> = ({
-  onSelectRole,
-  onSubmit,
-}) => {
-  const [selectedRole, setSelectedRole] = React.useState<Role | null>(null)
+const RoleSelection = ({ onSelectRole, onSubmit }: RoleSelectionProps) => {
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null)
 
   const roles: RoleOption[] = [
     {
