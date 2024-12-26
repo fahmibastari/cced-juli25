@@ -1,55 +1,71 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-// import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import CardNewsBig from './utils/CardNewsBig'
 import CardNewsSmall from './utils/CardNewsSmall'
 
-// import { getNews, getFeaturedNews } from '@/data/news'
-import { news, featuredNews } from '@/data/dummyNews'
-
 const News = () => {
-  // const [news, setNews] = useState<any[]>([])
-  // const [featuredNews, setFeaturedNews] = useState<any>({})
+  const [news, setNews] = useState<any[]>([]) // Inisialisasi sebagai array kosong
+  const [featuredNews, setFeaturedNews] = useState<any | null>(null)
 
-  // useEffect(() => {
-  //   const fetchNews = async () => {
-  //     const newsData = await getNews();
-  //     const featuredData = await getFeaturedNews();
-  //     setNews(newsData);
-  //     setFeaturedNews(featuredData);
-  //   };
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const response = await fetch('/api/get-news')
+        if (!response.ok) {
+          throw new Error('Failed to fetch news')
+        }
+        const data = await response.json()
+        setNews(data)
+        if (data.length > 0) {
+          setFeaturedNews(data[0]) // Set berita utama
+        }
+      } catch (error) {
+        console.error('Error fetching news:', error)
+      }
+    }
 
-  //   fetchNews()
-  // }, [])
+    fetchNews()
+  }, [])
+
   return (
     <main className='container mx-auto my-8 p-4'>
       {/* Main News Section */}
       <section>
         <h3 className='mb-4 text-xl font-semibold'>Berita Terbaru</h3>
-        <CardNewsBig
-          href='#'
-          srcImage={featuredNews?.thumbnail}
-          Title={featuredNews?.title}
-          description={featuredNews?.content}
-          publishedAt={featuredNews?.publishedAt}
-        />
+        {featuredNews ? (
+          <CardNewsBig
+            href='#'
+            srcImage={featuredNews.thumbnail}
+            Title={featuredNews.title}
+            description={featuredNews.content}
+            publishedAt={featuredNews.publishedAt}
+          />
+        ) : (
+          <p>Loading berita terbaru...</p>
+        )}
       </section>
 
       {/* Other News Section */}
       <section>
         <h3 className='mb-4 text-xl font-semibold'>Berita Lainnya</h3>
         <div className='grid gap-4 md:grid-cols-3'>
-          {news.map((data, index) => (
-            <CardNewsSmall
-              href='#'
-              key={index}
-              srcImage={data.thumbnail}
-              title={data.title}
-              description={data.content}
-              // publishedAt={data.publishedAt}
-            />
-          ))}
+          {news.length > 0 ? (
+            news
+              .slice(1)
+              .map((data: any) => (
+                <CardNewsSmall
+                  href='#'
+                  key={data.id}
+                  srcImage={data.thumbnail}
+                  title={data.title}
+                  description={data.content}
+                />
+              ))
+          ) : (
+            <p>Loading berita lainnya...</p>
+          )}
         </div>
       </section>
     </main>

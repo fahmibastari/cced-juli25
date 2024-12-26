@@ -8,7 +8,7 @@ interface CardNewsBigProps {
   srcImage?: string
   Title: string
   description: string
-  publishedAt?: Date
+  publishedAt?: string
 }
 
 const CardNewsBig = ({
@@ -33,13 +33,7 @@ const CardNewsBig = ({
           </div>
           <CardTitle className='mb-2 text-2xl font-semibold'>{Title}</CardTitle>
           {publishedAt && (
-            <p className='text-sm text-gray-500'>
-              {publishedAt.toLocaleDateString('id-ID', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
-            </p>
+            <p className='text-sm text-gray-500'>{publishedAt}</p>
           )}
           <p className='mb-4 text-gray-700'>{description}</p>
           <Button

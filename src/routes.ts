@@ -18,6 +18,7 @@ export const publicRoutes = [
   '/about/contact',
   '/new-verification',
   '/reset-password',
+  '/api/get-news',
 ]
 
 export const authRoutes = ['/login', '/register', 'logout', '/forgot-password']
