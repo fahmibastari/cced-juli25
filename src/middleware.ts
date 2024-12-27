@@ -5,6 +5,11 @@ import {
   publicRoutes,
   DEFAULT_LOGIN_REDIRECT,
   authRoutes,
+  blogPrefix,
+  kegiatanPrefix,
+  assessmentPrefix,
+  aboutPrefix,
+  apiPublicPrefix,
 } from './routes'
 
 const { auth } = NextAuth(authConfig)
@@ -13,12 +18,42 @@ export default auth((req) => {
   const { nextUrl } = req
   const isLoggedIn = !!req.auth
 
-  const isApiRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
+  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
+  const isApiPublicRoute = nextUrl.pathname.startsWith(apiPublicPrefix)
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname)
   const isAuthRoute = authRoutes.includes(nextUrl.pathname)
+  const isBlogRoute = nextUrl.pathname.startsWith(blogPrefix)
+  const iskegiatanRoute = nextUrl.pathname.startsWith(kegiatanPrefix)
+  const isAssessmentRoute = nextUrl.pathname.startsWith(assessmentPrefix)
+  const isAboutRoute = nextUrl.pathname.startsWith(aboutPrefix)
 
-  // Allow API routes
-  if (isApiRoute) {
+  // Allow blog routes
+  if (isBlogRoute) {
+    return // Kembali tanpa melakukan apa-apa
+  }
+
+  // Allow kegiatan routes
+  if (iskegiatanRoute) {
+    return // Kembali tanpa melakukan apa-apa
+  }
+
+  // Allow assessment routes
+  if (isAssessmentRoute) {
+    return // Kembali tanpa melakukan apa-apa
+  }
+
+  // Allow about routes
+  if (isAboutRoute) {
+    return // Kembali tanpa melakukan apa-apa
+  }
+
+  // Allow API Public routes
+  if (isApiPublicRoute) {
+    return // Kembali tanpa melakukan apa-apa
+  }
+
+  // Allow API Auth routes
+  if (isApiAuthRoute) {
     return // Kembali tanpa melakukan apa-apa
   }
 

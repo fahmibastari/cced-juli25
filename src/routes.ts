@@ -1,25 +1,19 @@
 export const publicRoutes = [
   '/',
-  '/blog',
-  '/blog/news',
-  '/blog/article',
-  '/kegiatan',
-  '/kegiatan/event',
-  '/kegiatan/kewirausahaan',
-  '/kegiatan/sertifikat',
-  '/kegiatan/absensi',
-  '/assessment',
-  '/assessment/kepribadian',
-  '/assessment/minat-bakat',
-  '/about',
-  '/about/profile',
-  '/about/struktur',
-  '/about/faq',
-  '/about/contact',
   '/new-verification',
   '/reset-password',
   '/api/get-news',
 ]
+
+export const blogPrefix = '/blog'
+
+export const kegiatanPrefix = '/kegiatan'
+
+export const assessmentPrefix = '/assessment'
+
+export const aboutPrefix = '/about'
+
+export const apiPublicPrefix = '/api/public'
 
 export const authRoutes = ['/login', '/register', 'logout', '/forgot-password']
 

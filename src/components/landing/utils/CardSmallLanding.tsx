@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 
-interface CardSmallProps {
+interface CardSmallLandingProps {
   title: string
   description: string
   styleCard: string
@@ -8,13 +8,13 @@ interface CardSmallProps {
   styleDescription: string
 }
 
-const CardSmall = ({
+const CardSmallLanding = ({
   title,
   description,
   styleCard,
   styleTitle,
   styleDescription,
-}: CardSmallProps) => {
+}: CardSmallLandingProps) => {
   return (
     <div>
       <Card className={styleCard}>
@@ -24,4 +24,4 @@ const CardSmall = ({
     </div>
   )
 }
-export default CardSmall
+export default CardSmallLanding
