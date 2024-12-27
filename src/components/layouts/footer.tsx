@@ -3,7 +3,10 @@ import Link from 'next/link'
 
 const Footer = () => {
   return (
-    <footer id='kontak' className='bg-[#025908] py-10 text-white'>
+    <footer
+      id='kontak'
+      className='bg-gradient-to-r from-[#025908] to-[#038f0a] py-16 text-white shadow-2xl'
+    >
       <div className='container mx-auto flex flex-col items-center justify-center text-center'>
         <Label className='mb-6 text-2xl font-bold'>Hubungi Kami</Label>
         <Label className='mt-2'>

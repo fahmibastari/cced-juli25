@@ -5,35 +5,44 @@ import Link from 'next/link'
 import { Label } from '../ui/label'
 import { Button, buttonVariants } from '../ui/button'
 import {
-  dummyArticleData,
   dummyFiturData,
   dummyKegiatanData,
   dummyManfaatData,
 } from '@/data/FiturData'
 import CardSmallLanding from './utils/CardSmallLanding'
 import { useEffect, useState } from 'react'
-import { type News } from '@prisma/client'
+import { type Article, type News } from '@prisma/client'
 import CardBig from '../blog/utils/CardBig'
 import CardSmall from '../blog/utils/CardSmall'
 
 export default function HomePage() {
   const [news, setNews] = useState<News[]>([]) // Inisialisasi sebagai array kosong
+  const [articles, setArticles] = useState<Article[]>([]) // Inisialisasi sebagai array kosong
   const [featuredNews, setFeaturedNews] = useState<News | null>(null)
 
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch('/api/public/get-news')
-        if (!response.ok) {
+        // Fetch news
+        const responseNews = await fetch('/api/public/get-news')
+        if (!responseNews.ok) {
           throw new Error('Failed to fetch news')
         }
-        const data = await response.json()
-        setNews(data)
-        if (data.length > 0) {
-          setFeaturedNews(data[0]) // Set berita utama
+        const dataNews = await responseNews.json()
+        setNews(dataNews)
+        if (dataNews.length > 0) {
+          setFeaturedNews(dataNews[0]) // Set berita utama
         }
+
+        // Fetch articles
+        const responseArticles = await fetch('/api/public/get-articles')
+        if (!responseArticles.ok) {
+          throw new Error('Failed to fetch news')
+        }
+        const dataArticle = await responseArticles.json()
+        setArticles(dataArticle)
       } catch (error) {
-        console.error('Error fetching news:', error)
+        console.error('Error fetching articles:', error)
       }
     }
 
@@ -43,16 +52,16 @@ export default function HomePage() {
   return (
     <div className='bg-white text-gray-800'>
       {/* ----------------- HEADER ------------------ */}
-      <header className='bg-[#025908] py-20 text-white shadow-2xl'>
+      <header className='bg-gradient-to-r from-[#025908] to-[#038f0a] py-16 text-white shadow-2xl'>
         <div className='container mx-auto flex h-96 flex-col justify-center text-center'>
-          <Label className='text-4xl font-bold'>
+          <Label className='text-4xl font-bold leading-tight lg:text-5xl'>
             Selamat Datang di Center for Career & Entrepreurship Development
           </Label>
-          <Label className='mt-4 text-lg'>
+          <Label className='mt-4 text-lg lg:text-xl'>
             Solusi mudah untuk mencari pekerjaan dan merekrut karyawan terbaik.
           </Label>
           <Link href='#'>
-            <Button className='mt-6 rounded-md bg-white px-6 py-3 text-xl font-semibold text-[#025908] shadow-md hover:bg-gray-100'>
+            <Button className='mt-8 rounded-lg bg-white px-8 py-4 text-xl font-semibold text-[#025908] shadow-lg transition-transform duration-300 ease-in-out hover:bg-gray-100 hover:scale-105'>
               Jelajahi Fitur
             </Button>
           </Link>
@@ -151,27 +160,30 @@ export default function HomePage() {
               Artikel Pilihan
             </h2>
             <div className='space-y-8'>
-              {dummyArticleData.map((data, index) => (
-                <article
-                  className='rounded-lg bg-white p-6 shadow-md'
-                  key={index}
-                >
-                  <CardSmallLanding
-                    key={index}
-                    styleCard='bg-white'
-                    styleTitle='text-2xl font-semibold'
-                    styleDescription='mt-2 text-gray-600'
-                    title={data.title}
-                    description={data.description}
-                  />
-                  <Link
-                    href={'#'}
-                    className='mt-2 inline-block pl-6 font-semibold text-[#025908]'
-                  >
-                    Baca Selengkapnya →
-                  </Link>
-                </article>
-              ))}
+              {articles.length > 0 ? (
+                articles
+                  .slice(1, 4) // Ambil item dari index 1 hingga sebelum index 4 (total 3 item)
+                  .map((data: Article) => (
+                    <CardSmall
+                      href='#'
+                      key={data.id}
+                      srcImage={data.thumbnail}
+                      title={data.title}
+                      description={data.content.slice(0, 100)}
+                      createdAt={data.createdAt ?? undefined}
+                    />
+                  ))
+              ) : (
+                <p>Loading berita lainnya...</p>
+              )}
+            </div>
+            <div className='mt-10 flex justify-center'>
+              <Link
+                href='/blog/article'
+                className={buttonVariants({ variant: 'outline' })}
+              >
+                Lihat Article lainnya
+              </Link>
             </div>
           </div>
         </section>

@@ -6,7 +6,6 @@ import DashboardMember from '@/components/dashboard/member/DashboardMember'
 export default async function Page() {
   const session = await auth()
   const user = session?.user
-  console.log(user)
   if (user?.role === 'ADMIN') {
     return <DashboardAdmin />
   }
