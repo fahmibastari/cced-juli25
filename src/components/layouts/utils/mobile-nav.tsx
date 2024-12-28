@@ -214,12 +214,6 @@ const MobileNav = () => {
 
       {/* Auth Links */}
       <div className='flex items-center justify-center gap-4 px-2 py-2'>
-        <Button
-          className='text-sm font-semibold text-[#025908] hover:text-green-600 transition duration-200'
-          variant={'ghost'}
-        >
-          <Link href={'/dashboard'}>Dashboard</Link>
-        </Button>
         {!isLoggedIn ? (
           <>
             <Link
@@ -236,13 +230,21 @@ const MobileNav = () => {
             </Link>
           </>
         ) : (
-          <Button
-            className='text-sm font-semibold text-[#025908] hover:text-green-600 transition duration-200'
-            onClick={logout}
-            variant={'ghost'}
-          >
-            Logout
-          </Button>
+          <>
+            <Button
+              className='text-sm font-semibold text-[#025908] hover:text-green-600 transition duration-200'
+              onClick={logout}
+              variant={'ghost'}
+            >
+              Logout
+            </Button>
+            <Button
+              className='text-sm font-semibold text-[#025908] hover:text-green-600 transition duration-200'
+              variant={'ghost'}
+            >
+              <Link href={'/dashboard'}>Dashboard</Link>
+            </Button>
+          </>
         )}
       </div>
     </div>

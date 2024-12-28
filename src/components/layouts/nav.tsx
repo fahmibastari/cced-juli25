@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { Menu } from 'lucide-react'
@@ -12,7 +11,7 @@ const Nav = () => {
   const toggleMenu = () => setIsOpen(!isOpen)
 
   return (
-    <nav className='bg-gradient-to-r from-white to-gray-100 shadow-lg backdrop-blur-md'>
+    <nav className='bg-gradient-to-r from-white to-gray-100 shadow-lg backdrop-blur-md fixed w-full top-0 left-0 z-50'>
       {/* Header Container */}
       <div className='flex justify-between items-center px-6 py-4'>
         {/* Logo */}

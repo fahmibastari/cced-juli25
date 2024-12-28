@@ -27,7 +27,7 @@ const DesktopNav = () => {
               Blog
             </NavigationMenuTrigger>
             <NavigationMenuContent className='mt-2 rounded-md bg-white shadow-lg'>
-              <ul className='grid w-[545px] gap-4 p-4'>
+              <ul className='grid w-[545px] z-50 gap-4 p-4'>
                 <li className='hover:bg-gray-100 p-4 rounded-md'>
                   <Link
                     href='/blog/news'
@@ -60,7 +60,7 @@ const DesktopNav = () => {
               Kegiatan
             </NavigationMenuTrigger>
             <NavigationMenuContent className='mt-2 rounded-md bg-white shadow-lg'>
-              <ul className='grid w-[545px] gap-4 p-4'>
+              <ul className='grid w-[545px] z-50 gap-4 p-4'>
                 <li className='hover:bg-gray-100 p-4 rounded-md'>
                   <Link
                     href='/kegiatan/event'
@@ -115,7 +115,7 @@ const DesktopNav = () => {
               Assessment
             </NavigationMenuTrigger>
             <NavigationMenuContent className='mt-2 rounded-md bg-white shadow-lg'>
-              <ul className='grid w-[545px] gap-4 p-4'>
+              <ul className='grid w-[545px] z-50 gap-4 p-4'>
                 <li className='hover:bg-gray-100 p-4 rounded-md'>
                   <Link
                     href='/assessment/kepribadian'
@@ -148,7 +148,7 @@ const DesktopNav = () => {
               About Us
             </NavigationMenuTrigger>
             <NavigationMenuContent className='mt-2 rounded-md bg-white shadow-lg'>
-              <ul className='grid w-[545px] gap-4 p-4'>
+              <ul className='grid w-[545px] z-50 gap-4 p-4'>
                 <li className='hover:bg-gray-100 p-4 rounded-md'>
                   <Link
                     href='/about/profile'
@@ -214,12 +214,6 @@ const DesktopNav = () => {
 
       {/* Auth Links */}
       <div className='flex items-center gap-8 px-4'>
-        <Button
-          className='text-base font-semibold text-[#025908] hover:text-green-600 transition duration-200'
-          variant={'ghost'}
-        >
-          <Link href={'/dashboard'}>Dashboard</Link>
-        </Button>
         {!isLoggedIn ? (
           <>
             <Link
@@ -236,13 +230,21 @@ const DesktopNav = () => {
             </Link>
           </>
         ) : (
-          <Button
-            className='text-base font-semibold text-[#025908] hover:text-green-600 transition duration-200'
-            onClick={logout}
-            variant={'ghost'}
-          >
-            Logout
-          </Button>
+          <>
+            <Button
+              className='text-base font-semibold text-[#025908] hover:text-green-600 transition duration-200'
+              onClick={logout}
+              variant={'ghost'}
+            >
+              Logout
+            </Button>
+            <Button
+              className='text-base font-semibold text-[#025908] hover:text-green-600 transition duration-200'
+              variant={'ghost'}
+            >
+              <Link href={'/dashboard'}>Dashboard</Link>
+            </Button>
+          </>
         )}
       </div>
     </div>

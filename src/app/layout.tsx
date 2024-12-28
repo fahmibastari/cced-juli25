@@ -32,7 +32,7 @@ export default function RootLayout({
       >
         <SessionProvider>
           <Nav />
-          {children}
+          <div className='pt-32'>{children}</div>
           <Footer />
         </SessionProvider>
       </body>
