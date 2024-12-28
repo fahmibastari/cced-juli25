@@ -6,12 +6,9 @@ import Link from 'next/link'
 import { useState } from 'react'
 import DesktopNav from './utils/desktop-nav'
 import MobileNav from './utils/mobile-nav'
-import { useSession } from 'next-auth/react'
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false) // State for mobile menu
-  const { data: session } = useSession() // Gunakan useSession untuk mendapatkan data sesi
-  const isLoggedIn = !!session?.user
   const toggleMenu = () => setIsOpen(!isOpen)
 
   return (
@@ -34,14 +31,14 @@ const Nav = () => {
         </button>
 
         {/* Desktop Navigation */}
-        <DesktopNav isLoggedIn={isLoggedIn} />
+        <DesktopNav />
       </div>
 
       {/* Mobile Navigation */}
       <div
         className={`md:hidden ${isOpen ? 'block' : 'hidden'} px-6 flex flex-col items-center`}
       >
-        <MobileNav isLoggedIn={isLoggedIn} />
+        <MobileNav />
       </div>
     </nav>
   )

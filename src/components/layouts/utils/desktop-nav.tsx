@@ -7,14 +7,13 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
+import useCurrentUser from '@/hooks/useCurrentUser'
 import { signOut } from 'next-auth/react'
 import Link from 'next/link'
 
-interface DesktopNavProps {
-  isLoggedIn: boolean
-}
-
-const DesktopNav = ({ isLoggedIn }: DesktopNavProps) => {
+const DesktopNav = () => {
+  const user = useCurrentUser()
+  const isLoggedIn = !!user
   const logout = async () => {
     await signOut()
   }
@@ -215,6 +214,12 @@ const DesktopNav = ({ isLoggedIn }: DesktopNavProps) => {
 
       {/* Auth Links */}
       <div className='flex items-center gap-8 px-4'>
+        <Button
+          className='text-base font-semibold text-[#025908] hover:text-green-600 transition duration-200'
+          variant={'ghost'}
+        >
+          <Link href={'/dashboard'}>Dashboard</Link>
+        </Button>
         {!isLoggedIn ? (
           <>
             <Link

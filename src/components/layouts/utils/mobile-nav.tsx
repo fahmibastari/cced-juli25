@@ -7,21 +7,20 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
+import useCurrentUser from '@/hooks/useCurrentUser'
 import { signOut } from 'next-auth/react'
 import Link from 'next/link'
 
-interface MobileNavProps {
-  isLoggedIn: boolean
-}
-
-const MobileNav = ({ isLoggedIn }: MobileNavProps) => {
+const MobileNav = () => {
+  const user = useCurrentUser()
+  const isLoggedIn = !!user
   const logout = async () => {
     await signOut()
   }
   return (
     <div className='md:hidden'>
       <NavigationMenu className='w-full'>
-        <NavigationMenuList className='flex items-center gap-2 py-2 px-2'>
+        <NavigationMenuList className='flex items-center gap-2 pb-2 px-2'>
           {/* Blog */}
           <NavigationMenuItem>
             <NavigationMenuTrigger className='bg-transparent text-sm font-semibold text-[#025908] hover:text-green-600 transition duration-200'>
@@ -215,6 +214,12 @@ const MobileNav = ({ isLoggedIn }: MobileNavProps) => {
 
       {/* Auth Links */}
       <div className='flex items-center justify-center gap-4 px-2 py-2'>
+        <Button
+          className='text-sm font-semibold text-[#025908] hover:text-green-600 transition duration-200'
+          variant={'ghost'}
+        >
+          <Link href={'/dashboard'}>Dashboard</Link>
+        </Button>
         {!isLoggedIn ? (
           <>
             <Link
