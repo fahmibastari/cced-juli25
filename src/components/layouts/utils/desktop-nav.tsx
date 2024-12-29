@@ -7,13 +7,14 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
-import useCurrentUser from '@/hooks/useCurrentUser'
 import { signOut } from 'next-auth/react'
 import Link from 'next/link'
 
-const DesktopNav = () => {
-  const user = useCurrentUser()
-  const isLoggedIn = !!user
+interface DesktopNavProps {
+  isLoggedIn: boolean
+}
+
+const DesktopNav = ({ isLoggedIn }: DesktopNavProps) => {
   const logout = async () => {
     await signOut()
   }

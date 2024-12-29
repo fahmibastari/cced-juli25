@@ -2,13 +2,20 @@
 
 import { Menu } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import DesktopNav from './utils/desktop-nav'
 import MobileNav from './utils/mobile-nav'
+import useCurrentUser from '@/hooks/useCurrentUser'
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false) // State for mobile menu
   const toggleMenu = () => setIsOpen(!isOpen)
+  const user = useCurrentUser()
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
+
+  useEffect(() => {
+    setIsLoggedIn(!!user)
+  }, [user])
 
   return (
     <nav className='bg-gradient-to-r from-white to-gray-100 shadow-lg backdrop-blur-md fixed w-full top-0 left-0 z-50'>
@@ -30,14 +37,14 @@ const Nav = () => {
         </button>
 
         {/* Desktop Navigation */}
-        <DesktopNav />
+        <DesktopNav isLoggedIn={isLoggedIn} />
       </div>
 
       {/* Mobile Navigation */}
       <div
         className={`md:hidden ${isOpen ? 'block' : 'hidden'} px-6 flex flex-col items-center`}
       >
-        <MobileNav />
+        <MobileNav isLoggedIn={isLoggedIn} />
       </div>
     </nav>
   )

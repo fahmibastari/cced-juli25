@@ -7,13 +7,14 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
-import useCurrentUser from '@/hooks/useCurrentUser'
 import { signOut } from 'next-auth/react'
 import Link from 'next/link'
 
-const MobileNav = () => {
-  const user = useCurrentUser()
-  const isLoggedIn = !!user
+interface MobileNavProps {
+  isLoggedIn: boolean
+}
+
+const MobileNav = ({ isLoggedIn }: MobileNavProps) => {
   const logout = async () => {
     await signOut()
   }

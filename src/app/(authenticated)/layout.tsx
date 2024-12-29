@@ -1,5 +1,7 @@
 'use client'
 
+import Header from '@/components/dashboard/company/Header'
+import { useEffect, useState } from 'react'
 import useCurrentUser from '@/hooks/useCurrentUser'
 
 export default function AuthenticatedLayout({
@@ -8,6 +10,30 @@ export default function AuthenticatedLayout({
   children: React.ReactNode
 }) {
   const user = useCurrentUser()
+  const [detailsUser, setDetailsUser] = useState<{
+    companyName: string
+    industry: string
+  } | null>(null)
+
+  useEffect(() => {
+    const fetchDetailUser = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/public/user/get-user-type?id=${user?.id}`
+        )
+        if (!response.ok) {
+          throw new Error('Failed to fetch news')
+        }
+        const data = await response.json()
+        setDetailsUser(data)
+      } catch (error) {
+        console.error('Error fetching news:', error)
+      }
+    }
+
+    fetchDetailUser()
+  }, [user])
+
   if (user?.role === 'ADMIN') {
     return (
       <div>
@@ -19,10 +45,15 @@ export default function AuthenticatedLayout({
 
   if (user?.role === 'COMPANY') {
     return (
-      <div>
-        {/* <h1>ini layout company</h1> */}
+      <section>
+        {detailsUser && (
+          <Header
+            companyName={detailsUser.companyName}
+            industri={detailsUser.industry}
+          />
+        )}
         {children}
-      </div>
+      </section>
     )
   }
 
