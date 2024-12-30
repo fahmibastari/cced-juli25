@@ -40,10 +40,6 @@ const DashboardCompany = () => {
     console.log('Draft clicked')
   }
 
-  const handleClickAddJob = () => {
-    console.log('Add job clicked')
-  }
-
   return (
     <div>
       <hr className='h-1 w-full' />
@@ -73,7 +69,7 @@ const DashboardCompany = () => {
             />
           </div>
         ) : (
-          <DataNotFound handleClickAddJob={handleClickAddJob} />
+          <DataNotFound />
         )}
       </div>
     </div>

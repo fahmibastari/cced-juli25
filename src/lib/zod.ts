@@ -93,3 +93,27 @@ export const companySchema = z
 
 // Register schema as a union of member and company schemas
 export const registerSchema = z.union([memberSchema, companySchema])
+
+export const JobSchema = z.object({
+  companyId: z.string(),
+  title: z.string().min(1, 'Title is required'),
+  description: z.string().nullable().optional(),
+  requirements: z
+    .array(z.string())
+    .min(1, 'At least one requirement is needed'),
+  location: z.string().nullable().optional(),
+  deadline: z.date().nullable().optional(),
+  status: z.string().nullable().optional(),
+  skills: z.array(z.string()).min(1, 'At least one skill is required'),
+  isExternal: z.boolean().default(false),
+  externalUrl: z.string().url('Must be a valid URL').nullable().optional(),
+  type: z.string().nullable().optional(),
+})
+
+// Validasi untuk model JobApplication
+export const JobApplicationSchema = z.object({
+  jobId: z.string().uuid(), // ID dari job harus valid
+  memberId: z.string().uuid(), // ID dari member harus valid
+  status: z.string().nullable().optional(),
+  notes: z.string().nullable().optional(),
+})
