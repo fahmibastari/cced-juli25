@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-'use client'
-
 import Link from 'next/link'
 import { Label } from '../ui/label'
 import { Button, buttonVariants } from '../ui/button'
@@ -10,44 +7,15 @@ import {
   dummyManfaatData,
 } from '@/data/FiturData'
 import CardSmallLanding from './utils/CardSmallLanding'
-import { useEffect, useState } from 'react'
 import { type Article, type News } from '@prisma/client'
 import CardBig from '../blog/utils/CardBig'
 import CardSmall from '../blog/utils/CardSmall'
+import { getArticles, getNews } from '@/data/data'
 
-export default function HomePage() {
-  const [news, setNews] = useState<News[]>([]) // Inisialisasi sebagai array kosong
-  const [articles, setArticles] = useState<Article[]>([]) // Inisialisasi sebagai array kosong
-  const [featuredNews, setFeaturedNews] = useState<News | null>(null)
-
-  useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        // Fetch news
-        const responseNews = await fetch('/api/public/get-news')
-        if (!responseNews.ok) {
-          throw new Error('Failed to fetch news')
-        }
-        const dataNews = await responseNews.json()
-        setNews(dataNews)
-        if (dataNews.length > 0) {
-          setFeaturedNews(dataNews[0]) // Set berita utama
-        }
-
-        // Fetch articles
-        const responseArticles = await fetch('/api/public/get-articles')
-        if (!responseArticles.ok) {
-          throw new Error('Failed to fetch news')
-        }
-        const dataArticle = await responseArticles.json()
-        setArticles(dataArticle)
-      } catch (error) {
-        console.error('Error fetching articles:', error)
-      }
-    }
-
-    fetchNews()
-  }, [])
+export default async function HomePage() {
+  const news = await getNews()
+  const articles = await getArticles()
+  const featuredNews = news[0]
 
   return (
     <div className='bg-white text-gray-800'>

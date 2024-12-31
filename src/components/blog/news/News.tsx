@@ -1,34 +1,12 @@
-'use client'
-
-import { useEffect, useState } from 'react'
 import CardBig from '../utils/CardBig'
 import CardSmall from '../utils/CardSmall'
 import { type News } from '@prisma/client'
 import PaginationNewsArticle from '../utils/Pagination'
+import { getNews } from '@/data/data'
 
-const NewsContent = () => {
-  const [news, setNews] = useState<News[]>([]) // Inisialisasi sebagai array kosong
-  const [featuredNews, setFeaturedNews] = useState<News | null>(null)
-
-  useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const response = await fetch('/api/public/get-news')
-        if (!response.ok) {
-          throw new Error('Failed to fetch news')
-        }
-        const data = await response.json()
-        setNews(data)
-        if (data.length > 0) {
-          setFeaturedNews(data[0]) // Set berita utama
-        }
-      } catch (error) {
-        console.error('Error fetching news:', error)
-      }
-    }
-
-    fetchNews()
-  }, [])
+const NewsContent = async () => {
+  const news = await getNews()
+  const featuredNews = news[0]
 
   return (
     <main className='container mx-auto my-8 p-4 flex-col space-y-14'>
