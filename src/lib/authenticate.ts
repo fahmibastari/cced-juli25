@@ -1,5 +1,5 @@
 import { auth } from '@/auth'
-import { getUserTypeById } from '@/data/userRole'
+import { getUserDetailCompany } from '@/data/userRole'
 
 export const currentUser = async () => {
   const data = await auth()
@@ -11,8 +11,8 @@ export const currentUserRole = async () => {
   return data?.user.role
 }
 
-export const currentDetailUser = async () => {
+export const currentDetailUserCompany = async () => {
   const user = await auth()
-  const data = await getUserTypeById(user?.user.id || '')
+  const data = await getUserDetailCompany(user?.user.id || '')
   return data
 }

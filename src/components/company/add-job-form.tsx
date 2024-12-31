@@ -18,7 +18,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { startTransition, useState } from 'react'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
-import { Switch } from '../ui/switch'
 import {
   Select,
   SelectContent,
@@ -36,6 +35,7 @@ import {
   CardTitle,
 } from '../ui/card'
 import { addNewJob } from '@/actions/company-action'
+import { X } from 'lucide-react'
 
 const AddJob = () => {
   const [errorMessage, setErrorMessage] = useState('')
@@ -45,17 +45,14 @@ const AddJob = () => {
   const form = useForm<z.infer<typeof JobSchema>>({
     resolver: zodResolver(JobSchema),
     defaultValues: {
-      companyId: '',
       title: '',
-      description: undefined,
+      description: '',
       requirements: [],
-      location: undefined,
-      deadline: undefined,
-      status: undefined,
+      location: '',
+      deadline: new Date(),
+      status: '',
       skills: [],
-      isExternal: false,
-      externalUrl: undefined,
-      type: undefined,
+      type: '',
     },
   })
 
@@ -76,13 +73,6 @@ const AddJob = () => {
 
   const jobTypes = ['Full-time', 'Part-time', 'Contract', 'Internship']
   const jobStatus = ['Draft', 'Published', 'Closed']
-  const skillOptions = ['React', 'Node.js', 'TypeScript', 'Python', 'Java']
-  const requirementOptions = [
-    'Bachelor Degree',
-    '2+ Years Experience',
-    'Remote Work',
-    'Willing to Travel',
-  ]
 
   return (
     <Card className='mx-auto my-8 w-full max-w-3xl bg-white shadow-lg'>
@@ -103,91 +93,17 @@ const AddJob = () => {
                 name='title'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='text-gray-700 font-medium'>
-                      Job Title
-                    </FormLabel>
+                    <FormLabel>Title</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        disabled={isPending}
-                        placeholder='Enter job title'
-                        className='border border-gray-200 rounded-md focus:ring-2 focus:ring-green-500'
+                        disabled={form.formState.isSubmitting}
+                        placeholder='Enter an title for the job'
+                        className='border-2 border-gray-100 shadow-sm'
+                        type='text'
                       />
                     </FormControl>
-                    <FormMessage className='text-red-600' />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name='description'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className='text-gray-700 font-medium'>
-                      Description
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        disabled={isPending}
-                        placeholder='Enter job description'
-                        className='border border-gray-200 rounded-md min-h-32 focus:ring-2 focus:ring-green-500'
-                        value={field.value ?? ''}
-                      />
-                    </FormControl>
-                    <FormMessage className='text-red-600' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='requirements'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className='text-gray-700 font-medium'>
-                      Requirements
-                    </FormLabel>
-                    <Select
-                      disabled={isPending}
-                      onValueChange={(value) =>
-                        field.onChange([...(field.value || []), value])
-                      }
-                      value=''
-                    >
-                      <SelectTrigger className='border border-gray-200 focus:ring-2 focus:ring-green-500'>
-                        <SelectValue placeholder='Add requirements' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {requirementOptions.map((req) => (
-                          <SelectItem key={req} value={req}>
-                            {req}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <div className='mt-3 flex flex-wrap gap-2'>
-                      {field.value?.map((req) => (
-                        <div
-                          key={req}
-                          className='bg-green-50 text-green-700 px-3 py-1 rounded-full flex items-center gap-2 border border-green-200'
-                        >
-                          {req}
-                          <button
-                            type='button'
-                            onClick={() =>
-                              field.onChange(
-                                field.value?.filter((r) => r !== req)
-                              )
-                            }
-                            className='hover:text-red-500 transition-colors'
-                          >
-                            ×
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                    <FormMessage className='text-red-600' />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -201,9 +117,10 @@ const AddJob = () => {
                     <FormControl>
                       <Input
                         {...field}
-                        disabled={isPending}
-                        placeholder='Enter job location'
+                        disabled={form.formState.isSubmitting}
+                        placeholder='Enter an location for the job'
                         className='border-2 border-gray-100 shadow-sm'
+                        type='text'
                         value={field.value ?? ''}
                       />
                     </FormControl>
@@ -214,21 +131,18 @@ const AddJob = () => {
 
               <FormField
                 control={form.control}
-                name='deadline'
+                name='description'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Application Deadline</FormLabel>
+                    <FormLabel>Description</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        type='date'
-                        disabled={isPending}
+                        disabled={form.formState.isSubmitting}
+                        placeholder='Enter an description for the job'
                         className='border-2 border-gray-100 shadow-sm'
-                        value={
-                          field.value
-                            ? field.value.toISOString().split('T')[0]
-                            : ''
-                        }
+                        type='text'
+                        value={field.value ?? ''}
                       />
                     </FormControl>
                     <FormMessage />
@@ -269,24 +183,28 @@ const AddJob = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Required Skills</FormLabel>
-                    <Select
-                      disabled={isPending}
-                      onValueChange={(value) =>
-                        field.onChange([...(field.value || []), value])
-                      }
-                      value=''
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder='Add required skills' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {skillOptions.map((skill) => (
-                          <SelectItem key={skill} value={skill}>
-                            {skill}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    {/* Input untuk menambahkan skill manual */}
+                    <FormControl>
+                      <Input
+                        placeholder='Type a skill and press Enter'
+                        disabled={isPending}
+                        onKeyDown={(e) => {
+                          if (
+                            e.key === 'Enter' &&
+                            e.currentTarget.value.trim() !== ''
+                          ) {
+                            const newSkill = e.currentTarget.value.trim()
+                            if (!field.value?.includes(newSkill)) {
+                              field.onChange([...(field.value || []), newSkill])
+                            }
+                            e.currentTarget.value = '' // Reset input
+                            e.preventDefault() // Prevent form submission
+                          }
+                        }}
+                        className='border-2 border-gray-100 shadow-sm mb-2'
+                      />
+                    </FormControl>
+                    {/* Menampilkan daftar skill */}
                     <div className='mt-2 flex flex-wrap gap-2'>
                       {field.value?.map((skill) => (
                         <div
@@ -294,17 +212,18 @@ const AddJob = () => {
                           className='bg-gray-100 px-2 py-1 rounded-md flex items-center gap-2'
                         >
                           {skill}
-                          <button
+                          <Button
+                            variant={'ghost'}
                             type='button'
                             onClick={() =>
                               field.onChange(
                                 field.value?.filter((s) => s !== skill)
                               )
                             }
-                            className='text-gray-500 hover:text-gray-700'
+                            className='text-gray-500 hover:text-gray-700 w-4 h-4'
                           >
-                            ×
-                          </button>
+                            <X className='h-4 w-4 text-red-600 hover:text-red-700' />
+                          </Button>
                         </div>
                       ))}
                     </div>
@@ -342,44 +261,83 @@ const AddJob = () => {
 
               <FormField
                 control={form.control}
-                name='isExternal'
+                name='requirements'
                 render={({ field }) => (
-                  <FormItem className='flex items-center justify-between rounded-lg border p-4'>
-                    <div className='space-y-0.5'>
-                      <FormLabel>External Job Posting</FormLabel>
-                    </div>
+                  <FormItem>
+                    <FormLabel>Requirements</FormLabel>
                     <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
+                      <Input
+                        placeholder='Type a skill and press Enter'
                         disabled={isPending}
+                        onKeyDown={(e) => {
+                          if (
+                            e.key === 'Enter' &&
+                            e.currentTarget.value.trim() !== ''
+                          ) {
+                            const newSkill = e.currentTarget.value.trim()
+                            if (!field.value?.includes(newSkill)) {
+                              field.onChange([...(field.value || []), newSkill])
+                            }
+                            e.currentTarget.value = '' // Reset input
+                            e.preventDefault() // Prevent form submission
+                          }
+                        }}
+                        className='border-2 border-gray-100 shadow-sm mb-2'
                       />
                     </FormControl>
+                    <div className='mt-2 flex flex-wrap gap-2'>
+                      {field.value?.map((skill) => (
+                        <div
+                          key={skill}
+                          className='bg-gray-100 px-2 py-1 rounded-md flex items-center gap-2'
+                        >
+                          {skill}
+                          <Button
+                            variant={'ghost'}
+                            type='button'
+                            onClick={() =>
+                              field.onChange(
+                                field.value?.filter((s) => s !== skill)
+                              )
+                            }
+                            className='text-gray-500 hover:text-gray-700 w-4 h-4'
+                          >
+                            <X className='h-4 w-4 text-red-600 hover:text-red-700' />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
 
-              {form.watch('isExternal') && (
-                <FormField
-                  control={form.control}
-                  name='externalUrl'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>External URL</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          disabled={isPending}
-                          placeholder='Enter external job posting URL'
-                          className='border-2 border-gray-100 shadow-sm'
-                          value={field.value ?? ''}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
+              <FormField
+                control={form.control}
+                name='deadline'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        value={
+                          field.value
+                            ? new Date(field.value).toISOString().split('T')[0]
+                            : ''
+                        }
+                        onChange={(e) =>
+                          field.onChange(new Date(e.target.value))
+                        }
+                        disabled={form.formState.isSubmitting}
+                        className='border-2 border-gray-100 shadow-sm'
+                        type='date'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               {errorMessage && <FormError message={errorMessage} />}
               {successMessage && <FormSuccess message={successMessage} />}
@@ -395,7 +353,7 @@ const AddJob = () => {
                     Processing...
                   </div>
                 ) : (
-                  'Job Posted!'
+                  'Create Job'
                 )}
               </Button>
             </div>

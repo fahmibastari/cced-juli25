@@ -1,11 +1,11 @@
 import DashboardAdmin from '@/components/dashboard/admin/DashboardAdmin'
 import DashboardCompany from '@/components/dashboard/company/DashboadCompany'
 import DashboardMember from '@/components/dashboard/member/DashboardMember'
-import { currentDetailUser } from '@/lib/authenticate'
+import { currentDetailUserCompany } from '@/lib/authenticate'
 import { Role } from '@prisma/client'
 
 export default async function Page() {
-  const user = await currentDetailUser()
+  const user = await currentDetailUserCompany()
   if (user?.role === Role.ADMIN) {
     return <DashboardAdmin />
   }

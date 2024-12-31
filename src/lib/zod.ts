@@ -95,7 +95,6 @@ export const companySchema = z
 export const registerSchema = z.union([memberSchema, companySchema])
 
 export const JobSchema = z.object({
-  companyId: z.string(),
   title: z.string().min(1, 'Title is required'),
   description: z.string().nullable().optional(),
   requirements: z
@@ -105,8 +104,6 @@ export const JobSchema = z.object({
   deadline: z.date().nullable().optional(),
   status: z.string().nullable().optional(),
   skills: z.array(z.string()).min(1, 'At least one skill is required'),
-  isExternal: z.boolean().default(false),
-  externalUrl: z.string().url('Must be a valid URL').nullable().optional(),
   type: z.string().nullable().optional(),
 })
 

@@ -199,14 +199,12 @@ model Job {
   id           String    @id @default(uuid())
   companyId    String
   title        String
-  description  String?
+  description  String
   requirements String[]
   location     String?
   deadline     DateTime?
   status       String?
   skills       String[]
-  isExternal   Boolean   @default(false)
-  externalUrl  String?
   type         String?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
