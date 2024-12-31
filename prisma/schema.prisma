@@ -218,7 +218,6 @@ model JobApplication {
   id        String   @id @default(uuid())
   jobId     String
   memberId  String
-  status    String?
   notes     String?
   appliedAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

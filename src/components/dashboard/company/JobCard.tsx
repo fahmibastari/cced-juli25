@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
+import Link from 'next/link'
 
 interface JobCardProps {
   title: string
@@ -18,9 +19,6 @@ interface JobCardProps {
   inReview: number
   inCommunication: number
   notSuitable: number
-  handleEdit: () => void
-  handleDelete: () => void
-  handleDetail: () => void
 }
 
 const JobCard = ({
@@ -31,9 +29,6 @@ const JobCard = ({
   inReview,
   inCommunication,
   notSuitable,
-  handleEdit,
-  handleDelete,
-  handleDetail,
 }: JobCardProps) => {
   return (
     <Card>
@@ -72,21 +67,19 @@ const JobCard = ({
       <hr className='h-0.5 w-full' />
       <CardFooter className='mt-3 flex justify-end gap-4'>
         <Button
-          onClick={handleEdit}
           variant='secondary'
           className='w-24 bg-green-500 text-white hover:bg-green-400'
         >
-          Edit
+          <Link href='/company/edit-job'>Edit</Link>
         </Button>
-        <Button onClick={handleDelete} variant='destructive' className='w-24'>
-          Hapus
+        <Button variant='destructive' className='w-24'>
+          <Link href='/company/delete-job'>Hapus</Link>
         </Button>
         <Button
-          onClick={handleDetail}
           variant='outline'
           className='w-24 bg-blue-400 text-white hover:bg-blue-300'
         >
-          Detail
+          <Link href={'/company/job-detail'}>Detail</Link>
         </Button>
       </CardFooter>
     </Card>

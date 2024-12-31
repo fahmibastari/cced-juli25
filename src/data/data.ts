@@ -19,3 +19,12 @@ export const getArticles = async () => {
   })
   return news
 }
+
+export const getJobById = async (companyId: string) => {
+  const jobs = await prisma.job.findMany({
+    where: {
+      companyId: companyId,
+    },
+  })
+  return jobs
+}

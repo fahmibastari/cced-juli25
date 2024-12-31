@@ -72,7 +72,7 @@ const AddJob = () => {
   }
 
   const jobTypes = ['Full-time', 'Part-time', 'Contract', 'Internship']
-  const jobStatus = ['Draft', 'Published', 'Closed']
+  const jobStatus = ['Aktif', 'NonAktif', 'Selesai', 'Draft']
 
   return (
     <Card className='mx-auto my-8 w-full max-w-3xl bg-white shadow-lg'>
