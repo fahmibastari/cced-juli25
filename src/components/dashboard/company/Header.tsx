@@ -22,8 +22,8 @@ const Header = ({ companyName, industri }: HeaderProps) => {
           </Avatar>
         </Link>
         <div>
-          <h2 className='text-lg font-bold'>{companyName}</h2>
-          <p className='text-sm'>{industri}</p>
+          <h2 className='text-lg font-bold'>{companyName || 'Perusahaan'}</h2>
+          <p className='text-sm'>{industri || 'Industri'}</p>
         </div>
       </div>
       <div className='flex items-center gap-4'>

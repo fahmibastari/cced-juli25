@@ -1,12 +1,11 @@
-'use client'
-
+import RoleGate from '@/components/auth/role-gate'
 import AddJob from '@/components/company/add-job-form'
-import useCurrentUser from '@/hooks/useCurrentUser'
+import { Role } from '@prisma/client'
 
-export default function Page() {
-  const user = useCurrentUser()
-  if (user?.role !== 'COMPANY') {
-    return <div>You dont have a permission!</div>
-  }
-  return <AddJob />
+export default async function Page() {
+  return (
+    <RoleGate accessRole={Role.COMPANY}>
+      <AddJob />
+    </RoleGate>
+  )
 }

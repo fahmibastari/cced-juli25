@@ -1,13 +1,16 @@
 'use client'
 
-import useCurrentUser from '@/hooks/useCurrentUser'
 import DataNotFound from './DataNotFound'
 import JobCard from './JobCard'
 import NavMenu from './NavMenu'
 import Search from './Search'
+import { ExtendedUser } from '@/next-auth'
 
-const DashboardCompany = () => {
-  const user = useCurrentUser()
+interface DashboardCompanyProps {
+  user: ExtendedUser
+}
+
+const DashboardCompany = ({ user }: DashboardCompanyProps) => {
   const handleEdit = () => {
     console.log('Edit clicked')
   }

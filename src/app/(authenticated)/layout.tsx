@@ -1,40 +1,25 @@
-'use client'
-
 import Header from '@/components/dashboard/company/Header'
-import { useEffect, useState } from 'react'
-import useCurrentUser from '@/hooks/useCurrentUser'
+import { getUserDetailCompany } from '@/data/userRole'
+import { currentUser } from '@/lib/authenticate'
 
-export default function AuthenticatedLayout({
+export default async function AuthenticatedLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const user = useCurrentUser()
-  const [detailsUser, setDetailsUser] = useState<{
-    companyName: string
-    industry: string
-  } | null>(null)
+  const user = await currentUser()
+  const detailsUser = await getUserDetailCompany(user?.id || '')
 
-  useEffect(() => {
-    const fetchDetailUser = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3000/api/public/user/get-user-type?id=${user?.id}`
-        )
-        if (!response.ok) {
-          throw new Error('Failed to fetch news')
-        }
-        const data = await response.json()
-        setDetailsUser(data)
-      } catch (error) {
-        console.error('Error fetching news:', error)
-      }
-    }
+  if (!detailsUser) {
+    return (
+      <div>
+        {/* <h1>ini layout guest</h1> */}
+        {children}
+      </div>
+    )
+  }
 
-    fetchDetailUser()
-  }, [user])
-
-  if (user?.role === 'ADMIN') {
+  if (detailsUser.role === 'ADMIN') {
     return (
       <div>
         {/* <h1>ini layout admin</h1> */}
@@ -43,13 +28,13 @@ export default function AuthenticatedLayout({
     )
   }
 
-  if (user?.role === 'COMPANY') {
+  if (detailsUser.role === 'COMPANY') {
     return (
       <section>
         {detailsUser && (
           <Header
-            companyName={detailsUser.companyName}
-            industri={detailsUser.industry}
+            companyName={detailsUser.companyName || ''}
+            industri={detailsUser.industry || ''}
           />
         )}
         {children}
@@ -57,7 +42,7 @@ export default function AuthenticatedLayout({
     )
   }
 
-  if (user?.role === 'MEMBER') {
+  if (detailsUser.role === 'MEMBER') {
     return (
       <div>
         {/* <h1>ini layout member</h1> */}
