@@ -13,22 +13,24 @@ import Link from 'next/link'
 
 interface JobCardProps {
   title: string
+  status: string
   location: string
   createdAt: string
-  totalApplicants: number
-  inReview: number
-  inCommunication: number
-  notSuitable: number
+  jobApplication: JobApplication[]
+  handleDelete: () => void
+}
+
+interface JobApplication {
+  notes: string
 }
 
 const JobCard = ({
   title,
+  status,
   location,
   createdAt,
-  totalApplicants,
-  inReview,
-  inCommunication,
-  notSuitable,
+  jobApplication,
+  handleDelete,
 }: JobCardProps) => {
   return (
     <Card>
@@ -36,7 +38,18 @@ const JobCard = ({
         <CardTitle>
           <div className='flex items-center justify-between'>
             <h3>{title}</h3>
-            <Badge className='bg-green-500'>Aktif</Badge>
+            {status === 'aktif' && (
+              <Badge className='bg-green-500'>{status}</Badge>
+            )}
+            {status === 'nonaktif' && (
+              <Badge className='bg-red-500'>{status}</Badge>
+            )}
+            {status === 'selesai' && (
+              <Badge className='bg-blue-500'>{status}</Badge>
+            )}
+            {status === 'draft' && (
+              <Badge className='bg-slate-500'>{status}</Badge>
+            )}
           </div>
         </CardTitle>
         <CardDescription className='flex flex-col pt-2'>
@@ -48,20 +61,35 @@ const JobCard = ({
       </CardHeader>
       <CardContent className='m-4 flex justify-between border border-gray-200 p-4'>
         <div className='flex flex-col px-4 text-center'>
-          <Label className='text-3xl font-bold'>{totalApplicants}</Label>
-          <Label className='text-sm font-medium'>Pelamar</Label>
+          <h1 className='text-3xl font-bold'>{jobApplication.length}</h1>
+          <p className='text-sm font-medium'>Pelamar</p>
         </div>
         <div className='flex flex-col px-4 text-center'>
-          <Label className='text-3xl font-bold'>{inReview}</Label>
-          <Label className='text-sm font-medium'>Seleksi Berkas</Label>
+          <h1 className='text-3xl font-bold'>
+            {
+              jobApplication.filter((app) => app.notes === 'Seleksi Berkas')
+                .length
+            }
+          </h1>
+          <p className='text-sm font-medium'>Seleksi Berkas</p>
         </div>
         <div className='flex flex-col px-4 text-center'>
-          <Label className='text-3xl font-bold'>{inCommunication}</Label>
-          <Label className='text-sm font-medium'>Dalam Komunikasi</Label>
+          <h1 className='text-3xl font-bold'>
+            {
+              jobApplication.filter((app) => app.notes === 'Dalam Komunikasi')
+                .length
+            }
+          </h1>
+          <p className='text-sm font-medium'>Dalam Komunikasi</p>
         </div>
         <div className='flex flex-col px-4 text-center'>
-          <Label className='text-3xl font-bold'>{notSuitable}</Label>
-          <Label className='text-sm font-medium'>Belum Sesuai</Label>
+          <h1 className='text-3xl font-bold'>
+            {
+              jobApplication.filter((app) => app.notes === 'Belum Sesuai')
+                .length
+            }
+          </h1>
+          <p className='text-sm font-medium'>Belum Sesuai</p>
         </div>
       </CardContent>
       <hr className='h-0.5 w-full' />
@@ -72,8 +100,8 @@ const JobCard = ({
         >
           <Link href='/company/edit-job'>Edit</Link>
         </Button>
-        <Button variant='destructive' className='w-24'>
-          <Link href='/company/delete-job'>Hapus</Link>
+        <Button variant='destructive' className='w-24' onClick={handleDelete}>
+          Hapus
         </Button>
         <Button
           variant='outline'

@@ -25,6 +25,14 @@ export const getJobById = async (companyId: string) => {
     where: {
       companyId: companyId,
     },
+    include: {
+      jobApplication: {
+        select: {
+          id: true,
+          notes: true,
+        },
+      },
+    },
   })
   return jobs
 }

@@ -1,16 +1,27 @@
-import { getJobById } from '@/data/data'
+'use client'
+
+import { useState } from 'react'
 import DataNotFound from './DataNotFound'
 import JobCard from './JobCard'
 // import NavMenu from './NavMenu'
 import Search from './Search'
 import { ExtendedUser } from '@/next-auth'
+import { Job } from '@prisma/client'
+import { deleteJob } from '@/actions/company-action'
 
 interface DashboardCompanyProps {
   user: ExtendedUser
+  jobs: Job[]
 }
 
-const DashboardCompany = async ({ user }: DashboardCompanyProps) => {
-  const jobs = await getJobById(user.id || '')
+const DashboardCompany = ({ user, jobs }: DashboardCompanyProps) => {
+  const [jobsData, setJobsData] = useState<Job[]>(jobs)
+  console.log(user)
+  const handleClickDelete = async (id: string) => {
+    setJobsData(jobsData.filter((job) => job.id !== id))
+    deleteJob(id)
+  }
+
   return (
     <div>
       <hr className='h-1 w-full' />
@@ -24,18 +35,18 @@ const DashboardCompany = async ({ user }: DashboardCompanyProps) => {
         handleClickDraft={handleClickDraft}
       /> */}
       <div className='container mx-auto p-4'>
-        {jobs ? (
+        {jobsData.length > 0 ? (
           <div className='flex flex-wrap justify-center gap-4'>
-            {jobs.map((job) => (
+            {jobsData.map((job) => (
               <JobCard
                 key={job.id}
                 title={job.title}
+                status={job.status || ''}
                 location={job.location || ''}
                 createdAt={job.createdAt.toLocaleDateString()}
-                totalApplicants={2}
-                inReview={2}
-                inCommunication={2}
-                notSuitable={2}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                jobApplication={(job as any).jobApplication || []}
+                handleDelete={() => handleClickDelete(job.id)}
               />
             ))}
           </div>

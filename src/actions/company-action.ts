@@ -59,3 +59,16 @@ export async function addNewJob(formData: z.infer<typeof JobSchema>) {
     }
   }
 }
+
+export async function deleteJob(id: string) {
+  try {
+    await prisma.job.delete({ where: { id } })
+    return {
+      success: 'Job successfully deleted!',
+    }
+  } catch {
+    return {
+      error: 'An error occurred while deleting the job.',
+    }
+  }
+}
