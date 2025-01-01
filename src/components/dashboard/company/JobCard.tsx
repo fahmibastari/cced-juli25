@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 
 interface JobCardProps {
+  id: string
   title: string
   status: string
   location: string
@@ -25,6 +26,7 @@ interface JobApplication {
 }
 
 const JobCard = ({
+  id,
   title,
   status,
   location,
@@ -39,16 +41,24 @@ const JobCard = ({
           <div className='flex items-center justify-between'>
             <h3>{title}</h3>
             {status === 'aktif' && (
-              <Badge className='bg-green-500'>{status}</Badge>
+              <Badge className='bg-green-500 hover:bg-green-700 cursor-default'>
+                {status}
+              </Badge>
             )}
             {status === 'nonaktif' && (
-              <Badge className='bg-red-500'>{status}</Badge>
+              <Badge className='bg-red-500 hover:bg-red-700 cursor-default'>
+                {status}
+              </Badge>
             )}
             {status === 'selesai' && (
-              <Badge className='bg-blue-500'>{status}</Badge>
+              <Badge className='bg-blue-500 hover:bg-blue-700 cursor-default'>
+                {status}
+              </Badge>
             )}
             {status === 'draft' && (
-              <Badge className='bg-slate-500'>{status}</Badge>
+              <Badge className='bg-slate-500 hover:bg-slate-700 cursor-default'>
+                {status}
+              </Badge>
             )}
           </div>
         </CardTitle>
@@ -98,7 +108,7 @@ const JobCard = ({
           variant='secondary'
           className='w-24 bg-green-500 text-white hover:bg-green-400'
         >
-          <Link href='/company/edit-job'>Edit</Link>
+          <Link href={`/company/edit-job?token=${id}`}>Edit</Link>
         </Button>
         <Button variant='destructive' className='w-24' onClick={handleDelete}>
           Hapus
@@ -107,7 +117,7 @@ const JobCard = ({
           variant='outline'
           className='w-24 bg-blue-400 text-white hover:bg-blue-300'
         >
-          <Link href={'/company/job-detail'}>Detail</Link>
+          <Link href={`/company/detail-job?token=${id}`}>Detail</Link>
         </Button>
       </CardFooter>
     </Card>

@@ -25,6 +25,9 @@ export const getJobById = async (companyId: string) => {
     where: {
       companyId: companyId,
     },
+    orderBy: {
+      updatedAt: 'desc',
+    },
     include: {
       jobApplication: {
         select: {

@@ -72,3 +72,71 @@ export async function deleteJob(id: string) {
     }
   }
 }
+
+export async function updateJob(
+  formData: z.infer<typeof JobSchema>,
+  id: string
+) {
+  try {
+    const user = await currentDetailUserCompany()
+
+    if (!user?.id) {
+      return {
+        error: 'User is not authenticated or does not belong to a company!',
+      }
+    }
+
+    const validatedFields = JobSchema.safeParse(formData)
+
+    if (!validatedFields.success) {
+      return {
+        error: 'Invalid fields!',
+        details: validatedFields.error.errors,
+      }
+    }
+
+    const {
+      title,
+      description,
+      requirements,
+      skills,
+      location,
+      status,
+      type,
+      deadline,
+    } = validatedFields.data
+
+    const newJob = await prisma.job.update({
+      where: { id: id },
+      data: {
+        companyId: user.id,
+        title,
+        description: description ?? '',
+        requirements,
+        skills,
+        location: location ?? null,
+        status: status ?? null,
+        type: type ?? null,
+        deadline: deadline ?? null,
+      },
+    })
+
+    return {
+      success: 'Job successfully updated!',
+      data: newJob,
+    }
+  } catch {
+    return {
+      error: 'An error occurred while updating the job.',
+    }
+  }
+}
+
+export async function getJob(id: string) {
+  try {
+    const data = await prisma.job.findUnique({ where: { id: id } })
+    return { data }
+  } catch {
+    console.error('An error occurred while fetching the job.')
+  }
+}
