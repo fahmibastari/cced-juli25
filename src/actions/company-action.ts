@@ -134,9 +134,15 @@ export async function updateJob(
 
 export async function getJob(id: string) {
   try {
-    const data = await prisma.job.findUnique({ where: { id: id } })
+    const data = await prisma.job.findUnique({
+      where: { id: id },
+      include: {
+        jobApplication: true,
+        company: true,
+      },
+    })
     return { data }
-  } catch {
-    console.error('An error occurred while fetching the job.')
+  } catch (error) {
+    console.error('An error occurred while fetching the job:', error)
   }
 }
