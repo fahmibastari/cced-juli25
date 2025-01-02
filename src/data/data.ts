@@ -39,3 +39,23 @@ export const getJobById = async (companyId: string) => {
   })
   return jobs
 }
+
+export async function getJobs() {
+  try {
+    const data = await prisma.job.findMany({
+      where: {
+        status: 'aktif',
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        jobApplication: true,
+        company: true,
+      },
+    })
+    return { data }
+  } catch (error) {
+    console.error('An error occurred while fetching the job:', error)
+  }
+}

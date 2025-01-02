@@ -1,93 +1,120 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Bookmark, Share2 } from 'lucide-react'
-import Image from 'next/image'
-import { useState } from 'react'
-
-interface Job {
-  title: string
-  location: string
-  isBookmarked?: boolean
-  image?: string
-  requirements?: string[]
-  skills?: string[]
-  description?: string
-}
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Share2 } from 'lucide-react'
 
 interface JobDetailProps {
-  job: Job
+  detailData: any
   onClickQuickApply: () => void
 }
 
-const JobDetail = ({ job, onClickQuickApply }: JobDetailProps) => {
-  const [isBookmarked, setIsBookmarked] = useState(job.isBookmarked || false)
-
-  const handleBookmarkClick = () => {
-    setIsBookmarked(!isBookmarked)
-  }
-
+const JobDetail = ({ detailData, onClickQuickApply }: JobDetailProps) => {
   return (
-    <div className='space-y-6 rounded-md border border-gray-200 p-6'>
-      <div className='flex items-center justify-between'>
-        <h2 className='text-2xl font-bold'>{job.title}</h2>
-        <div className='space-x-2'>
-          <Button variant='ghost' size='icon'>
-            <Share2 className='h-4 w-4' />
-          </Button>
-          <Button variant='ghost' size='icon' onClick={handleBookmarkClick}>
-            <Bookmark
-              className={`h-5 w-5 ${isBookmarked ? 'text-blue-500' : 'text-gray-500'}`}
-              fill={isBookmarked ? 'currentColor' : 'none'}
-            />
-          </Button>
-          <Button onClick={onClickQuickApply}>Quick Apply</Button>
+    <Card className='mx-auto w-full max-w-3xl rounded-lg bg-white shadow-xl'>
+      <CardHeader className='text-center space-y-3 pb-8 border-b'>
+        <CardTitle>
+          <div className='flex items-center justify-between'>
+            <div className='flex flex-col items-start'>
+              <h2 className='text-5xl font-bold text-green-800'>
+                {detailData?.title}
+              </h2>
+              <p className='text-sm text-gray-500 pt-3'>
+                Dibuat oleh : {detailData?.company?.companyName || 'Perusahaan'}
+              </p>
+            </div>
+            <div className='space-x-2'>
+              <Button variant='ghost' size='icon'>
+                <Share2 className='h-4 w-4' />
+              </Button>
+              <Button onClick={onClickQuickApply}>Quick Apply</Button>
+            </div>
+          </div>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className='pt-8'>
+        <div className='space-y-6 rounded-lg border border-gray-200 bg-gray-50 p-6'>
+          <div className='space-y-6'>
+            <section>
+              <h3 className='mb-3 text-lg font-semibold text-gray-800'>
+                Deskripsi Pekerjaan
+              </h3>
+              <p className='text-gray-600'>
+                {detailData?.description || 'Deskripsi'}
+              </p>
+            </section>
+
+            <section>
+              <h3 className='mb-3 text-lg font-semibold text-gray-800'>
+                Gaji Pekerjaan
+              </h3>
+              <p className='text-gray-600'>
+                {detailData?.salary || 'Deskripsi'}
+              </p>
+            </section>
+
+            <section>
+              <h3 className='mb-3 text-lg font-semibold text-gray-800'>
+                Lokasi
+              </h3>
+              <p className='text-gray-600'>
+                {detailData?.location || 'Lokasi'}
+              </p>
+            </section>
+
+            <section>
+              <h3 className='mb-3 text-lg font-semibold text-gray-800'>
+                Persyaratan
+              </h3>
+              <ul className='list-disc space-y-2 pl-6 text-gray-700'>
+                {detailData?.requirements ? (
+                  detailData?.requirements.map(
+                    (item: string, index: number) => <li key={index}>{item}</li>
+                  )
+                ) : (
+                  <p>Tidak ada persyaratan</p>
+                )}
+              </ul>
+            </section>
+
+            <section>
+              <h3 className='mb-3 text-lg font-semibold text-gray-800'>
+                Skills
+              </h3>
+              <ul className='list-disc space-y-2 pl-6 text-gray-700'>
+                {detailData?.skills ? (
+                  detailData?.skills.map((item: string, index: number) => (
+                    <li key={index}>{item}</li>
+                  ))
+                ) : (
+                  <p>Tidak ada skills</p>
+                )}
+              </ul>
+            </section>
+
+            <section>
+              <h3 className='mb-3 text-lg font-semibold text-gray-800'>
+                Deadline
+              </h3>
+              <p className='text-gray-600'>
+                {detailData?.deadline?.toLocaleDateString('id-ID') ||
+                  'Deadline'}
+              </p>
+            </section>
+
+            <section>
+              <h3 className='mb-3 text-lg font-semibold text-gray-800'>
+                Status
+              </h3>
+              <p className='text-gray-600'>
+                {detailData?.status || 'Tidak ada status'}
+              </p>
+            </section>
+          </div>
         </div>
-      </div>
-
-      <Image
-        src={
-          job.image ||
-          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80'
-        }
-        alt={job.title}
-        width={1920}
-        height={1080}
-        priority
-        className='h-96 w-full object-cover'
-      />
-
-      <div className='space-y-4'>
-        {job.requirements && job.requirements.length > 0 && (
-          <section>
-            <h3 className='mb-2 font-semibold'>Persyaratan</h3>
-            <ul className='list-disc space-y-1 pl-5'>
-              {job.requirements.map((requirement, index) => (
-                <li key={index}>{requirement}</li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        {job.skills && job.skills.length > 0 && (
-          <section>
-            <h3 className='mb-2 font-semibold'>Skills</h3>
-            <ul className='list-disc space-y-1 pl-5'>
-              {job.skills.map((skill, index) => (
-                <li key={index}>{skill}</li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        {job.description && (
-          <section>
-            <h3 className='mb-2 font-semibold'>Deskripsi Pekerjaan</h3>
-            <p className='text-gray-600'>{job.description}</p>
-          </section>
-        )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }
 

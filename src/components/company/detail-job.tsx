@@ -55,6 +55,15 @@ const DetailJob = () => {
 
             <section>
               <h3 className='mb-3 text-lg font-semibold text-gray-800'>
+                Gaji Pekerjaan
+              </h3>
+              <p className='text-gray-600'>
+                {detailData?.salary || 'Deskripsi'}
+              </p>
+            </section>
+
+            <section>
+              <h3 className='mb-3 text-lg font-semibold text-gray-800'>
                 Lokasi
               </h3>
               <p className='text-gray-600'>

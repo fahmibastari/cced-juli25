@@ -4,18 +4,15 @@ import { useState } from 'react'
 import DataNotFound from './DataNotFound'
 import JobCard from './JobCard'
 import Search from './Search'
-import { ExtendedUser } from '@/next-auth'
 import { Job } from '@prisma/client'
 import { deleteJob } from '@/actions/company-action'
 import NavMenu from './NavMenu'
 
 interface DashboardCompanyProps {
-  user: ExtendedUser
   jobs: Job[]
 }
 
-const DashboardCompany = ({ user, jobs }: DashboardCompanyProps) => {
-  console.log(user)
+const DashboardCompany = ({ jobs }: DashboardCompanyProps) => {
   const [jobsData, setJobsData] = useState<Job[]>(jobs)
   const [filter, setFilter] = useState<string>('all')
 
