@@ -105,6 +105,7 @@ export const JobSchema = z.object({
   status: z.string().nullable().optional(),
   skills: z.array(z.string()).min(1, 'At least one skill is required'),
   type: z.string().nullable().optional(),
+  salary: z.string().nullable().optional(),
 })
 
 // Validasi untuk model JobApplication

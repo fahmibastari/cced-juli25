@@ -47,6 +47,7 @@ const AddJob = () => {
     defaultValues: {
       title: '',
       description: '',
+      salary: '',
       requirements: [],
       location: '',
       deadline: new Date(),
@@ -119,6 +120,27 @@ const AddJob = () => {
                         {...field}
                         disabled={form.formState.isSubmitting}
                         placeholder='Enter an location for the job'
+                        className='border-2 border-gray-100 shadow-sm'
+                        type='text'
+                        value={field.value ?? ''}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='salary'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Salary</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={form.formState.isSubmitting}
+                        placeholder='Enter an range salary for the job'
                         className='border-2 border-gray-100 shadow-sm'
                         type='text'
                         value={field.value ?? ''}

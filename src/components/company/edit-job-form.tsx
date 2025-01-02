@@ -49,6 +49,7 @@ const EditJob = () => {
     defaultValues: {
       title: '',
       description: '',
+      salary: '',
       requirements: [],
       location: '',
       deadline: new Date(),
@@ -66,6 +67,7 @@ const EditJob = () => {
           const job = response.data
           form.reset({
             title: job.title || '',
+            salary: job.salary || '',
             description: job.description || '',
             requirements: job.requirements || [],
             location: job.location || '',
@@ -133,6 +135,27 @@ const EditJob = () => {
                         placeholder='Enter an title for the job'
                         className='border-2 border-gray-100 shadow-sm'
                         type='text'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='salary'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Salary</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={form.formState.isSubmitting}
+                        placeholder='Enter an range salary for the job'
+                        className='border-2 border-gray-100 shadow-sm'
+                        type='text'
+                        value={field.value ?? ''}
                       />
                     </FormControl>
                     <FormMessage />

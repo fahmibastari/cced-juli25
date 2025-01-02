@@ -32,6 +32,7 @@ export async function addNewJob(formData: z.infer<typeof JobSchema>) {
       location,
       status,
       type,
+      salary,
       deadline,
     } = validatedFields.data
 
@@ -39,6 +40,7 @@ export async function addNewJob(formData: z.infer<typeof JobSchema>) {
       data: {
         companyId: user.id,
         title,
+        salary: salary ?? '',
         description: description ?? '',
         requirements,
         skills,
@@ -98,6 +100,7 @@ export async function updateJob(
     const {
       title,
       description,
+      salary,
       requirements,
       skills,
       location,
@@ -111,6 +114,7 @@ export async function updateJob(
       data: {
         companyId: user.id,
         title,
+        salary: salary ?? '',
         description: description ?? '',
         requirements,
         skills,
