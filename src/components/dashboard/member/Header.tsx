@@ -3,13 +3,13 @@ import { Button } from '@/components/ui/button'
 import { User } from 'lucide-react'
 import Link from 'next/link'
 
-interface HeaderCompanyProps {
-  companyName: string
-  industri: string
-  // logo: string
+interface HeaderMemberProps {
+  fullname: string
+  membertype: string
+  // img: string
 }
 
-const HeaderCompany = ({ companyName, industri }: HeaderCompanyProps) => {
+const HeaderMember = ({ fullname, membertype }: HeaderMemberProps) => {
   return (
     <div className='flex items-center justify-between bg-gray-100 p-4'>
       <div className='flex items-center gap-4'>
@@ -22,19 +22,17 @@ const HeaderCompany = ({ companyName, industri }: HeaderCompanyProps) => {
           </Avatar>
         </Link>
         <div>
-          <h2 className='text-lg font-bold'>{companyName || 'Perusahaan'}</h2>
-          <p className='text-sm'>{industri || 'Industri'}</p>
+          <h2 className='text-lg font-bold'>{fullname || 'Fullname'}</h2>
+          <p className='text-sm'>{membertype.toLowerCase() || 'typeMember'}</p>
         </div>
       </div>
       <div className='flex items-center gap-4'>
         <Button variant='outline'>
-          <Link href='company/edit-profile-company'>
-            Edit Profil Perusahaan
-          </Link>
+          <Link href='/member/edit-profile-member'>Edit Profil Anda</Link>
         </Button>
       </div>
     </div>
   )
 }
 
-export default HeaderCompany
+export default HeaderMember

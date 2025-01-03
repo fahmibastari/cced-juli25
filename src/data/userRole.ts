@@ -73,3 +73,23 @@ export const getUserDetailCompany = async (id: string) => {
     return null
   }
 }
+
+export const getUserDetailMember = async (id: string) => {
+  try {
+    const user = await prisma.user.findUnique({ where: { id } })
+
+    if (!user) {
+      return null
+    }
+
+    const userDetail = await prisma.member.findUnique({
+      where: { userId: user.id },
+    })
+    return {
+      ...user,
+      ...userDetail,
+    }
+  } catch {
+    return null
+  }
+}

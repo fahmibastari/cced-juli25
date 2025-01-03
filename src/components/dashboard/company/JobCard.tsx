@@ -77,7 +77,7 @@ const JobCard = ({
         <div className='flex flex-col px-4 text-center'>
           <h1 className='text-3xl font-bold'>
             {
-              jobApplication.filter((app) => app.notes === 'Seleksi Berkas')
+              jobApplication.filter((app) => app.notes === 'seleksi berkas')
                 .length
             }
           </h1>
@@ -86,7 +86,7 @@ const JobCard = ({
         <div className='flex flex-col px-4 text-center'>
           <h1 className='text-3xl font-bold'>
             {
-              jobApplication.filter((app) => app.notes === 'Dalam Komunikasi')
+              jobApplication.filter((app) => app.notes === 'dalam komunikasi')
                 .length
             }
           </h1>
@@ -95,7 +95,7 @@ const JobCard = ({
         <div className='flex flex-col px-4 text-center'>
           <h1 className='text-3xl font-bold'>
             {
-              jobApplication.filter((app) => app.notes === 'Belum Sesuai')
+              jobApplication.filter((app) => app.notes === 'belum sesuai')
                 .length
             }
           </h1>

@@ -112,7 +112,7 @@ const EditJob = () => {
     <Card className='mx-auto my-8 w-full max-w-3xl bg-white shadow-lg'>
       <CardHeader className='text-center space-y-2 pb-8 border-b'>
         <CardTitle className='text-3xl font-bold text-green-700'>
-          Create New Job Posting
+          Edit Job Posting
         </CardTitle>
         <CardDescription className='text-gray-600'>
           Fill in the details below to create a new job opportunity

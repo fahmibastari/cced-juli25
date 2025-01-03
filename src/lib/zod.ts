@@ -110,8 +110,9 @@ export const JobSchema = z.object({
 
 // Validasi untuk model JobApplication
 export const JobApplicationSchema = z.object({
-  jobId: z.string().uuid(), // ID dari job harus valid
-  memberId: z.string().uuid(), // ID dari member harus valid
-  status: z.string().nullable().optional(),
   notes: z.string().nullable().optional(),
+  resumeMember: z
+    .string()
+    .min(1, 'Resume is required')
+    .max(5000, 'Resume cannot exceed 5000 characters'),
 })

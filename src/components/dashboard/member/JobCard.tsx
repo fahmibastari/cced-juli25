@@ -4,26 +4,29 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { User } from 'lucide-react'
+import Link from 'next/link'
 
 interface JobCardProps {
+  jobId: string
+  userId: string
   companyLogo?: string
   companyName: string
   title: string
   location: string
   deadline: Date
   salary?: string
-  onClickQuickApply: () => void
   onSelectJob: () => void
 }
 
 const JobCard = ({
+  jobId,
+  userId,
   companyLogo,
   companyName,
   title,
   location,
   deadline,
   salary,
-  onClickQuickApply,
   onSelectJob,
 }: JobCardProps) => {
   return (
@@ -55,14 +58,10 @@ const JobCard = ({
             </p>
             {salary && <p className='text-sm font-medium'>{salary}</p>}
           </div>
-          <Button
-            onClick={(e) => {
-              e.stopPropagation()
-              onClickQuickApply()
-            }}
-            size='sm'
-          >
-            Apply
+          <Button>
+            <Link href={`/member/apply-job?token=${jobId}&user=${userId}`}>
+              apply
+            </Link>
           </Button>
         </div>
       </CardContent>

@@ -12,7 +12,7 @@ interface JobDetailProps {
 
 const JobDetail = ({ detailData, onClickQuickApply }: JobDetailProps) => {
   return (
-    <Card className='mx-auto w-full max-w-3xl rounded-lg bg-white shadow-xl'>
+    <Card className='mx-auto w-full max-w-3xl h-full rounded-lg bg-white shadow-xl'>
       <CardHeader className='text-center space-y-3 pb-8 border-b'>
         <CardTitle>
           <div className='flex items-center justify-between'>

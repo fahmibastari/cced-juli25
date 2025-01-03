@@ -18,6 +18,6 @@ export default async function Page() {
 
   if (user?.role === Role.MEMBER) {
     const objData = await getJobs()
-    return <DashboardMember jobs={objData?.data} />
+    return <DashboardMember jobs={objData?.data} user={user} />
   }
 }

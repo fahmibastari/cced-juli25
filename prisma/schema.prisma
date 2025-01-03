@@ -216,12 +216,13 @@ model Job {
 }
 
 model JobApplication {
-  id        String   @id @default(uuid())
-  jobId     String
-  memberId  String
-  notes     String?
-  appliedAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  id           String   @id @default(uuid())
+  jobId        String
+  memberId     String
+  notes        String?
+  resumeMember String
+  appliedAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
 
   job    Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
   member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)

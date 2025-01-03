@@ -1,5 +1,6 @@
-import Header from '@/components/dashboard/company/Header'
-import { getUserDetailCompany } from '@/data/userRole'
+import HeaderCompany from '@/components/dashboard/company/Header'
+import HeaderMember from '@/components/dashboard/member/Header'
+import { getUserDetailCompany, getUserDetailMember } from '@/data/userRole'
 import { currentUser } from '@/lib/authenticate'
 
 export default async function AuthenticatedLayout({
@@ -8,9 +9,8 @@ export default async function AuthenticatedLayout({
   children: React.ReactNode
 }) {
   const user = await currentUser()
-  const detailsUser = await getUserDetailCompany(user?.id || '')
 
-  if (!detailsUser) {
+  if (!user) {
     return (
       <div>
         {/* <h1>ini layout guest</h1> */}
@@ -19,7 +19,7 @@ export default async function AuthenticatedLayout({
     )
   }
 
-  if (detailsUser.role === 'ADMIN') {
+  if (user.role === 'ADMIN') {
     return (
       <div>
         {/* <h1>ini layout admin</h1> */}
@@ -28,23 +28,31 @@ export default async function AuthenticatedLayout({
     )
   }
 
-  if (detailsUser.role === 'COMPANY') {
+  if (user.role === 'COMPANY') {
+    const detailsUser = await getUserDetailCompany(user?.id || '')
     return (
-      <section>
+      <div>
         {detailsUser && (
-          <Header
+          <HeaderCompany
             companyName={detailsUser.companyName || ''}
             industri={detailsUser.industry || ''}
           />
         )}
         {children}
-      </section>
+      </div>
     )
   }
 
-  if (detailsUser.role === 'MEMBER') {
+  if (user.role === 'MEMBER') {
+    const detailsUser = await getUserDetailMember(user?.id || '')
     return (
       <div>
+        {detailsUser && (
+          <HeaderMember
+            fullname={detailsUser.fullname || ''}
+            membertype={detailsUser.memberType || ''}
+          />
+        )}
         {/* <h1>ini layout member</h1> */}
         {children}
       </div>
