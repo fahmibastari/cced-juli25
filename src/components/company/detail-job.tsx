@@ -9,10 +9,11 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/card'
-import { Button } from '../ui/button'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { getJob } from '@/actions/company-action'
+import { JobApplication } from '@prisma/client'
+import ListDetailAplicants from './list-detail-aplicants'
 
 const DetailJob = () => {
   const token = useSearchParams().get('token')
@@ -31,6 +32,7 @@ const DetailJob = () => {
     }
     fetchAndSetData()
   }, [token])
+  console.log(detailData)
   return (
     <Card className='mx-auto my-12 w-full max-w-3xl rounded-lg bg-white shadow-xl'>
       <CardHeader className='text-center space-y-3 pb-8 border-b'>
@@ -124,36 +126,20 @@ const DetailJob = () => {
               <h3 className='mb-3 text-lg font-semibold text-gray-800'>
                 Pelamar
               </h3>
-              <div className='flex items-center justify-between p-1 rounded-sm hover:bg-green-100'>
-                <p>Pelamar 1</p>
-                <Button
-                  variant='outline'
-                  size={'sm'}
-                  className='bg-green-50 hover:bg-green-300'
-                >
-                  <Link href='#'>Lihat</Link>
-                </Button>
-              </div>
-              <div className='flex items-center justify-between p-1 rounded-sm hover:bg-green-100'>
-                <p>Pelamar 2</p>
-                <Button
-                  variant='outline'
-                  size={'sm'}
-                  className='bg-green-50 hover:bg-green-300'
-                >
-                  <Link href='#'>Lihat</Link>
-                </Button>
-              </div>
-              <div className='flex items-center justify-between p-1 rounded-sm hover:bg-green-100'>
-                <p>Pelamar 3</p>
-                <Button
-                  variant='outline'
-                  size={'sm'}
-                  className='bg-green-50 hover:bg-green-300'
-                >
-                  <Link href='#'>Lihat</Link>
-                </Button>
-              </div>
+              {detailData?.jobApplication?.length > 0 ? (
+                detailData.jobApplication.map(
+                  (data: JobApplication, index: number) => (
+                    // todo
+                    <ListDetailAplicants
+                      key={data.id}
+                      data={data}
+                      index={index}
+                    />
+                  )
+                )
+              ) : (
+                <p>Tidak ada pelamar</p>
+              )}
             </section>
           </div>
         </div>

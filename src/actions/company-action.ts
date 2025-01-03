@@ -141,7 +141,15 @@ export async function getJob(id: string) {
     const data = await prisma.job.findUnique({
       where: { id: id },
       include: {
-        jobApplication: true,
+        jobApplication: {
+          include: {
+            member: {
+              include: {
+                user: true,
+              },
+            },
+          },
+        },
         company: true,
       },
     })

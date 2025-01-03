@@ -59,3 +59,12 @@ export async function getJobs() {
     console.error('An error occurred while fetching the job:', error)
   }
 }
+
+export async function getMemberById(id: string) {
+  try {
+    const member = await prisma.member.findUnique({ where: { id } })
+    return member
+  } catch {
+    return null
+  }
+}
