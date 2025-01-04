@@ -1,7 +1,7 @@
 'use server'
 
 import * as z from 'zod'
-import { JobSchema } from '../lib/zod'
+import { JobApplicationSchema, JobSchema } from '../lib/zod'
 import { currentDetailUserCompany } from '@/lib/authenticate'
 import prisma from '@/lib/prisma'
 
@@ -156,5 +156,55 @@ export async function getJob(id: string) {
     return { data }
   } catch (error) {
     console.error('An error occurred while fetching the job:', error)
+  }
+}
+
+export async function getDetailJobApplicant(id: string) {
+  try {
+    const data = await prisma.jobApplication.findUnique({
+      where: { id: id },
+      include: {
+        member: {
+          include: {
+            user: true,
+          },
+        },
+        job: {
+          include: {
+            company: true,
+          },
+        },
+      },
+    })
+    return { data }
+  } catch (error) {
+    console.error('An error occurred while fetching the job:', error)
+  }
+}
+
+export async function updateDetailJobApplicant(
+  formData: z.infer<typeof JobApplicationSchema>,
+  id: string
+) {
+  try {
+    const validatedFields = JobApplicationSchema.safeParse(formData)
+
+    if (!validatedFields.success) {
+      return {
+        error: 'Invalid fields!',
+        details: validatedFields.error.errors,
+      }
+    }
+    const { data } = validatedFields
+
+    await prisma.jobApplication.update({
+      where: { id: id },
+      data: {
+        notes: data.notes,
+      },
+    })
+    return { success: 'Job successfully updated!', data: data.notes }
+  } catch {
+    return { error: 'An error occurred while updating the job.' }
   }
 }

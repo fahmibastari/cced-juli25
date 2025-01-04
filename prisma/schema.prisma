@@ -119,8 +119,8 @@ model Member {
   birthDate  DateTime?
   gender     Gender?
   about      String?
-  skills     Json?
-  interests  Json?
+  skills     String[]
+  interests  String[]
   resume     String?
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
