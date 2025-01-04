@@ -10,6 +10,7 @@ import {
   assessmentPrefix,
   aboutPrefix,
   apiPublicPrefix,
+  adminRoutes,
 } from './routes'
 
 const { auth } = NextAuth(authConfig)
@@ -17,6 +18,7 @@ const { auth } = NextAuth(authConfig)
 export default auth((req) => {
   const { nextUrl } = req
   const isLoggedIn = !!req.auth
+  const { pathname } = req.nextUrl
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
   const isApiPublicRoute = nextUrl.pathname.startsWith(apiPublicPrefix)
@@ -26,6 +28,12 @@ export default auth((req) => {
   const iskegiatanRoute = nextUrl.pathname.startsWith(kegiatanPrefix)
   const isAssessmentRoute = nextUrl.pathname.startsWith(assessmentPrefix)
   const isAboutRoute = nextUrl.pathname.startsWith(aboutPrefix)
+
+  // Allow spesific admin
+  // Izinkan hanya jika rute cocok dengan `adminRoutes`
+  if (pathname === adminRoutes) {
+    return
+  }
 
   // Allow blog routes
   if (isBlogRoute) {

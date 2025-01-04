@@ -93,3 +93,10 @@ export const getUserDetailMember = async (id: string) => {
     return null
   }
 }
+
+export const isValidTokenAdmin = async (value: string) => {
+  if (value !== process.env.ADMIN_KEY) {
+    return false
+  }
+  return true
+}

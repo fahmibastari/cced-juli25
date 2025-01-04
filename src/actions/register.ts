@@ -3,7 +3,7 @@
 
 import prisma from '@/lib/prisma'
 import { saveFile } from '@/lib/file-handler'
-import { companySchema, memberSchema } from '@/lib/zod'
+import { companySchema, memberSchema, userSchema } from '@/lib/zod'
 import bcrypt from 'bcryptjs'
 import { generateVerificationToken } from '@/lib/tokens'
 import { sendVerificationEmail } from '@/lib/mail'
@@ -127,5 +127,43 @@ export const registerCompany = async (value: z.infer<typeof companySchema>) => {
     success: true,
     message: 'Account created successfully Please Verifiy your email',
     role,
+  }
+}
+
+export const registerAdmin = async (value: z.infer<typeof userSchema>) => {
+  const validatedFields = userSchema.safeParse(value)
+  if (!validatedFields.success) {
+    return { error: 'Please fill all the fields' }
+  }
+
+  const { data } = validatedFields
+  const { username, fullname, email, password, role } = data
+
+  const emailExists = await getUserByEmail(email)
+  if (emailExists) {
+    return { error: 'Email already exists' }
+  }
+  // Hash password
+  const hashedPassword = await bcrypt.hash(password, 10)
+  try {
+    // Create user
+    await prisma.user.create({
+      data: {
+        username,
+        fullname,
+        email,
+        password: hashedPassword,
+        emailVerified: new Date(Date.now()),
+        role: role as Role,
+      },
+    })
+
+    return {
+      success: 'Account created successfully!',
+    }
+  } catch {
+    return {
+      error: 'Something went wrong',
+    }
   }
 }
