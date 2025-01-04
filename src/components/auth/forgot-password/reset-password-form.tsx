@@ -38,7 +38,6 @@ const ResetPasswordForm = () => {
   const onSubmitForm = (data: z.infer<typeof resetPasswordSchema>) => {
     setError('')
     setSuccess('')
-    console.log(data)
     startTransition(() => {
       changePassword(data, token)
         .then((data) => {

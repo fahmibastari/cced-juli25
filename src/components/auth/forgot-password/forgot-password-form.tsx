@@ -35,7 +35,6 @@ const ForgotPasswordForm = () => {
   const onSubmitForm = (data: z.infer<typeof forgotPasswordSchema>) => {
     setError('')
     setSuccess('')
-    console.log(data)
     startTransition(() => {
       reset(data)
         .then((data) => {

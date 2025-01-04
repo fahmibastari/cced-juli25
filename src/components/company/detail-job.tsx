@@ -32,7 +32,6 @@ const DetailJob = () => {
     }
     fetchAndSetData()
   }, [token])
-  console.log(detailData)
   return (
     <Card className='mx-auto my-12 w-full max-w-3xl rounded-lg bg-white shadow-xl'>
       <CardHeader className='text-center space-y-3 pb-8 border-b'>

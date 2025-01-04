@@ -67,7 +67,6 @@ const AddJob = () => {
         setSuccessMessage(data?.success ?? '')
         setErrorMessage(data?.error ?? '')
       })
-      console.log(data)
       setIsPending(false)
     })
   }
