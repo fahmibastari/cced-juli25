@@ -85,3 +85,32 @@ export const applyJob = async (
     }
   }
 }
+
+export const getDetailUserMemberFull = async (id: string) => {
+  try {
+    const data = await prisma.user.findUnique({
+      where: { id },
+      include: {
+        member: {
+          include: {
+            experience: true,
+            education: true,
+            assessment: true,
+            jobApplication: {
+              include: {
+                job: {
+                  include: {
+                    company: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    })
+    return data
+  } catch {
+    return null
+  }
+}
