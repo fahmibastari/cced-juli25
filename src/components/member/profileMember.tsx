@@ -60,7 +60,9 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
           </div>
           <div className='flex items-center gap-3 mb-2'>
             <span className='text-gray-900'>Role:</span>
-            <span className='text-gray-600'>{data.role || '-'}</span>
+            <span className='text-gray-600'>
+              {data.role.toLowerCase() || '-'}
+            </span>
           </div>
           <div className='flex items-center gap-3 mb-2'>
             <span className='text-gray-900'>Status:</span>

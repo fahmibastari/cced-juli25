@@ -1,13 +1,25 @@
-import { FormSuccess } from '@/components/auth/form-succsess'
+import { getDetailUserCompanyFull } from '@/actions/company-action'
+import { FormError } from '@/components/auth/form-error'
 import RoleGate from '@/components/auth/role-gate'
+import ProfileCompany from '@/components/company/profileCompany'
+import { currentUser } from '@/lib/authenticate'
 import { Role } from '@prisma/client'
 
-export default function Page() {
+export default async function Page() {
+  const user = await currentUser()
+  const detailUserCompany = await getDetailUserCompanyFull(user?.id || '')
+  if (!detailUserCompany) {
+    return (
+      <RoleGate accessRole={Role.COMPANY}>
+        <div className='w-full h-screen flex items-center justify-center'>
+          <FormError message='Something Went Wrong!' />
+        </div>
+      </RoleGate>
+    )
+  }
   return (
     <RoleGate accessRole={Role.COMPANY}>
-      <div className='w-full h-screen flex items-center justify-center'>
-        <FormSuccess message='You have an access to this page' />
-      </div>
+      <ProfileCompany data={detailUserCompany} />
     </RoleGate>
   )
 }

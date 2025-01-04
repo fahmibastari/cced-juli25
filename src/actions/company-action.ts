@@ -208,3 +208,29 @@ export async function updateDetailJobApplicant(
     return { error: 'An error occurred while updating the job.' }
   }
 }
+
+export const getDetailUserCompanyFull = async (id: string) => {
+  try {
+    const data = await prisma.user.findUnique({
+      where: { id },
+      include: {
+        company: {
+          include: {
+            job: {
+              include: {
+                jobApplication: {
+                  include: {
+                    member: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    })
+    return data
+  } catch {
+    return null
+  }
+}
