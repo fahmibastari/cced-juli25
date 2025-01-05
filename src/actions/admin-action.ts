@@ -89,3 +89,25 @@ export const deleteMember = async (id: string) => {
     }
   }
 }
+
+export const deleteNews = async (id: string) => {
+  try {
+    await prisma.news.delete({ where: { id } })
+    return { success: 'News successfully deleted!' }
+  } catch {
+    return {
+      error: 'An error occurred while deleting the news. Please try again.',
+    }
+  }
+}
+
+export const deleteArticle = async (id: string) => {
+  try {
+    await prisma.article.delete({ where: { id } })
+    return { success: 'Article successfully deleted!' }
+  } catch {
+    return {
+      error: 'An error occurred while deleting the article. Please try again.',
+    }
+  }
+}

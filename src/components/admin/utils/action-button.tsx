@@ -9,7 +9,7 @@ interface ButtonActionProps {
 
 const ButtonAction = ({ id, handleClickDelete }: ButtonActionProps) => {
   return (
-    <div className='flex gap-2 justify-end'>
+    <div className='flex gap-4 justify-end'>
       <Button onClick={handleClickDelete} variant={'destructive'} size={'sm'}>
         Hapus
       </Button>
