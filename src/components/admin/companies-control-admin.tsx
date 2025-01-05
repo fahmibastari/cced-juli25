@@ -71,29 +71,37 @@ const CompaniesControl = ({ companies }: CompaniesControlProps) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {companiesData.map((company: any) => (
-            <TableRow key={company.id}>
-              <TableCell className='font-medium'>
-                {company?.user?.email}
-              </TableCell>
-              <TableCell>{company?.companyName || '-'}</TableCell>
-              <TableCell>{company?.industry || '-'}</TableCell>
-              <TableCell>{company?.ownership || '-'}</TableCell>
-              <TableCell>{company?.phone || '-'}</TableCell>
-              <TableCell>{company?.companyPhone || '-'}</TableCell>
-              <TableCell>{company?.website || '-'}</TableCell>
-              <TableCell>{company?.address || '-'}</TableCell>
-              <TableCell>{company?.city || '-'}</TableCell>
-              <TableCell>{company?.isVerified ? 'Ya' : 'Tidak'}</TableCell>
-              <TableCell>{company.id}</TableCell>
-              <TableCell className='text-right'>
-                <ButtonAction
-                  id={company.id}
-                  handleClickDelete={() => handleClickDelete(company.id)}
-                />
+          {companiesData.length < 1 ? (
+            <TableRow>
+              <TableCell colSpan={12} className='h-24 text-center'>
+                <FormError message='Tidak ada pengguna' />
               </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            companiesData.map((company: any) => (
+              <TableRow key={company.id}>
+                <TableCell className='font-medium'>
+                  {company?.user?.email}
+                </TableCell>
+                <TableCell>{company?.companyName || '-'}</TableCell>
+                <TableCell>{company?.industry || '-'}</TableCell>
+                <TableCell>{company?.ownership || '-'}</TableCell>
+                <TableCell>{company?.phone || '-'}</TableCell>
+                <TableCell>{company?.companyPhone || '-'}</TableCell>
+                <TableCell>{company?.website || '-'}</TableCell>
+                <TableCell>{company?.address || '-'}</TableCell>
+                <TableCell>{company?.city || '-'}</TableCell>
+                <TableCell>{company?.isVerified ? 'Ya' : 'Tidak'}</TableCell>
+                <TableCell>{company.id}</TableCell>
+                <TableCell className='text-right'>
+                  <ButtonAction
+                    id={company.id}
+                    handleClickDelete={() => handleClickDelete(company.id)}
+                  />
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </main>

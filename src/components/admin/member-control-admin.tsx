@@ -68,30 +68,38 @@ const MembersControl = ({ members }: MembersControlProps) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {membersData.map((member: any) => (
-            <TableRow key={member.id}>
-              <TableCell className='font-medium'>
-                {member?.user?.email}
-              </TableCell>
-              <TableCell className='font-medium'>
-                {member?.user?.fullname}
-              </TableCell>
-              <TableCell>{member?.memberType || '-'}</TableCell>
-              <TableCell>{member?.nim || '-'}</TableCell>
-              <TableCell>{member?.phone || '-'}</TableCell>
-              <TableCell>{member?.address || '-'}</TableCell>
-              <TableCell>{member?.city || '-'}</TableCell>
-              <TableCell>{member?.birthDate || '-'}</TableCell>
-              <TableCell>{member?.gender || '-'}</TableCell>
-              <TableCell>{member.id}</TableCell>
-              <TableCell className='text-right'>
-                <ButtonAction
-                  id={member.id}
-                  handleClickDelete={() => handleClickDelete(member.id)}
-                />
+          {membersData.length < 1 ? (
+            <TableRow>
+              <TableCell colSpan={11} className='h-24 text-center'>
+                <FormError message='Tidak ada pengguna' />
               </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            membersData.map((member: any) => (
+              <TableRow key={member.id}>
+                <TableCell className='font-medium'>
+                  {member?.user?.email}
+                </TableCell>
+                <TableCell className='font-medium'>
+                  {member?.user?.fullname}
+                </TableCell>
+                <TableCell>{member?.memberType || '-'}</TableCell>
+                <TableCell>{member?.nim || '-'}</TableCell>
+                <TableCell>{member?.phone || '-'}</TableCell>
+                <TableCell>{member?.address || '-'}</TableCell>
+                <TableCell>{member?.city || '-'}</TableCell>
+                <TableCell>{member?.birthDate || '-'}</TableCell>
+                <TableCell>{member?.gender || '-'}</TableCell>
+                <TableCell>{member.id}</TableCell>
+                <TableCell className='text-right'>
+                  <ButtonAction
+                    id={member.id}
+                    handleClickDelete={() => handleClickDelete(member.id)}
+                  />
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </main>

@@ -60,20 +60,28 @@ const UsersControl = ({ users }: UsersControlProps) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {usersData.map((user: User) => (
-            <TableRow key={user.id}>
-              <TableCell className='font-medium'>{user.email}</TableCell>
-              <TableCell>{user.fullname}</TableCell>
-              <TableCell>{user.role}</TableCell>
-              <TableCell>{user.id}</TableCell>
-              <TableCell className='text-right'>
-                <ButtonActionUsers
-                  id={user.id}
-                  handleClickDelete={() => handleClickDelete(user.id)}
-                />
+          {usersData.length < 1 ? (
+            <TableRow>
+              <TableCell colSpan={5} className='h-24 text-center'>
+                <FormError message='Tidak ada pengguna' />
               </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            usersData.map((user: User) => (
+              <TableRow key={user.id}>
+                <TableCell className='font-medium'>{user.email}</TableCell>
+                <TableCell>{user.fullname}</TableCell>
+                <TableCell>{user.role}</TableCell>
+                <TableCell>{user.id}</TableCell>
+                <TableCell className='text-right'>
+                  <ButtonActionUsers
+                    id={user.id}
+                    handleClickDelete={() => handleClickDelete(user.id)}
+                  />
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </main>

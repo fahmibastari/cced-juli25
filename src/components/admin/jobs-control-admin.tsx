@@ -54,29 +54,37 @@ const JobsControl = ({ jobs }: JobsControlProps) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {jobsData.map((job: Job | any) => (
-            <TableRow key={job.id}>
-              <TableCell>{job.company.companyName}</TableCell>
-              <TableCell>{job.title}</TableCell>
-              <TableCell>
-                {job.description.length < 20
-                  ? job.description
-                  : `${job.description.slice(0, 20)}...`}
-              </TableCell>
-              <TableCell>{job.salary}</TableCell>
-              <TableCell>{job.location}</TableCell>
-              <TableCell>{job.deadline?.toLocaleDateString()}</TableCell>
-              <TableCell>{job.type}</TableCell>
-              <TableCell>{job.createdAt.toLocaleDateString()}</TableCell>
-              <TableCell>{job.updatedAt.toLocaleDateString()}</TableCell>
-              <TableCell className='text-right'>
-                <ButtonAction
-                  id={job.id}
-                  handleClickDelete={() => handleClickDelete(job.id)}
-                />
+          {jobsData.length < 1 ? (
+            <TableRow>
+              <TableCell colSpan={5} className='h-24 text-center'>
+                <FormError message='Tidak ada pengguna' />
               </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            jobsData.map((job: Job | any) => (
+              <TableRow key={job.id}>
+                <TableCell>{job.company.companyName}</TableCell>
+                <TableCell>{job.title}</TableCell>
+                <TableCell>
+                  {job.description.length < 20
+                    ? job.description
+                    : `${job.description.slice(0, 20)}...`}
+                </TableCell>
+                <TableCell>{job.salary}</TableCell>
+                <TableCell>{job.location}</TableCell>
+                <TableCell>{job.deadline?.toLocaleDateString()}</TableCell>
+                <TableCell>{job.type}</TableCell>
+                <TableCell>{job.createdAt.toLocaleDateString()}</TableCell>
+                <TableCell>{job.updatedAt.toLocaleDateString()}</TableCell>
+                <TableCell className='text-right'>
+                  <ButtonAction
+                    id={job.id}
+                    handleClickDelete={() => handleClickDelete(job.id)}
+                  />
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </main>

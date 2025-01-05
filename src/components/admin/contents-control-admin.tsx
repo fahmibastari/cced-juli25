@@ -89,24 +89,32 @@ const ContentsControl = ({ news, article }: ContentsControlProps) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {contentsData.map((content: News | Article) => (
-            <TableRow key={content.id}>
-              <TableCell>{content.id}</TableCell>
-              <TableCell>
-                {content.title.length < 80
-                  ? content.title
-                  : `${content.title.slice(0, 80)}...`}
-              </TableCell>
-              <TableCell>{content.createdAt.toLocaleDateString()}</TableCell>
-              <TableCell>{content.updatedAt.toLocaleDateString()}</TableCell>
-              <TableCell className='text-right'>
-                <ButtonAction
-                  id={content.id}
-                  handleClickDelete={() => handleClickDelete(content.id)}
-                />
+          {contentsData.length < 1 ? (
+            <TableRow>
+              <TableCell colSpan={5} className='h-24 text-center'>
+                <FormError message='Tidak ada pengguna' />
               </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            contentsData.map((content: News | Article) => (
+              <TableRow key={content.id}>
+                <TableCell>{content.id}</TableCell>
+                <TableCell>
+                  {content.title.length < 80
+                    ? content.title
+                    : `${content.title.slice(0, 80)}...`}
+                </TableCell>
+                <TableCell>{content.createdAt.toLocaleDateString()}</TableCell>
+                <TableCell>{content.updatedAt.toLocaleDateString()}</TableCell>
+                <TableCell className='text-right'>
+                  <ButtonAction
+                    id={content.id}
+                    handleClickDelete={() => handleClickDelete(content.id)}
+                  />
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </main>
