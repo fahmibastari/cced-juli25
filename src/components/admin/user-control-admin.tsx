@@ -48,7 +48,7 @@ const UsersControl = ({ users }: UsersControlProps) => {
       <h1 className='text-2xl font-bold text-[#025908] mb-4'>Tabel Pengguna</h1>
       {errorMessage && <FormError message={errorMessage} />}
       {successMessage && <FormSuccess message={successMessage} />}
-      <Table>
+      <Table className='mt-4'>
         <TableCaption>Daftar List Pengguna</TableCaption>
         <TableHeader>
           <TableRow>

@@ -52,7 +52,7 @@ const CompaniesControl = ({ companies }: CompaniesControlProps) => {
       </h1>
       {errorMessage && <FormError message={errorMessage} />}
       {successMessage && <FormSuccess message={successMessage} />}
-      <Table>
+      <Table className='mt-4'>
         <TableCaption>Daftar List Perusahaan</TableCaption>
         <TableHeader>
           <TableRow>

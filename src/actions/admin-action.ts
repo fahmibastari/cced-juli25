@@ -31,7 +31,11 @@ export const getMembers = async () => {
 
 export const getJobs = async () => {
   try {
-    const job = await prisma.job.findMany()
+    const job = await prisma.job.findMany({
+      include: {
+        company: true,
+      },
+    })
     return job
   } catch {
     return null
@@ -108,6 +112,17 @@ export const deleteArticle = async (id: string) => {
   } catch {
     return {
       error: 'An error occurred while deleting the article. Please try again.',
+    }
+  }
+}
+
+export const deleteJob = async (id: string) => {
+  try {
+    await prisma.job.delete({ where: { id } })
+    return { success: 'Job successfully deleted!' }
+  } catch {
+    return {
+      error: 'An error occurred while deleting the job. Please try again.',
     }
   }
 }

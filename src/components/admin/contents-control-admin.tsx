@@ -31,11 +31,13 @@ const ContentsControl = ({ news, article }: ContentsControlProps) => {
     try {
       if (currentData === 'News') {
         await deleteNews(id).then((res) => {
+          setContentsData((prev) => prev.filter((prev) => prev.id !== id))
           setSuccessMessage(res.success ?? '')
           setErrorMessage(res.error ?? '')
         })
       } else {
         await deleteArticle(id).then((res) => {
+          setContentsData((prev) => prev.filter((prev) => prev.id !== id))
           setSuccessMessage(res.success ?? '')
           setErrorMessage(res.error ?? '')
         })
@@ -75,7 +77,7 @@ const ContentsControl = ({ news, article }: ContentsControlProps) => {
       </div>
       {errorMessage && <FormError message={errorMessage} />}
       {successMessage && <FormSuccess message={successMessage} />}
-      <Table>
+      <Table className='mt-4'>
         <TableCaption>Daftar List Contents</TableCaption>
         <TableHeader>
           <TableRow>

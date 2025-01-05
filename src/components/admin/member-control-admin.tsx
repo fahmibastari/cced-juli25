@@ -50,7 +50,7 @@ const MembersControl = ({ members }: MembersControlProps) => {
       <h1 className='text-2xl font-bold text-[#025908] mb-4'>Tabel Member</h1>
       {errorMessage && <FormError message={errorMessage} />}
       {successMessage && <FormSuccess message={successMessage} />}
-      <Table>
+      <Table className='mt-4'>
         <TableCaption>Daftar List Member</TableCaption>
         <TableHeader>
           <TableRow>
