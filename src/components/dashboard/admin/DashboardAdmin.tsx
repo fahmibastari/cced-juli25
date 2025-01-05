@@ -1,13 +1,67 @@
-const DashboardAdmin = () => {
+import {
+  getCompanies,
+  getContents,
+  getJobApplications,
+  getJobs,
+  getMembers,
+  getUsers,
+} from '@/actions/admin-action'
+import DasboardCard from './card-dashborad'
+
+const DashboardAdmin = async () => {
+  const users = await getUsers()
+  const companies = await getCompanies()
+  const members = await getMembers()
+  const jobs = await getJobs()
+  const jobApplications = await getJobApplications()
+  const contents = await getContents()
   return (
     <main className='p-6'>
-      <h2 className='mb-4 text-2xl font-bold text-[#025908]'>
-        Selamat datang di Admin Panel
-      </h2>
-      <p className='text-gray-600'>
-        Di sini Anda dapat mengelola konten, pengguna, dan data lainnya yang
-        berkaitan dengan Admin Panel.
-      </p>
+      <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
+        <DasboardCard
+          title='Total Pengguna'
+          description='Perusahaan terdaftar'
+          content={users?.length || 0}
+          href='/admin/companies'
+        />
+
+        <DasboardCard
+          title='Total Perusahaan'
+          description='Perusahaan terdaftar'
+          content={companies?.length || 0}
+          href='/admin/companies'
+        />
+
+        <DasboardCard
+          title='Total Member'
+          description='Pengguna terdaftar'
+          content={members?.length || 0}
+          href='/admin/members'
+        />
+
+        <DasboardCard
+          title='Total Lowongan'
+          description='Lowongan aktif'
+          content={jobs?.length || 0}
+          href='/admin/jobs'
+        />
+
+        <DasboardCard
+          title='Total Lamaran'
+          description='Lamaran aktif'
+          content={jobApplications?.length || 0}
+          href='/admin/jobs'
+        />
+
+        <DasboardCard
+          title='Total Content'
+          description='Content aktif'
+          content={
+            (contents?.news?.length || 0) + (contents?.article?.length || 0)
+          }
+          href='/admin/jobs'
+        />
+      </div>
     </main>
   )
 }
