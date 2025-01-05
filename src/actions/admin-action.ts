@@ -13,7 +13,7 @@ export const getUsers = async () => {
 
 export const getCompanies = async () => {
   try {
-    const company = await prisma.company.findMany()
+    const company = await prisma.company.findMany({ include: { user: true } })
     return company
   } catch {
     return null
@@ -22,7 +22,7 @@ export const getCompanies = async () => {
 
 export const getMembers = async () => {
   try {
-    const member = await prisma.member.findMany()
+    const member = await prisma.member.findMany({ include: { user: true } })
     return member
   } catch {
     return null
@@ -64,6 +64,17 @@ export const deleteUser = async (id: string) => {
   } catch {
     return {
       error: 'An error occurred while deleting the user. Please try again.',
+    }
+  }
+}
+
+export const deleteCompany = async (id: string) => {
+  try {
+    await prisma.company.delete({ where: { id } })
+    return { success: 'Company successfully deleted!' }
+  } catch {
+    return {
+      error: 'An error occurred while deleting the compant. Please try again.',
     }
   }
 }

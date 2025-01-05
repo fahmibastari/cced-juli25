@@ -2,15 +2,12 @@
 
 import { Button } from '@/components/ui/button'
 
-interface ButtonActionUsersProps {
+interface ButtonActionProps {
   id: string
   handleClickDelete?: () => void
 }
 
-const ButtonActionUsers = ({
-  id,
-  handleClickDelete,
-}: ButtonActionUsersProps) => {
+const ButtonAction = ({ id, handleClickDelete }: ButtonActionProps) => {
   return (
     <div className='flex gap-2 justify-end'>
       <Button onClick={handleClickDelete} variant={'destructive'} size={'sm'}>
@@ -24,4 +21,4 @@ const ButtonActionUsers = ({
   )
 }
 
-export default ButtonActionUsers
+export default ButtonAction

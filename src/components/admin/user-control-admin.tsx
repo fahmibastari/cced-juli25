@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import ButtonActionUsers from './utils/user-action-button'
+import ButtonActionUsers from './utils/action-button'
 import { useState } from 'react'
 import { User } from '@prisma/client'
 import { FormError } from '../auth/form-error'
