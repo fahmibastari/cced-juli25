@@ -35,9 +35,7 @@ const ProfileCompany = ({ data }: ProfileCompanyProps) => {
           <div className='flex items-center gap-6 mb-4'>
             <div className='relative w-36 h-36'>
               <Image
-                src={
-                  'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-                }
+                src={data.company.logo.src}
                 alt='Profile'
                 className='rounded-full object-cover'
                 fill
@@ -53,13 +51,19 @@ const ProfileCompany = ({ data }: ProfileCompanyProps) => {
             </div>
           </div>
           {/* Verification Status */}
-          <StatusVerifikasi type={isClickAjukan} />
-          <Button
-            onClick={handleAjukan}
-            className='w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-md transition-colors mt-2'
-          >
-            Ajukan Verifikasi
-          </Button>
+          {data.company.isVerified ? (
+            <StatusVerifikasi type={'verified'} />
+          ) : (
+            <>
+              <StatusVerifikasi type={isClickAjukan} />
+              <Button
+                onClick={handleAjukan}
+                className='w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-md transition-colors mt-2'
+              >
+                Ajukan Verifikasi
+              </Button>
+            </>
+          )}
         </CardHeader>
       </Card>
 

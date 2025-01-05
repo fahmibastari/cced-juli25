@@ -102,6 +102,25 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
       <Card className='mb-6'>
         <CardHeader>
           <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
+            PekerJaan Dilamar
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {data.member?.jobApplication?.length > 0 ? (
+            <ul className='list-disc space-y-2 pl-6 text-gray-700'>
+              {data.member?.jobApplication?.map((job: any, index: number) => (
+                <li key={index}>{job.job.title}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>Tidak ada PekerJaan</p>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card className='mb-6'>
+        <CardHeader>
+          <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
             Resume
           </CardTitle>
         </CardHeader>
@@ -205,25 +224,6 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
             </ul>
           ) : (
             <p>Tidak ada Assessment</p>
-          )}
-        </CardContent>
-      </Card>
-
-      <Card className='mb-6'>
-        <CardHeader>
-          <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
-            PekerJaan Dilamar
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {data.member?.jobApplication?.length > 0 ? (
-            <ul className='list-disc space-y-2 pl-6 text-gray-700'>
-              {data.member?.jobApplication?.map((job: any, index: number) => (
-                <li key={index}>{job.job.title}</li>
-              ))}
-            </ul>
-          ) : (
-            <p>Tidak ada PekerJaan</p>
           )}
         </CardContent>
       </Card>

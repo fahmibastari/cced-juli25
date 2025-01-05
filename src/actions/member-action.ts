@@ -91,6 +91,7 @@ export const getDetailUserMemberFull = async (id: string) => {
     const data = await prisma.user.findUnique({
       where: { id },
       include: {
+        image: true,
         member: {
           include: {
             experience: true,

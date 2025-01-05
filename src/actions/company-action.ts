@@ -216,6 +216,7 @@ export const getDetailUserCompanyFull = async (id: string) => {
       include: {
         company: {
           include: {
+            logo: true,
             job: {
               include: {
                 jobApplication: {

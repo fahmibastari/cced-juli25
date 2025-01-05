@@ -74,6 +74,7 @@ model File {
   id        String   @id @default(uuid())
   name      String
   type      String
+  src       String
   path      String
   size      Int
   createdAt DateTime @default(now())
@@ -105,7 +106,7 @@ model Company {
   job Job[]
 
   user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  logo File? @relation(fields: [logoId], references: [id])
+  logo File? @relation(fields: [logoId], references: [id], onDelete: Cascade)
 }
 
 model Member {

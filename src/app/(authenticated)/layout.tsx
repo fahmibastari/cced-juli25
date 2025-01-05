@@ -1,6 +1,7 @@
+import { getDetailUserCompanyFull } from '@/actions/company-action'
 import HeaderCompany from '@/components/dashboard/company/Header'
 import HeaderMember from '@/components/dashboard/member/Header'
-import { getUserDetailCompany, getUserDetailMember } from '@/data/userRole'
+import { getUserDetailMember } from '@/data/userRole'
 import { currentUser } from '@/lib/authenticate'
 
 export default async function AuthenticatedLayout({
@@ -29,13 +30,14 @@ export default async function AuthenticatedLayout({
   }
 
   if (user.role === 'COMPANY') {
-    const detailsUser = await getUserDetailCompany(user?.id || '')
+    const detailsUser = await getDetailUserCompanyFull(user?.id || '')
     return (
       <div>
         {detailsUser && (
           <HeaderCompany
-            companyName={detailsUser.companyName || ''}
-            industri={detailsUser.industry || ''}
+            companyName={detailsUser?.company?.companyName || ''}
+            industri={detailsUser?.company?.industry || ''}
+            logo={detailsUser?.company?.logo?.src || ''}
           />
         )}
         {children}
