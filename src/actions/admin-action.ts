@@ -1,3 +1,5 @@
+'use server'
+
 import prisma from '@/lib/prisma'
 
 export const getUsers = async () => {
@@ -52,5 +54,16 @@ export const getContents = async () => {
     return { news, article }
   } catch {
     return null
+  }
+}
+
+export const deleteUser = async (id: string) => {
+  try {
+    await prisma.user.delete({ where: { id } })
+    return { success: 'User successfully deleted!' }
+  } catch {
+    return {
+      error: 'An error occurred while deleting the user. Please try again.',
+    }
   }
 }

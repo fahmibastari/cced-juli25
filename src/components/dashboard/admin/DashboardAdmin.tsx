@@ -22,7 +22,7 @@ const DashboardAdmin = async () => {
           title='Total Pengguna'
           description='Perusahaan terdaftar'
           content={users?.length || 0}
-          href='/admin/companies'
+          href='/admin/users'
         />
 
         <DasboardCard

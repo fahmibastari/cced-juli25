@@ -6,7 +6,7 @@ import Nav from '@/components/layouts/nav'
 import { SessionProvider } from 'next-auth/react'
 import { currentUser } from '@/lib/authenticate'
 import Sidebar from '@/components/layouts/sidebar'
-import Header from '@/components/dashboard/admin/utils/Header'
+import Header from '@/components/utils/Header'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
