@@ -74,7 +74,18 @@ export const deleteCompany = async (id: string) => {
     return { success: 'Company successfully deleted!' }
   } catch {
     return {
-      error: 'An error occurred while deleting the compant. Please try again.',
+      error: 'An error occurred while deleting the company. Please try again.',
+    }
+  }
+}
+
+export const deleteMember = async (id: string) => {
+  try {
+    await prisma.member.delete({ where: { id } })
+    return { success: 'Member successfully deleted!' }
+  } catch {
+    return {
+      error: 'An error occurred while deleting the member. Please try again.',
     }
   }
 }
