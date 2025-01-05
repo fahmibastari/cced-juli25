@@ -105,8 +105,9 @@ model Company {
 
   job Job[]
 
-  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  logo File? @relation(fields: [logoId], references: [id], onDelete: Cascade)
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  logo            File?             @relation(fields: [logoId], references: [id], onDelete: Cascade)
+  RequestVerified RequestVerified[]
 }
 
 model Member {
@@ -245,4 +246,12 @@ model passwordResetToken {
   expires DateTime
 
   @@unique([email, token])
+}
+
+model RequestVerified {
+  id        String   @id @default(uuid())
+  companyId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
 }

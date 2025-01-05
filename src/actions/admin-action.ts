@@ -61,6 +61,19 @@ export const getContents = async () => {
   }
 }
 
+export const getRequestVerification = async () => {
+  try {
+    const request = await prisma.requestVerified.findMany({
+      include: {
+        company: true,
+      },
+    })
+    return request
+  } catch {
+    return null
+  }
+}
+
 export const deleteUser = async (id: string) => {
   try {
     await prisma.user.delete({ where: { id } })
@@ -123,6 +136,42 @@ export const deleteJob = async (id: string) => {
   } catch {
     return {
       error: 'An error occurred while deleting the job. Please try again.',
+    }
+  }
+}
+
+export const deleteRequestVerified = async (id: string, companyId: string) => {
+  try {
+    const company = await prisma.company.findUnique({
+      where: { id: companyId },
+    })
+    if (!company) {
+      return {
+        error: 'Company not found. Please try again.',
+      }
+    }
+
+    const request = await prisma.requestVerified.findUnique({ where: { id } })
+    if (!request) {
+      return {
+        error: 'Request verified not found. Please try again.',
+      }
+    }
+
+    await prisma.company.update({
+      where: { id: companyId },
+      data: {
+        isVerified: true,
+      },
+    })
+
+    await prisma.requestVerified.delete({ where: { id } })
+
+    return { success: `Request ${company.companyName} verified successfully!` }
+  } catch {
+    return {
+      error:
+        'An error occurred while prosessing the request verified. Please try again.',
     }
   }
 }
