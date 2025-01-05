@@ -216,6 +216,7 @@ export const getDetailUserCompanyFull = async (id: string) => {
       include: {
         company: {
           include: {
+            RequestVerified: true,
             logo: true,
             job: {
               include: {
@@ -233,5 +234,20 @@ export const getDetailUserCompanyFull = async (id: string) => {
     return data
   } catch {
     return null
+  }
+}
+
+export const createRequestVerified = async (companyId: string) => {
+  try {
+    await prisma.requestVerified.create({
+      data: {
+        companyId,
+      },
+    })
+    return {
+      success: 'Request verified successfully!, please wait for admin approval',
+    }
+  } catch {
+    return { error: 'An error occurred while creating the request verified.' }
   }
 }

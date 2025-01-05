@@ -108,9 +108,12 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
         <CardContent>
           {data.member?.jobApplication?.length > 0 ? (
             <ul className='list-disc space-y-2 pl-6 text-gray-700'>
-              {data.member?.jobApplication?.map((job: any, index: number) => (
-                <li key={index}>{job.job.title}</li>
-              ))}
+              {data.member?.jobApplication?.map(
+                (job: any, index: number) =>
+                  job.job.status === 'aktif' && (
+                    <li key={index}>{job.job.title}</li>
+                  )
+              )}
             </ul>
           ) : (
             <p>Tidak ada PekerJaan</p>

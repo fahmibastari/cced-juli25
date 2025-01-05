@@ -15,6 +15,9 @@ import Image from 'next/image'
 import StatusVerifikasi from './status-verifikasi'
 import { Button } from '../ui/button'
 import { useState } from 'react'
+import { createRequestVerified } from '@/actions/company-action'
+import { FormError } from '../auth/form-error'
+import { FormSuccess } from '../auth/form-succsess'
 
 interface ProfileCompanyProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,12 +25,24 @@ interface ProfileCompanyProps {
 }
 
 const ProfileCompany = ({ data }: ProfileCompanyProps) => {
-  const [isClickAjukan, setIsClickAjukan] = useState<string>('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
+  const [checkIsWaiting, setCheckIsWaiting] = useState<boolean>(
+    data.company.RequestVerified.length > 0
+  )
 
-  const handleAjukan = () => {
-    setIsClickAjukan('waiting')
+  // Hapus useEffect yang ada
+
+  const handleAjukan = async () => {
+    const res = await createRequestVerified(data.company.id)
+    setErrorMessage(res?.error ?? '')
+    setSuccessMessage(res?.success ?? '')
+
+    // Langsung set waiting ke true saat berhasil request
+    if (res?.success) {
+      setCheckIsWaiting(true)
+    }
   }
-
   return (
     <div className='max-w-4xl mx-auto p-6'>
       <Card className='mb-6'>
@@ -50,12 +65,17 @@ const ProfileCompany = ({ data }: ProfileCompanyProps) => {
               </CardDescription>
             </div>
           </div>
-          {/* Verification Status */}
           {data.company.isVerified ? (
             <StatusVerifikasi type={'verified'} />
+          ) : checkIsWaiting ? (
+            <div className='my-4 w-full flex flex-col gap-4'>
+              <StatusVerifikasi type={'waiting'} />
+              {errorMessage && <FormError message={errorMessage} />}
+              {successMessage && <FormSuccess message={successMessage} />}
+            </div>
           ) : (
             <>
-              <StatusVerifikasi type={isClickAjukan} />
+              <StatusVerifikasi type={''} />
               <Button
                 onClick={handleAjukan}
                 className='w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-md transition-colors mt-2'
