@@ -5,6 +5,8 @@ import Footer from '@/components/layouts/footer'
 import Nav from '@/components/layouts/nav'
 import { SessionProvider } from 'next-auth/react'
 import { currentUser } from '@/lib/authenticate'
+import Sidebar from '@/components/layouts/sidebar'
+import Header from '@/components/dashboard/admin/utils/Header'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -28,6 +30,25 @@ export default async function RootLayout({
 }>) {
   const user = await currentUser()
   const isLoggedIn = !!user
+  if (user?.role === 'ADMIN') {
+    return (
+      <html lang='en'>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <div className='flex h-screen bg-gray-100'>
+            <Sidebar />
+            <div className='flex-1 overflow-auto'>
+              {/* Header */}
+              <Header />
+              {children}
+            </div>
+          </div>
+        </body>
+      </html>
+    )
+  }
+
   return (
     <html lang='en'>
       <body
