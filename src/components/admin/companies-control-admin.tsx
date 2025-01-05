@@ -84,7 +84,7 @@ const CompaniesControl = ({ companies }: CompaniesControlProps) => {
               <TableCell>{company?.website || '-'}</TableCell>
               <TableCell>{company?.address || '-'}</TableCell>
               <TableCell>{company?.city || '-'}</TableCell>
-              <TableCell>{company?.verified ? 'Ya' : 'Tidak'}</TableCell>
+              <TableCell>{company?.isVerified ? 'Ya' : 'Tidak'}</TableCell>
               <TableCell>{company.id}</TableCell>
               <TableCell className='text-right'>
                 <ButtonAction
