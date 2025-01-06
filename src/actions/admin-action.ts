@@ -4,7 +4,11 @@ import prisma from '@/lib/prisma'
 
 export const getUsers = async () => {
   try {
-    const user = await prisma.user.findMany()
+    const user = await prisma.user.findMany({
+      orderBy: {
+        updatedAt: 'desc',
+      },
+    })
     return user
   } catch {
     return null
@@ -13,7 +17,12 @@ export const getUsers = async () => {
 
 export const getCompanies = async () => {
   try {
-    const company = await prisma.company.findMany({ include: { user: true } })
+    const company = await prisma.company.findMany({
+      include: { user: true },
+      orderBy: {
+        updatedAt: 'desc',
+      },
+    })
     return company
   } catch {
     return null
@@ -22,7 +31,12 @@ export const getCompanies = async () => {
 
 export const getMembers = async () => {
   try {
-    const member = await prisma.member.findMany({ include: { user: true } })
+    const member = await prisma.member.findMany({
+      include: { user: true },
+      orderBy: {
+        updatedAt: 'desc',
+      },
+    })
     return member
   } catch {
     return null
@@ -35,6 +49,9 @@ export const getJobs = async () => {
       include: {
         company: true,
       },
+      orderBy: {
+        updatedAt: 'desc',
+      },
     })
     return job
   } catch {
@@ -44,7 +61,11 @@ export const getJobs = async () => {
 
 export const getJobApplications = async () => {
   try {
-    const jobApplication = await prisma.jobApplication.findMany()
+    const jobApplication = await prisma.jobApplication.findMany({
+      orderBy: {
+        appliedAt: 'desc',
+      },
+    })
     return jobApplication
   } catch {
     return null
@@ -53,8 +74,16 @@ export const getJobApplications = async () => {
 
 export const getContents = async () => {
   try {
-    const news = await prisma.news.findMany()
-    const article = await prisma.article.findMany()
+    const news = await prisma.news.findMany({
+      orderBy: {
+        updatedAt: 'desc',
+      },
+    })
+    const article = await prisma.article.findMany({
+      orderBy: {
+        updatedAt: 'desc',
+      },
+    })
     return { news, article }
   } catch {
     return null
@@ -66,6 +95,9 @@ export const getRequestVerification = async () => {
     const request = await prisma.requestVerified.findMany({
       include: {
         company: true,
+      },
+      orderBy: {
+        updatedAt: 'desc',
       },
     })
     return request
