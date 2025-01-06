@@ -116,3 +116,23 @@ export const JobApplicationSchema = z.object({
     .min(1, 'Resume is required')
     .max(5000, 'Resume cannot exceed 5000 characters'),
 })
+
+export const updateUserSchema = z.object({
+  username: z.string().min(3),
+  fullname: z.string().min(3),
+})
+
+export const updateCompanySchema = z.object({
+  username: z.string().min(3),
+  fullname: z.string().min(3),
+  companyName: z.string().min(3),
+  industry: z.string().min(3),
+  ownership: z.string().min(3),
+  phone: z.string().min(10),
+  companyPhone: z.string().min(10),
+  website: z.string().min(1),
+  publicMail: z.string().min(1),
+  bio: z.string().min(1),
+  address: z.string().min(1),
+  city: z.string().min(1),
+})

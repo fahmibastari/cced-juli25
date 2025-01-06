@@ -28,7 +28,7 @@ const HeaderCompany = ({ companyName, industri, logo }: HeaderCompanyProps) => {
       </div>
       <div className='flex items-center gap-4'>
         <Button variant='outline'>
-          <Link href='company/edit-profile-company'>
+          <Link href='/company/edit-profile-company'>
             Edit Profil Perusahaan
           </Link>
         </Button>

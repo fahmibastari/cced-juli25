@@ -67,43 +67,58 @@ export const updateFile = async (id: string, file: File) => {
 
   // 3. Tentukan path penyimpanan file baru
   const storagePath = path.join(process.cwd(), 'public', folder)
+  console.log('Storage Path:', storagePath)
 
-  // 4. Buat hash unik untuk nama file
+  // 4. Validasi file
+  const validTypes = ['image/png', 'image/webp']
+  const maxSize = 100 * 1024 // 100 KB
+  if (!validTypes.includes(file.type)) {
+    throw new Error('Invalid file type. Only PNG and WebP are allowed.')
+  }
+  if (file.size > maxSize) {
+    throw new Error('File size exceeds 100 KB.')
+  }
+
+  // 5. Buat hash unik untuk nama file
   const hash = await bcrypt.hash(
     `${file.name}_${Date.now()}_${Math.random()}`,
     10
   )
 
-  // 5. Validasi dan dapatkan ekstensi file
+  // 6. Validasi dan dapatkan ekstensi file
   const fileType = file.type?.split('/')[1]
   if (!fileType) {
     throw new Error('Invalid file type')
   }
 
-  // 6. Tentukan nama dan path file baru
-  const fileName = hash.replace(/\//g, '_')
-  const newFilePath = path.join(storagePath, `${fileName}.${fileType}`)
+  // 7. Tentukan nama dan path file baru
+  const fileName = `${hash}.${fileType}`
+  const newFilePath = path.join(storagePath, fileName)
 
-  // 7. Konversi file menjadi buffer untuk ditulis
+  // 8. Konversi file menjadi buffer untuk ditulis
   const arrayBuffer = await file.arrayBuffer()
   const buffer = new Uint8Array(arrayBuffer)
 
-  // 8. Hapus file lama jika ada
+  // 9. Hapus file lama jika ada
   if (await fs.stat(fileToUpdate.path).catch(() => false)) {
-    await fs.unlink(fileToUpdate.path) // Menghapus file lama
+    console.log('Deleting old file:', fileToUpdate.path)
+    await fs.unlink(fileToUpdate.path)
+  } else {
+    console.warn('Old file not found:', fileToUpdate.path)
   }
 
-  // 9. Simpan file baru
+  // 10. Simpan file baru
+  console.log('Saving new file:', newFilePath)
   await fs.writeFile(newFilePath, buffer)
 
-  // 10. Perbarui data file di database
+  // 11. Perbarui data file di database
   return await prisma.file.update({
     where: { id },
     data: {
-      name: file.name, // Nama file asli
-      type: file.type, // Tipe file (MIME type)
-      size: file.size, // Ukuran file
-      src: `/${folder}/${fileName}.${fileType}`, // Path relatif untuk akses URL
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      src: `/${folder}/${fileName}`, // Path relatif untuk akses URL
       path: newFilePath, // Path absolut di server
     },
   })

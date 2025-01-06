@@ -1,9 +1,14 @@
 'use server'
 
 import * as z from 'zod'
-import { JobApplicationSchema, JobSchema } from '../lib/zod'
+import {
+  JobApplicationSchema,
+  JobSchema,
+  updateCompanySchema,
+} from '../lib/zod'
 import { currentDetailUserCompany } from '@/lib/authenticate'
 import prisma from '@/lib/prisma'
+import { saveFile } from '@/lib/file-handler'
 
 export async function addNewJob(formData: z.infer<typeof JobSchema>) {
   try {
@@ -249,5 +254,96 @@ export const createRequestVerified = async (companyId: string) => {
     }
   } catch {
     return { error: 'An error occurred while creating the request verified.' }
+  }
+}
+
+export const updateLogoCompany = async (
+  idCompany: string,
+  idFile: string,
+  logo: File
+) => {
+  try {
+    const logoFile = logo ? await saveFile('company-logos', logo) : undefined
+
+    if (!logoFile) {
+      return { error: 'Logo tidak valid' }
+    }
+    await prisma.company.update({
+      where: { id: idCompany },
+      data: {
+        logoId: logoFile.id,
+      },
+    })
+
+    await prisma.file.delete({
+      where: {
+        id: idFile,
+      },
+    })
+
+    return { success: 'Logo successfully updated!' }
+  } catch (err) {
+    console.error('Error during update:', err)
+    return { error: 'An error occurred while updating the logo.' }
+  }
+}
+
+export async function updateCompanyPersonalInformation(
+  formData: z.infer<typeof updateCompanySchema>,
+  id: string,
+  idCompany: string
+) {
+  try {
+    const validatedFields = updateCompanySchema.safeParse(formData)
+
+    if (!validatedFields.success) {
+      return {
+        error: 'Invalid fields!',
+        details: validatedFields.error.errors,
+      }
+    }
+
+    const {
+      username,
+      fullname,
+      companyName,
+      industry,
+      ownership,
+      phone,
+      companyPhone,
+      website,
+      publicMail,
+      bio,
+      address,
+      city,
+    } = validatedFields.data
+
+    await prisma.user.update({
+      where: { id: id },
+      data: {
+        username,
+        fullname,
+      },
+    })
+
+    await prisma.company.update({
+      where: { id: idCompany },
+      data: {
+        companyName,
+        industry,
+        ownership,
+        phone,
+        companyPhone,
+        website,
+        publicMail,
+        bio,
+        address,
+        city,
+      },
+    })
+
+    return { success: 'Company successfully updated!' }
+  } catch {
+    return { error: 'An error occurred while updating the company.' }
   }
 }
