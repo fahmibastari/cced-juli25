@@ -13,7 +13,7 @@ const ArticleContent = async () => {
       {/* Main Article Section */}
       <section>
         <h3 className='mb-4 text-2xl font-bold md:text-3xl text-[#025908]'>
-          Berita Terbaru
+          Article Terbaru
         </h3>
         {featuredArticle ? (
           <CardBig
@@ -24,14 +24,14 @@ const ArticleContent = async () => {
             createdAt={featuredArticle.createdAt ?? undefined}
           />
         ) : (
-          <p>Loading berita terbaru...</p>
+          <p>Loading Article terbaru...</p>
         )}
       </section>
 
       {/* Other Article Section */}
       <section>
         <h3 className='mb-4 text-xl font-bold md:text-2xl text-[#025908]'>
-          Berita Lainnya
+          Article Lainnya
         </h3>
         <div className='grid gap-4 md:grid-cols-3'>
           {articles.length > 0 ? (
@@ -48,7 +48,7 @@ const ArticleContent = async () => {
                 />
               ))
           ) : (
-            <p>Loading berita lainnya...</p>
+            <p>Loading Article lainnya...</p>
           )}
         </div>
       </section>

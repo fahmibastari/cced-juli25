@@ -61,7 +61,7 @@ const JobsControl = ({ jobs }: JobsControlProps) => {
         <TableBody>
           {jobsData.length < 1 ? (
             <TableRow>
-              <TableCell colSpan={5} className='h-24 text-center'>
+              <TableCell colSpan={10} className='h-24 text-center'>
                 <FormError message='Tidak ada pengguna' />
               </TableCell>
             </TableRow>

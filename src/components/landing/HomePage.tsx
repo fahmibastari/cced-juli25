@@ -43,14 +43,14 @@ export default async function HomePage() {
               Fitur Unggulan
             </h2>
             <div className='grid gap-8 md:grid-cols-3 m-4'>
-              {dummyFiturData.map((data, index) => (
+              {dummyFiturData?.map((data, index) => (
                 <CardSmallLanding
                   key={index}
                   styleCard='rounded-lg border border-[#025908] bg-white p-4 shadow-md'
                   styleTitle='text-xl font-bold text-[#025908]'
                   styleDescription='mt-2 text-gray-600'
-                  title={data.title}
-                  description={data.description}
+                  title={data?.title}
+                  description={data?.description}
                 />
               ))}
             </div>
@@ -63,14 +63,14 @@ export default async function HomePage() {
               Manfaat Sistem
             </h2>
             <div className='space-y-8'>
-              {dummyManfaatData.map((data, index) => (
+              {dummyManfaatData?.map((data, index) => (
                 <CardSmallLanding
                   key={index}
                   styleCard='bg-white rounded-lg shadow-md p-6'
                   styleTitle='text-2xl font-semibold text-[#025908] text-center'
                   styleDescription='mt-2 text-gray-600 text-center'
-                  title={data.title}
-                  description={data.description}
+                  title={data?.title}
+                  description={data?.description}
                 />
               ))}
             </div>
@@ -85,10 +85,10 @@ export default async function HomePage() {
             {featuredNews ? (
               <CardBig
                 href='#'
-                srcImage={featuredNews.thumbnail}
-                title={featuredNews.title}
-                description={featuredNews.content.slice(0, 250)}
-                createdAt={featuredNews.createdAt ?? undefined}
+                srcImage={featuredNews?.thumbnail}
+                title={featuredNews?.title}
+                description={featuredNews?.content.slice(0, 250)}
+                createdAt={featuredNews?.createdAt ?? undefined}
               />
             ) : (
               <p>Loading berita terbaru...</p>
@@ -100,11 +100,11 @@ export default async function HomePage() {
                   .map((data: News) => (
                     <CardSmall
                       href='#'
-                      key={data.id}
-                      srcImage={data.thumbnail}
-                      title={data.title}
-                      description={data.content.slice(0, 100)}
-                      createdAt={data.createdAt ?? undefined}
+                      key={data?.id}
+                      srcImage={data?.thumbnail}
+                      title={data?.title}
+                      description={data?.content.slice(0, 100)}
+                      createdAt={data?.createdAt ?? undefined}
                     />
                   ))
               ) : (
@@ -134,11 +134,11 @@ export default async function HomePage() {
                   .map((data: Article) => (
                     <CardSmall
                       href='#'
-                      key={data.id}
-                      srcImage={data.thumbnail}
-                      title={data.title}
-                      description={data.content.slice(0, 100)}
-                      createdAt={data.createdAt ?? undefined}
+                      key={data?.id}
+                      srcImage={data?.thumbnail}
+                      title={data?.title}
+                      description={data?.content.slice(0, 100)}
+                      createdAt={data?.createdAt ?? undefined}
                     />
                   ))
               ) : (
@@ -162,14 +162,14 @@ export default async function HomePage() {
               Kegiatan Terbaru
             </h2>
             <div className='grid gap-8 md:grid-cols-3 m-4'>
-              {dummyKegiatanData.map((data, index) => (
+              {dummyKegiatanData?.map((data, index) => (
                 <CardSmallLanding
                   key={index}
                   styleCard='bg-white rounded-lg shadow-md p-4'
                   styleTitle='text-xl font-bold text-[#025908]'
                   styleDescription='mt-2 text-gray-600'
-                  title={data.title}
-                  description={data.description}
+                  title={data?.title}
+                  description={data?.description}
                 />
               ))}
             </div>

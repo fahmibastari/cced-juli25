@@ -23,7 +23,7 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
           <div className='flex items-center gap-6'>
             <div className='relative w-36 h-36'>
               <Image
-                src={data.image.src}
+                src={data?.image?.src || '/default-thumbnail.jpg'}
                 alt='Profile'
                 className='rounded-full object-cover'
                 fill
@@ -78,21 +78,23 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
           </div>
           <div className='flex items-center gap-3 mb-2'>
             <span className='text-gray-900'>Address:</span>
-            <span className='text-gray-600'>{data.member.address || '-'}</span>
+            <span className='text-gray-600'>
+              {data?.member?.address || '-'}
+            </span>
           </div>
           <div className='flex items-center gap-3 mb-2'>
             <span className='text-gray-900'>Kota:</span>
-            <span className='text-gray-600'>{data.member.city || '-'}</span>
+            <span className='text-gray-600'>{data?.member?.city || '-'}</span>
           </div>
           <div className='flex items-center gap-3 mb-2'>
             <span className='text-gray-900'>Tanggal Lahir:</span>
             <span className='text-gray-600'>
-              {data.member.birthDate.toLocaleDateString('id-ID') || '-'}
+              {data?.member?.birthDate?.toLocaleDateString('id-ID') || '-'}
             </span>
           </div>
           <div className='flex items-center gap-3 mb-2'>
             <span className='text-gray-900'>Jenis Kelamin:</span>
-            <span className='text-gray-600'>{data.member.gender || '-'}</span>
+            <span className='text-gray-600'>{data?.member?.gender || '-'}</span>
           </div>
         </CardContent>
       </Card>
@@ -126,8 +128,8 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {data.member?.resume ? (
-            <p>{data.member?.resume}</p>
+          {data?.member?.resume ? (
+            <p>{data?.member?.resume}</p>
           ) : (
             <p>Belum Melengkapi Resume</p>
           )}

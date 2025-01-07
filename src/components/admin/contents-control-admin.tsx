@@ -92,7 +92,7 @@ const ContentsControl = ({ news, article }: ContentsControlProps) => {
           {contentsData.length < 1 ? (
             <TableRow>
               <TableCell colSpan={5} className='h-24 text-center'>
-                <FormError message='Tidak ada pengguna' />
+                <FormError message='Tidak ada contents' />
               </TableCell>
             </TableRow>
           ) : (
