@@ -48,6 +48,11 @@ const JobsControl = ({ jobs }: JobsControlProps) => {
           <TableRow>
             <TableHead className='w-[100px]'>Dibuat Oleh</TableHead>
             <TableHead>Pekerjaan</TableHead>
+            <TableHead>Deskripsi</TableHead>
+            <TableHead>Gaji</TableHead>
+            <TableHead>Lokasi</TableHead>
+            <TableHead>Deadline</TableHead>
+            <TableHead>Tipe Pekerjaan</TableHead>
             <TableHead>Dibuat</TableHead>
             <TableHead>Diupdate</TableHead>
             <TableHead className='text-right'>Action</TableHead>

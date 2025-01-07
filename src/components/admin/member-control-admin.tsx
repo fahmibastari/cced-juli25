@@ -88,7 +88,9 @@ const MembersControl = ({ members }: MembersControlProps) => {
                 <TableCell>{member?.phone || '-'}</TableCell>
                 <TableCell>{member?.address || '-'}</TableCell>
                 <TableCell>{member?.city || '-'}</TableCell>
-                <TableCell>{member?.birthDate || '-'}</TableCell>
+                <TableCell>
+                  {member?.birthDate?.toLocaleDateString('id-ID') || '-'}
+                </TableCell>
                 <TableCell>{member?.gender || '-'}</TableCell>
                 <TableCell>{member.id}</TableCell>
                 <TableCell className='text-right'>
