@@ -39,7 +39,7 @@ const DashboardMember = ({ jobs, user }: DashboardMemberProps) => {
   }
 
   return (
-    <div className='container mx-auto max-w-6xl p-4'>
+    <div className='container mx-auto max-w-7xl p-4'>
       <div className='mb-6'>
         <Search />
         <hr className='h-1 w-full border-gray-200' />

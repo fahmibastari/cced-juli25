@@ -6,10 +6,6 @@ import { Card, CardContent, CardFooter, CardHeader } from '../ui/card'
 import { startTransition, useRef, useState } from 'react'
 import { ImagePlus } from 'lucide-react'
 import { Button } from '../ui/button'
-import {
-  updateCompanyPersonalInformation,
-  updateLogoCompany,
-} from '@/actions/company-action'
 import { FormError } from '../auth/form-error'
 import { FormSuccess } from '../auth/form-succsess'
 import {
@@ -21,26 +17,46 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
-import { updateCompanySchema } from '@/lib/zod'
+import { updateMemberSchema } from '@/lib/zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { Input } from '../ui/input'
-import { Textarea } from '../ui/textarea'
+// import { Textarea } from '../ui/textarea'
 import Link from 'next/link'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select'
+import {
+  updateImageMember,
+  updateMemberPersonalInformation,
+} from '@/actions/member-action'
 
-interface EditProfileCompanyProps {
+interface EditProfileMemberProps {
   data: any
 }
 
-const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
-  const [errorMessageLogo, setErrorMessageLogo] = useState('')
-  const [successMessageLogo, setSuccessMessageLogo] = useState('')
+const EditProfileMember = ({ data }: EditProfileMemberProps) => {
+  const [errorMessageImage, setErrorMessageImage] = useState('')
+  const [successMessageImage, setSuccessMessageImage] = useState('')
   const [errorMessagePersonal, setErrorMessagePersonal] = useState('')
   const [successMessagePersonal, setSuccessMessagePersonal] = useState('')
   const [isPending, setIsPending] = useState(false)
-  const [logoFile, setLogoFile] = useState<File | null>(null)
-  const [srcImage, setSrcImage] = useState(data.company.logo.src)
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [srcImage, setSrcImage] = useState<string | null>(
+    data?.image?.src || null
+  )
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const gender = ['laki-laki', 'perempuan']
+  const dataMemberType = [
+    'Alumni Unila',
+    'Mahasiswa Unila',
+    'Alumni non Unila',
+    'Mahasiswa non Unila',
+  ]
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -49,18 +65,20 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
       const validTypes = ['image/png', 'image/webp']
 
       if (!validTypes.includes(file.type)) {
-        setErrorMessageLogo('Hanya file PNG dan WebP yang diperbolehkan.')
+        setErrorMessageImage('Only PNG and WebP files are allowed.')
+        setSuccessMessageImage('')
         return
       }
 
       if (file.size > maxSize) {
-        setErrorMessageLogo('Ukuran file maksimal 100 KB.')
+        setErrorMessageImage('File size must be under 100 KB.')
+        setSuccessMessageImage('')
         return
       }
 
-      setErrorMessageLogo('')
-      setSuccessMessageLogo('File berhasil diunggah!')
-      setLogoFile(file)
+      setErrorMessageImage('')
+      setSuccessMessageImage('File successfully uploaded!')
+      setImageFile(file)
       setSrcImage(URL.createObjectURL(file))
     }
   }
@@ -71,54 +89,70 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
     }
   }
 
-  const handleEditLogo = async () => {
-    if (!logoFile) {
-      setErrorMessageLogo('Tidak ada file yang dipilih.')
+  const handleEditImage = async () => {
+    if (!imageFile) {
+      // console.log(data.id, data.imageId, imageFile)
+      setErrorMessageImage('No file selected.')
       return
     }
 
     setIsPending(true)
     try {
-      const response = await updateLogoCompany(
-        data.company.id,
-        data.company.logo.id,
-        logoFile
+      const response = await updateImageMember(
+        data.id,
+        data.imageId || '',
+        imageFile
       )
-      setSuccessMessageLogo(response?.success ?? '')
-      setErrorMessageLogo(response?.error ?? '')
+      if (response?.error) {
+        setErrorMessageImage(response.error)
+        setSuccessMessageImage('')
+      } else {
+        setErrorMessageImage('')
+        setSuccessMessageImage(
+          response?.success || 'Image updated successfully!'
+        )
+      }
     } catch (err) {
-      console.error('Error updating logo:', err)
-      setErrorMessageLogo('Terjadi kesalahan saat memperbarui logo.')
-      setSuccessMessageLogo('')
+      console.error('Error updating image:', err)
+      setErrorMessageImage('An error occurred while updating the image.')
+      setSuccessMessageImage('')
     } finally {
       setIsPending(false)
     }
   }
 
-  const formPersonal = useForm<z.infer<typeof updateCompanySchema>>({
-    resolver: zodResolver(updateCompanySchema),
+  const formPersonal = useForm<z.infer<typeof updateMemberSchema>>({
+    resolver: zodResolver(updateMemberSchema),
     defaultValues: {
       username: data.username || '',
       fullname: data.fullname || '',
-      companyName: data.company.companyName || '',
-      industry: data.company.industry || '',
-      ownership: data.company.ownership || '',
-      phone: data.company.phone || '',
-      companyPhone: data.company.companyPhone || '',
-      website: data.company.website || '',
-      publicMail: data.company.publicMail || '',
-      bio: data.company.bio || '',
-      address: data.company.address || '',
-      city: data.company.city || '',
+      memberType: data.member.memberType || '',
+      nim: data.member.nim || '',
+      phone: data.member.phone || '',
+      address: data.member.address || '',
+      city: data.member.city || '',
+      birthDate: data.member.birthDate || null,
+      gender: data.member.gender || '',
+      about: data.member.about || '',
+      //   resume: data.resume || '',
+      //   skills: data.skills || [],
+      //   interests: data.interests || [],
     },
   })
-  const onSubmitPersonal = (value: z.infer<typeof updateCompanySchema>) => {
+  const formResume = useForm<z.infer<typeof updateMemberSchema>>({
+    resolver: zodResolver(updateMemberSchema),
+    defaultValues: {
+      resume: data.resume || '',
+      //   skills: data.skills || [],
+      //   interests: data.interests || [],
+    },
+  })
+  const onSubmitPersonal = (value: z.infer<typeof updateMemberSchema>) => {
     setErrorMessagePersonal('')
     setSuccessMessagePersonal('')
     startTransition(() => {
       setIsPending(true)
-      // todo: implement submit logic
-      updateCompanyPersonalInformation(value, data.id, data.company.id)
+      updateMemberPersonalInformation(value, data.id, data.member.id)
         .then((response) => {
           setSuccessMessagePersonal(response?.success ?? '')
           setErrorMessagePersonal(response?.error ?? '')
@@ -134,29 +168,28 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
         })
     })
   }
-
   return (
     <div className='max-w-6xl mx-auto p-8 w-full'>
       <h1 className='text-3xl font-bold text-green-700 mb-6'>
-        Edit Profile Company
+        Edit Profile Member
       </h1>
 
-      {/* section edit logo */}
+      {/* section edit image */}
       <Card className='shadow-lg'>
         <CardHeader>
           <p className='text-lg font-semibold text-green-700 mb-4'>
-            Edit Logo Perusahaan
+            Edit Foto Profile
           </p>
-          {errorMessageLogo && <FormError message={errorMessageLogo} />}
-          {successMessageLogo && <FormSuccess message={successMessageLogo} />}
+          {errorMessageImage && <FormError message={errorMessageImage} />}
+          {successMessageImage && <FormSuccess message={successMessageImage} />}
         </CardHeader>
         <CardContent>
           <div>
             <div className='mb-4 flex justify-between'>
               <p className='text-md font-medium text-gray-700 mb-4'>
-                Logo Perusahaan
+                Foto Profile
               </p>
-              <Button onClick={handleEditLogo} disabled={isPending}>
+              <Button onClick={handleEditImage} disabled={isPending}>
                 Simpan Perubahan
               </Button>
             </div>
@@ -174,27 +207,26 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                     src={srcImage}
                     width={100}
                     height={100}
-                    alt='logo'
+                    alt='Profile Image'
                     className='rounded-md shadow'
                   />
                 ) : (
-                  <ImagePlus className='h-12 w-12 text-gray-400' />
-                )}
-                <div className='text-sm text-gray-600'>
-                  Set logo perusahaan. Hanya file berformat *.png dan *.webp
-                  dengan ukuran maksimal 100 KB.
-                </div>
-                {logoFile && (
-                  <div className='text-sm text-green-600'>
-                    File terpilih: {logoFile.name}
+                  <div className='flex flex-col items-center'>
+                    <ImagePlus className='h-12 w-12 text-gray-400' />
+                    <p className='text-sm text-gray-600'>No image selected</p>
                   </div>
+                )}
+                {imageFile && (
+                  <p className='text-sm text-green-600'>
+                    Selected File: {imageFile.name}
+                  </p>
                 )}
                 <Button
                   variant='outline'
                   className='w-full hover:bg-green-100 hover:border-green-700 transition'
                   onClick={handleButtonClick}
                 >
-                  Pilih File
+                  Select File
                 </Button>
               </div>
             </div>
@@ -230,6 +262,41 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
               </div>
               <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                 <div className='space-y-4'>
+                  <FormField
+                    control={formPersonal.control}
+                    name='memberType'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Status Member</FormLabel>
+                        <FormControl>
+                          <Select
+                            disabled={isPending}
+                            onValueChange={field.onChange}
+                            value={field.value || ''}
+                          >
+                            <SelectTrigger>
+                              <SelectValue
+                                placeholder={
+                                  field.value || 'Pilih Status Member'
+                                }
+                              />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {dataMemberType.map((data) => (
+                                <SelectItem
+                                  key={data}
+                                  value={data.toLowerCase()}
+                                >
+                                  {data}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <FormField
                     control={formPersonal.control}
                     name='username'
@@ -270,53 +337,15 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                   />
                   <FormField
                     control={formPersonal.control}
-                    name='companyName'
+                    name='nim'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nama Perusahaaan</FormLabel>
+                        <FormLabel>NIM</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             disabled={formPersonal.formState.isSubmitting}
-                            placeholder='Nama Perusahaan'
-                            className='border-2 border-gray-100 shadow-sm'
-                            type='text'
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={formPersonal.control}
-                    name='industry'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Bidang Industry</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            disabled={formPersonal.formState.isSubmitting}
-                            placeholder='Bidang Industry'
-                            className='border-2 border-gray-100 shadow-sm'
-                            type='text'
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={formPersonal.control}
-                    name='ownership'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Kepemilikan Perusahaan</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            disabled={formPersonal.formState.isSubmitting}
-                            placeholder='Kepemilikan Perusahaan'
+                            placeholder='nim'
                             className='border-2 border-gray-100 shadow-sm'
                             type='text'
                           />
@@ -330,12 +359,12 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                     name='phone'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nomor Telephone</FormLabel>
+                        <FormLabel>Nomor Telepon</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             disabled={formPersonal.formState.isSubmitting}
-                            placeholder='Nomor Telephone'
+                            placeholder='Nomor Telepon'
                             className='border-2 border-gray-100 shadow-sm'
                             type='text'
                           />
@@ -346,18 +375,34 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                   />
                   <FormField
                     control={formPersonal.control}
-                    name='companyPhone'
+                    name='gender'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nomor Telephone Perusahaan</FormLabel>
+                        <FormLabel>Jenis Kelamin</FormLabel>
                         <FormControl>
-                          <Input
-                            {...field}
-                            disabled={formPersonal.formState.isSubmitting}
-                            placeholder='Nomor Telephone Perusahaan'
-                            className='border-2 border-gray-100 shadow-sm'
-                            type='text'
-                          />
+                          <Select
+                            disabled={isPending}
+                            onValueChange={field.onChange}
+                            value={field.value || ''}
+                          >
+                            <SelectTrigger>
+                              <SelectValue
+                                placeholder={
+                                  field.value || 'Pilih Jenis Kelamin'
+                                }
+                              />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {gender.map((note) => (
+                                <SelectItem
+                                  key={note}
+                                  value={note.toLowerCase()}
+                                >
+                                  {note}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -365,44 +410,6 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                   />
                 </div>
                 <div className='space-y-4'>
-                  <FormField
-                    control={formPersonal.control}
-                    name='website'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Website Perusahaan</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            disabled={formPersonal.formState.isSubmitting}
-                            placeholder='Website Perusahaan'
-                            className='border-2 border-gray-100 shadow-sm'
-                            type='text'
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={formPersonal.control}
-                    name='publicMail'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Alamat Email Public</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            disabled={formPersonal.formState.isSubmitting}
-                            placeholder='Alamat Email Public'
-                            className='border-2 border-gray-100 shadow-sm'
-                            type='text'
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
                   <FormField
                     control={formPersonal.control}
                     name='address'
@@ -443,16 +450,45 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                   />
                   <FormField
                     control={formPersonal.control}
-                    name='bio'
+                    name='about'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Biodata Perusahaan</FormLabel>
+                        <FormLabel>Tentang Anda</FormLabel>
                         <FormControl>
-                          <Textarea
+                          <Input
                             {...field}
                             disabled={formPersonal.formState.isSubmitting}
-                            placeholder='Biodata Perusahaan'
-                            className='border-2 border-gray-100 shadow-sm h-[216px]'
+                            placeholder='Tentang Anda'
+                            className='border-2 border-gray-100 shadow-sm'
+                            type='text'
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={formPersonal.control}
+                    name='birthDate'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Tanggal Lahir Anda</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            value={
+                              field.value
+                                ? new Date(field.value)
+                                    .toISOString()
+                                    .split('T')[0]
+                                : ''
+                            }
+                            onChange={(e) =>
+                              field.onChange(new Date(e.target.value))
+                            }
+                            disabled={formPersonal.formState.isSubmitting}
+                            className='border-2 border-gray-100 shadow-sm'
+                            type='date'
                           />
                         </FormControl>
                         <FormMessage />
@@ -477,4 +513,4 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
   )
 }
 
-export default EditProfileCompany
+export default EditProfileMember

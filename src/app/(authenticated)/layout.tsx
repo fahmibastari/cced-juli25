@@ -1,7 +1,7 @@
 import { getDetailUserCompanyFull } from '@/actions/company-action'
+import { getDetailUserMemberFull } from '@/actions/member-action'
 import HeaderCompany from '@/components/dashboard/company/Header'
 import HeaderMember from '@/components/dashboard/member/Header'
-import { getUserDetailMember } from '@/data/userRole'
 import { currentUser } from '@/lib/authenticate'
 
 export default async function AuthenticatedLayout({
@@ -46,13 +46,14 @@ export default async function AuthenticatedLayout({
   }
 
   if (user.role === 'MEMBER') {
-    const detailsUser = await getUserDetailMember(user?.id || '')
+    const detailsUser = await getDetailUserMemberFull(user?.id || '')
     return (
       <div>
         {detailsUser && (
           <HeaderMember
-            fullname={detailsUser.fullname || ''}
-            membertype={detailsUser.memberType || ''}
+            fullname={detailsUser?.fullname || ''}
+            membertype={detailsUser?.member?.memberType || ''}
+            img={detailsUser?.image?.src || ''}
           />
         )}
         {/* <h1>ini layout member</h1> */}

@@ -6,16 +6,16 @@ import Link from 'next/link'
 interface HeaderMemberProps {
   fullname: string
   membertype: string
-  // img: string
+  img: string
 }
 
-const HeaderMember = ({ fullname, membertype }: HeaderMemberProps) => {
+const HeaderMember = ({ fullname, membertype, img }: HeaderMemberProps) => {
   return (
     <div className='flex items-center justify-between bg-gray-100 p-4'>
       <div className='flex items-center gap-4'>
         <Link href={'/member/profile'}>
           <Avatar>
-            <AvatarImage src='https://github.com/shadcn.png' alt='@shadcn' />
+            <AvatarImage src={img} alt='@shadcn' />
             <AvatarFallback>
               <User />
             </AvatarFallback>

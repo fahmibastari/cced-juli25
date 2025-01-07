@@ -23,9 +23,7 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
           <div className='flex items-center gap-6'>
             <div className='relative w-36 h-36'>
               <Image
-                src={
-                  'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-                }
+                src={data.image.src}
                 alt='Profile'
                 className='rounded-full object-cover'
                 fill
@@ -89,7 +87,7 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
           <div className='flex items-center gap-3 mb-2'>
             <span className='text-gray-900'>Tanggal Lahir:</span>
             <span className='text-gray-600'>
-              {data.member.birthDate || '-'}
+              {data.member.birthDate.toLocaleDateString('id-ID') || '-'}
             </span>
           </div>
           <div className='flex items-center gap-3 mb-2'>
