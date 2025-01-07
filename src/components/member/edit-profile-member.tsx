@@ -21,7 +21,6 @@ import { updateMemberSchema } from '@/lib/zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { Input } from '../ui/input'
-// import { Textarea } from '../ui/textarea'
 import Link from 'next/link'
 import {
   Select,
@@ -34,6 +33,7 @@ import {
   updateImageMember,
   updateMemberPersonalInformation,
 } from '@/actions/member-action'
+import { Textarea } from '../ui/textarea'
 
 interface EditProfileMemberProps {
   data: any
@@ -44,6 +44,8 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
   const [successMessageImage, setSuccessMessageImage] = useState('')
   const [errorMessagePersonal, setErrorMessagePersonal] = useState('')
   const [successMessagePersonal, setSuccessMessagePersonal] = useState('')
+  const [errorMessageResume, setErrorMessageResume] = useState('')
+  const [successMessageResume, setSuccessMessageResume] = useState('')
   const [isPending, setIsPending] = useState(false)
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [srcImage, setSrcImage] = useState<string | null>(
@@ -139,6 +141,7 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
       //   interests: data.interests || [],
     },
   })
+
   const formResume = useForm<z.infer<typeof updateMemberSchema>>({
     resolver: zodResolver(updateMemberSchema),
     defaultValues: {
@@ -147,6 +150,7 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
       //   interests: data.interests || [],
     },
   })
+
   const onSubmitPersonal = (value: z.infer<typeof updateMemberSchema>) => {
     setErrorMessagePersonal('')
     setSuccessMessagePersonal('')
@@ -168,6 +172,29 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
         })
     })
   }
+
+  const onSubmitResume = (value: z.infer<typeof updateMemberSchema>) => {
+    setErrorMessageResume('')
+    setSuccessMessageResume('')
+    startTransition(() => {
+      setIsPending(true)
+      updateMemberPersonalInformation(value, data.id, data.member.id)
+        .then((response) => {
+          setSuccessMessageResume(response?.success ?? '')
+          setErrorMessageResume(response?.error ?? '')
+          setIsPending(false)
+        })
+        .catch((err) => {
+          console.error('Error updating resume information:', err)
+          setErrorMessageResume(
+            'Terjadi kesalahan saat memperbarui informasi resume.'
+          )
+          setSuccessMessageResume('')
+          setIsPending(false)
+        })
+    })
+  }
+
   return (
     <div className='max-w-6xl mx-auto p-8 w-full'>
       <h1 className='text-3xl font-bold text-green-700 mb-6'>
@@ -496,6 +523,65 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
                     )}
                   />
                 </div>
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+        <CardFooter className='text-center pt-6 border-t'>
+          <Link
+            href='/dashboard'
+            className='text-green-600 hover:text-green-700 font-medium'
+          >
+            Back to Dashboard
+          </Link>
+        </CardFooter>
+      </Card>
+
+      {/* section resume data */}
+      <Card className='shadow-lg'>
+        <CardHeader>
+          <p className='text-lg font-semibold text-green-700 mb-4'>
+            Edit Resume Anda
+          </p>
+          {errorMessageResume && <FormError message={errorMessageResume} />}
+          {successMessageResume && (
+            <FormSuccess message={successMessageResume} />
+          )}
+        </CardHeader>
+
+        <CardContent>
+          <Form {...formResume}>
+            <form
+              onSubmit={formResume.handleSubmit(onSubmitResume)}
+              className='space-y-6'
+            >
+              <div className='mb-4 flex justify-between'>
+                <p className='text-md font-medium text-gray-700 mb-4'>
+                  Personal Information
+                </p>
+                <Button type='submit' disabled={isPending}>
+                  Simpan Perubahan
+                </Button>
+              </div>
+              <div>
+                <FormField
+                  control={formResume.control}
+                  name='resume'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Resume</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          {...field}
+                          disabled={formResume.formState.isSubmitting}
+                          placeholder='Resume Anda'
+                          className='border-2 border-gray-100 shadow-sm h-[216px]'
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
             </form>
           </Form>
