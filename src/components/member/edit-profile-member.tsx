@@ -4,7 +4,7 @@
 import Image from 'next/image'
 import { Card, CardContent, CardFooter, CardHeader } from '../ui/card'
 import { startTransition, useRef, useState } from 'react'
-import { ImagePlus } from 'lucide-react'
+import { ImagePlus, X } from 'lucide-react'
 import { Button } from '../ui/button'
 import { FormError } from '../auth/form-error'
 import { FormSuccess } from '../auth/form-succsess'
@@ -46,6 +46,10 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
   const [successMessagePersonal, setSuccessMessagePersonal] = useState('')
   const [errorMessageResume, setErrorMessageResume] = useState('')
   const [successMessageResume, setSuccessMessageResume] = useState('')
+  const [errorMessageSkills, setErrorMessageSkills] = useState('')
+  const [successMessageSkills, setSuccessMessageSkills] = useState('')
+  const [errorMessageInterests, setErrorMessageInterests] = useState('')
+  const [successMessageInterests, setSuccessMessageInterests] = useState('')
   const [isPending, setIsPending] = useState(false)
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [srcImage, setSrcImage] = useState<string | null>(
@@ -146,8 +150,20 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
     resolver: zodResolver(updateMemberSchema),
     defaultValues: {
       resume: data.resume || '',
-      //   skills: data.skills || [],
-      //   interests: data.interests || [],
+    },
+  })
+
+  const formSkills = useForm<z.infer<typeof updateMemberSchema>>({
+    resolver: zodResolver(updateMemberSchema),
+    defaultValues: {
+      skills: data.skills || [],
+    },
+  })
+
+  const formInterests = useForm<z.infer<typeof updateMemberSchema>>({
+    resolver: zodResolver(updateMemberSchema),
+    defaultValues: {
+      interests: data.interests || [],
     },
   })
 
@@ -190,6 +206,50 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
             'Terjadi kesalahan saat memperbarui informasi resume.'
           )
           setSuccessMessageResume('')
+          setIsPending(false)
+        })
+    })
+  }
+
+  const onSubmitSkills = (value: z.infer<typeof updateMemberSchema>) => {
+    setErrorMessageSkills('')
+    setSuccessMessageSkills('')
+    startTransition(() => {
+      setIsPending(true)
+      updateMemberPersonalInformation(value, data.id, data.member.id)
+        .then((response) => {
+          setSuccessMessageSkills(response?.success ?? '')
+          setErrorMessageSkills(response?.error ?? '')
+          setIsPending(false)
+        })
+        .catch((err) => {
+          console.error('Error updating Skills information:', err)
+          setErrorMessageSkills(
+            'Terjadi kesalahan saat memperbarui informasi Skills.'
+          )
+          setSuccessMessageSkills('')
+          setIsPending(false)
+        })
+    })
+  }
+
+  const onSubmitInterests = (value: z.infer<typeof updateMemberSchema>) => {
+    setErrorMessageInterests('')
+    setSuccessMessageInterests('')
+    startTransition(() => {
+      setIsPending(true)
+      updateMemberPersonalInformation(value, data.id, data.member.id)
+        .then((response) => {
+          setSuccessMessageInterests(response?.success ?? '')
+          setErrorMessageInterests(response?.error ?? '')
+          setIsPending(false)
+        })
+        .catch((err) => {
+          console.error('Error updating Interests information:', err)
+          setErrorMessageInterests(
+            'Terjadi kesalahan saat memperbarui informasi Interests.'
+          )
+          setSuccessMessageInterests('')
           setIsPending(false)
         })
     })
@@ -578,6 +638,200 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
                           className='border-2 border-gray-100 shadow-sm h-[216px]'
                         />
                       </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+        <CardFooter className='text-center pt-6 border-t'>
+          <Link
+            href='/dashboard'
+            className='text-green-600 hover:text-green-700 font-medium'
+          >
+            Back to Dashboard
+          </Link>
+        </CardFooter>
+      </Card>
+
+      {/* section Skills data */}
+      <Card className='shadow-lg'>
+        <CardHeader>
+          <p className='text-lg font-semibold text-green-700 mb-4'>
+            Edit Skills Anda
+          </p>
+          {errorMessageSkills && <FormError message={errorMessageSkills} />}
+          {successMessageSkills && (
+            <FormSuccess message={successMessageSkills} />
+          )}
+        </CardHeader>
+
+        <CardContent>
+          <Form {...formSkills}>
+            <form
+              onSubmit={formSkills.handleSubmit(onSubmitSkills)}
+              className='space-y-6'
+            >
+              <div className='mb-4 flex justify-between'>
+                <p className='text-md font-medium text-gray-700 mb-4'>Skils</p>
+                <Button type='submit' disabled={isPending}>
+                  Simpan Perubahan
+                </Button>
+              </div>
+              <div>
+                <FormField
+                  control={formSkills.control}
+                  name='skills'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Tambahkan Skills Anda</FormLabel>
+                      {/* Input untuk menambahkan skill manual */}
+                      <FormControl>
+                        <Input
+                          placeholder='Tulis disini dan tekan enter untuk menambahkan skill'
+                          disabled={isPending}
+                          onKeyDown={(e) => {
+                            if (
+                              e.key === 'Enter' &&
+                              e.currentTarget.value.trim() !== ''
+                            ) {
+                              const newSkill = e.currentTarget.value.trim()
+                              if (!field.value?.includes(newSkill)) {
+                                field.onChange([
+                                  ...(field.value || []),
+                                  newSkill,
+                                ])
+                              }
+                              e.currentTarget.value = '' // Reset input
+                              e.preventDefault() // Prevent form submission
+                            }
+                          }}
+                          className='border-2 border-gray-100 shadow-sm mb-2'
+                        />
+                      </FormControl>
+                      {/* Menampilkan daftar skill */}
+                      <div className='mt-2 flex flex-wrap gap-2'>
+                        {field.value?.map((skill) => (
+                          <div
+                            key={skill}
+                            className='bg-gray-100 px-2 py-1 rounded-md flex items-center gap-2'
+                          >
+                            {skill}
+                            <Button
+                              variant={'ghost'}
+                              type='button'
+                              onClick={() =>
+                                field.onChange(
+                                  field.value?.filter((s) => s !== skill)
+                                )
+                              }
+                              className='text-gray-500 hover:text-gray-700 w-4 h-4'
+                            >
+                              <X className='h-4 w-4 text-red-600 hover:text-red-700' />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+        <CardFooter className='text-center pt-6 border-t'>
+          <Link
+            href='/dashboard'
+            className='text-green-600 hover:text-green-700 font-medium'
+          >
+            Back to Dashboard
+          </Link>
+        </CardFooter>
+      </Card>
+
+      {/* section Interets data */}
+      <Card className='shadow-lg'>
+        <CardHeader>
+          <p className='text-lg font-semibold text-green-700 mb-4'>
+            Edit Skills Anda
+          </p>
+          {errorMessageInterests && (
+            <FormError message={errorMessageInterests} />
+          )}
+          {successMessageInterests && (
+            <FormSuccess message={successMessageInterests} />
+          )}
+        </CardHeader>
+
+        <CardContent>
+          <Form {...formInterests}>
+            <form
+              onSubmit={formInterests.handleSubmit(onSubmitInterests)}
+              className='space-y-6'
+            >
+              <div className='mb-4 flex justify-between'>
+                <p className='text-md font-medium text-gray-700 mb-4'>Skils</p>
+                <Button type='submit' disabled={isPending}>
+                  Simpan Perubahan
+                </Button>
+              </div>
+              <div>
+                <FormField
+                  control={formInterests.control}
+                  name='interests'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Tambahkan Minat Anda</FormLabel>
+                      {/* Input untuk menambahkan skill manual */}
+                      <FormControl>
+                        <Input
+                          placeholder='Tulis disini dan tekan enter untuk menambahkan skill'
+                          disabled={isPending}
+                          onKeyDown={(e) => {
+                            if (
+                              e.key === 'Enter' &&
+                              e.currentTarget.value.trim() !== ''
+                            ) {
+                              const newSkill = e.currentTarget.value.trim()
+                              if (!field.value?.includes(newSkill)) {
+                                field.onChange([
+                                  ...(field.value || []),
+                                  newSkill,
+                                ])
+                              }
+                              e.currentTarget.value = '' // Reset input
+                              e.preventDefault() // Prevent form submission
+                            }
+                          }}
+                          className='border-2 border-gray-100 shadow-sm mb-2'
+                        />
+                      </FormControl>
+                      {/* Menampilkan daftar skill */}
+                      <div className='mt-2 flex flex-wrap gap-2'>
+                        {field.value?.map((skill) => (
+                          <div
+                            key={skill}
+                            className='bg-gray-100 px-2 py-1 rounded-md flex items-center gap-2'
+                          >
+                            {skill}
+                            <Button
+                              variant={'ghost'}
+                              type='button'
+                              onClick={() =>
+                                field.onChange(
+                                  field.value?.filter((s) => s !== skill)
+                                )
+                              }
+                              className='text-gray-500 hover:text-gray-700 w-4 h-4'
+                            >
+                              <X className='h-4 w-4 text-red-600 hover:text-red-700' />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
                       <FormMessage />
                     </FormItem>
                   )}

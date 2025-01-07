@@ -144,6 +144,7 @@ export async function updateMemberPersonalInformation(
       memberType,
       nim,
       resume,
+      skills,
     } = validatedFields.data
 
     await prisma.user.update({
@@ -177,6 +178,7 @@ export async function updateMemberPersonalInformation(
         memberType: dataMemberType,
         nim: nim,
         resume: resume,
+        skills: skills,
       },
     })
     return {
