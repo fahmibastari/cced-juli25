@@ -756,7 +756,7 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
       <Card className='shadow-lg'>
         <CardHeader>
           <p className='text-lg font-semibold text-green-700 mb-4'>
-            Edit Skills Anda
+            Edit Minat Anda
           </p>
           {errorMessageInterests && (
             <FormError message={errorMessageInterests} />
@@ -773,7 +773,7 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
               className='space-y-6'
             >
               <div className='mb-4 flex justify-between'>
-                <p className='text-md font-medium text-gray-700 mb-4'>Skils</p>
+                <p className='text-md font-medium text-gray-700 mb-4'>Minat</p>
                 <Button type='submit' disabled={isPending}>
                   Simpan Perubahan
                 </Button>
@@ -788,7 +788,7 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
                       {/* Input untuk menambahkan skill manual */}
                       <FormControl>
                         <Input
-                          placeholder='Tulis disini dan tekan enter untuk menambahkan skill'
+                          placeholder='Tulis disini dan tekan enter untuk menambahkan minat anda'
                           disabled={isPending}
                           onKeyDown={(e) => {
                             if (
