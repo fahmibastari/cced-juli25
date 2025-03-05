@@ -192,6 +192,32 @@ export async function updateMemberPersonalInformation(
     }
   }
 }
+export const updateCvMember = async (id: string, cv: File) => {
+  try {
+    if (!cv) {
+      return { error: 'CV file is required' };
+    }
+
+    // Save the file and get the file URL
+    const cvFile = await saveFile('member-cvs', cv);
+    if (!cvFile) {
+      return { error: 'CV file is invalid or could not be saved' };
+    }
+
+    // Update the `cv` column in the `member` table where userId = id
+    await prisma.member.update({
+      where: { userId: id }, // Ensure `userId` is the correct field
+      data: { cv: cvFile.src }, // Store the file URL in the `cv` column
+    });
+
+    return { success: 'CV successfully updated!' };
+  } catch (err) {
+    console.error('Error during CV update:', err);
+    return {
+      error: 'An unexpected error occurred while updating the profile CV.',
+    };
+  }
+};
 
 export const updateImageMember = async (
   id: string,
@@ -236,3 +262,4 @@ export const updateImageMember = async (
     }
   }
 }
+

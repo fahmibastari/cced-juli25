@@ -124,9 +124,9 @@ model Member {
   skills     String[]
   interests  String[]
   resume     String?
+  cv         String?   
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
-
   experience     Experience[]
   education      Education[]
   assessment     Assessment[]
@@ -201,7 +201,7 @@ model Job {
   id           String    @id @default(uuid())
   companyId    String
   title        String
-  description  String
+  description  String 
   salary       String
   requirements String[]
   location     String?

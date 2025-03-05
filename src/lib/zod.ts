@@ -149,6 +149,7 @@ export const updateMemberSchema = z.object({
   gender: z.string().optional(),
   about: z.string().optional(),
   resume: z.string().optional(),
+  cv: z.string().optional(),
   skills: z.array(z.string()).optional(),
   interests: z.array(z.string()).optional(),
 })

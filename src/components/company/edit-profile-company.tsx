@@ -46,10 +46,10 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0]
       const maxSize = 100 * 1024 // 100 KB
-      const validTypes = ['image/png', 'image/webp']
+      const validTypes = ['image/png', 'image/webp','image/jpg','image/jpeg']
 
       if (!validTypes.includes(file.type)) {
-        setErrorMessageLogo('Hanya file PNG dan WebP yang diperbolehkan.')
+        setErrorMessageLogo('Hanya file PNG,JPG,JPEG dan WebP yang diperbolehkan.')
         return
       }
 
@@ -163,7 +163,7 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
             <div className='cursor-pointer rounded-lg border-2 border-dashed p-6 text-center h-80 flex flex-col gap-4 items-center justify-center'>
               <input
                 type='file'
-                accept='.png,.webp'
+                accept='.png,.webp,.jpg,.jpeg'
                 className='hidden'
                 ref={fileInputRef}
                 onChange={handleFileChange}
@@ -181,7 +181,7 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                   <ImagePlus className='h-12 w-12 text-gray-400' />
                 )}
                 <div className='text-sm text-gray-600'>
-                  Set logo perusahaan. Hanya file berformat *.png dan *.webp
+                  Set logo perusahaan. Hanya file berformat *.png,*.jpg,*.jpeg dan *.webp
                   dengan ukuran maksimal 100 KB.
                 </div>
                 {logoFile && (

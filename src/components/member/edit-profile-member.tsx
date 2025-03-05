@@ -31,6 +31,7 @@ import {
 } from '../ui/select'
 import {
   updateImageMember,
+  updateCvMember,
   updateMemberPersonalInformation,
 } from '@/actions/member-action'
 import { Textarea } from '../ui/textarea'
@@ -50,10 +51,16 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
   const [successMessageSkills, setSuccessMessageSkills] = useState('')
   const [errorMessageInterests, setErrorMessageInterests] = useState('')
   const [successMessageInterests, setSuccessMessageInterests] = useState('')
+  const [errorMessageCv, setErrorMessageCv] = useState('')
+  const [successMessageCv, setSuccessMessageCv] = useState('')
   const [isPending, setIsPending] = useState(false)
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [srcImage, setSrcImage] = useState<string | null>(
     data?.image?.src || null
+  ) 
+  const [cvFile, setCvFile] = useState<File | null>(null)
+  const [srcCv, setSrcCv] = useState<string | null>(
+    data?.cv?.src || null
   )
   const fileInputRef = useRef<HTMLInputElement>(null)
   const gender = ['laki-laki', 'perempuan']
@@ -88,6 +95,67 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
       setSrcImage(URL.createObjectURL(file))
     }
   }
+
+  const handleCvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0]
+      const maxSize =  2 * 1024 * 1024;
+      const validTypes = [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ];
+
+      if (!validTypes.includes(file.type)) {
+        setErrorMessageCv (  "Only PDF and Word files are allowed." )
+        setSuccessMessageCv('')
+        return
+      }
+
+      if (file.size > maxSize) {
+        setErrorMessageCv('File size must be under 2 MB.')
+        setSuccessMessageCv('')
+        return
+      }
+
+      setErrorMessageCv('')
+      setSuccessMessageCv('File successfully uploaded!')
+      setCvFile(file)
+      setSrcCv(URL.createObjectURL(file))
+    }
+  }
+  const handleEditCv = async () => {
+    if (!cvFile) {
+      // console.log(data.id, data.imageId, imageFile)
+      setErrorMessageCv('No file selected.')
+      return
+    }
+
+    setIsPending(true)
+    try {
+      const response = await updateCvMember(
+        data.id,
+        cvFile
+      )
+      if (response?.error) {
+        setErrorMessageCv(response.error)
+        setSuccessMessageCv('')
+      } else {
+        setErrorMessageCv('')
+        setSuccessMessageCv(
+          response?.success || 'Cv updated successfully!'
+        )
+      }
+    } catch (err) {
+      console.error('Error updating image:', err)
+      setErrorMessageCv('An error occurred while updating the image.')
+      setSuccessMessageCv('')
+    } finally {
+      setIsPending(false)
+    }
+  }
+
 
   const handleButtonClick = () => {
     if (fileInputRef.current) {
@@ -315,6 +383,7 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
                 >
                   Select File
                 </Button>
+
               </div>
             </div>
           </div>
@@ -655,6 +724,66 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
           </Link>
         </CardFooter>
       </Card>
+
+      {/* CV Upload Section */}
+      <Card className="shadow-lg p-6">
+      <CardHeader>
+        <p className="text-lg font-semibold text-green-700 mb-4">Edit CV Anda</p>
+        {errorMessageCv && <FormError message={errorMessageCv} />}
+        {successMessageCv && <FormSuccess message={successMessageCv} />}
+      </CardHeader>
+
+      <CardContent>
+      <div className='mb-4 flex justify-between'>
+                 <p className="text-md font-medium text-gray-700 mb-2">
+            Upload Your CV (PDF or Word)
+          </p>
+          <Button
+          type="submit"
+          onClick={handleEditCv}
+          disabled={isPending }
+        >
+          {isPending ? 'Menyimpan...' : 'Simpan Perubahan'}
+        </Button>
+              </div>
+        <div className="mb-4">
+
+         
+          <div className="flex items-start space-x-4 flex-col gap-4">
+            <input
+              type="file"
+              accept=".pdf,.doc,.docx"
+              className="w-full border-2"
+              onChange={handleCvChange}
+            />
+            {data.member.cv && (
+                <a
+                  href={`${data.member.cv}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-blue-600 hover:underline"
+                >
+                    Preview
+                </a>
+              )}
+          </div>
+        </div>
+
+     
+      </CardContent>
+
+
+      <CardFooter className="text-center pt-6 border-t">
+        <Link
+          href="/dashboard"
+          className="text-green-600 hover:text-green-700 font-medium"
+        >
+          Kembali ke Dashboard
+        </Link>
+      </CardFooter>
+      </Card>
+
+
 
       {/* section Skills data */}
       <Card className='shadow-lg'>

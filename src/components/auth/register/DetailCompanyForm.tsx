@@ -80,23 +80,24 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0]
       const maxSize = 100 * 1024 // 100 KB
-      const validTypes = ['image/png', 'image/webp']
-
+      const validTypes = ['image/png', 'image/webp', 'image/jpeg', 'image/jpg']
+  
       if (!validTypes.includes(file.type)) {
-        setErrorMessage('Hanya file PNG dan WebP yang diperbolehkan.')
+        setErrorMessage('Hanya file PNG, WebP, JPG, dan JPEG yang diperbolehkan.')
         return
       }
-
+  
       if (file.size > maxSize) {
         setErrorMessage('Ukuran file maksimal 100 KB.')
         return
       }
-
+  
       setErrorMessage('')
       setSuccessMessage('File Berhasil di Upload!')
       setLogoFile(file)
     }
   }
+  
 
   return (
     <CardWrapper
@@ -115,7 +116,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
             <div className='mt-2 cursor-pointer rounded-lg border-2 border-dashed p-4 text-center'>
               <input
                 type='file'
-                accept='.png,.webp'
+                accept='.png,.webp,.jpg,.jpeg'
                 className='hidden'
                 id='logo-upload'
                 onChange={handleFileChange}
@@ -124,7 +125,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 <div className='flex flex-col items-center w-full h-40 justify-center gap-8'>
                   <ImagePlus className='h-10 w-10 text-gray-400' />
                   <div className='text-sm text-gray-600'>
-                    Set logo perusahaan. Hanya file berformat *.png dan *.webp
+                    Set logo perusahaan. Hanya file berformat *.png, *.webp ,*.jpg dan *.jpeg
                     dengan ukuran maksimal 100 KB.
                   </div>
                   {logoFile && (
