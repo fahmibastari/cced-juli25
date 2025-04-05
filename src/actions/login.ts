@@ -25,6 +25,9 @@ export const login = async (data: z.infer<typeof signInSchema>) => {
 
   if (!existingUser.emailVerified) {
     await generateVerificationToken(existingUser.email)
+    if(existingUser.role==="COMPANY"){
+        return { success: 'Waiting for Verification!' }
+    }
     return { success: 'Confirmation Email Sent!' }
   }
 

@@ -42,23 +42,28 @@ const CardSmall = ({
           </div>
         </CardHeader>
         <CardContent className='p-4 pt-2'>
-          <CardTitle className='mb-2 text-xl md:text-lg font-semibold'>
-            {title}
-          </CardTitle>
-          {createdAt && (
-            <p className='text-sm text-gray-500 mb-2'>
-              {new Date(createdAt).toLocaleString('id-ID', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-              })}
-            </p>
-          )}
-          <p className='mb-4 text-gray-600'>{description}......</p>
-        </CardContent>
+        <CardTitle className='mb-2 text-xl md:text-lg font-semibold'>
+          {title}
+        </CardTitle>
+        {createdAt && (
+          <p className='text-sm text-gray-500 mb-2'>
+            {new Date(createdAt).toLocaleString('id-ID', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+            })}
+          </p>
+        )}
+        {/* ✅ Render description as HTML */}
+        <div
+          className='mb-4 text-gray-600'
+          dangerouslySetInnerHTML={{ __html: description }}
+        />
+      </CardContent>
+
         <CardFooter className='p-4 pt-0'>
           <Button
             variant='link'

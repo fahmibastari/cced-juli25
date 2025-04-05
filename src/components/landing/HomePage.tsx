@@ -17,6 +17,8 @@ export default async function HomePage() {
   const articles = await getArticles()
   const featuredNews = news[0]
 
+  const sanitizeImageUrl = (url: string) => url.startsWith('blob:') ? '' : url;
+
   return (
     <div className='bg-white text-gray-800'>
       {/* ----------------- HEADER ------------------ */}
@@ -37,46 +39,6 @@ export default async function HomePage() {
       </header>
       {/* ----------------- CONTENT ------------------ */}
       <div>
-        <section id='fitur' className='py-16'>
-          <div className='container mx-auto'>
-            <h2 className='mb-8 text-center text-3xl font-bold text-[#025908]'>
-              Fitur Unggulan
-            </h2>
-            <div className='grid gap-8 md:grid-cols-3 m-4'>
-              {dummyFiturData?.map((data, index) => (
-                <CardSmallLanding
-                  key={index}
-                  styleCard='rounded-lg border border-[#025908] bg-white p-4 shadow-md'
-                  styleTitle='text-xl font-bold text-[#025908]'
-                  styleDescription='mt-2 text-gray-600'
-                  title={data?.title}
-                  description={data?.description}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id='manfaat' className='bg-gray-100 py-16'>
-          <div className='container mx-auto'>
-            <h2 className='mb-8 text-center text-3xl font-bold text-[#025908]'>
-              Manfaat Sistem
-            </h2>
-            <div className='space-y-8'>
-              {dummyManfaatData?.map((data, index) => (
-                <CardSmallLanding
-                  key={index}
-                  styleCard='bg-white rounded-lg shadow-md p-6'
-                  styleTitle='text-2xl font-semibold text-[#025908] text-center'
-                  styleDescription='mt-2 text-gray-600 text-center'
-                  title={data?.title}
-                  description={data?.description}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
-
         <section id='berita' className='py-16'>
           <div className='container mx-auto p-10'>
             <h2 className='mb-12 text-center text-3xl font-bold text-[#025908]'>
@@ -85,7 +47,7 @@ export default async function HomePage() {
             {featuredNews ? (
               <CardBig
                 href='#'
-                srcImage={featuredNews?.thumbnail}
+                srcImage={sanitizeImageUrl(featuredNews?.thumbnail)}
                 title={featuredNews?.title}
                 description={featuredNews?.content.slice(0, 250)}
                 createdAt={featuredNews?.createdAt ?? undefined}
@@ -96,12 +58,12 @@ export default async function HomePage() {
             <div className='grid gap-3 md:grid-cols-3'>
               {news.length > 0 ? (
                 news
-                  .slice(1, 4) // Ambil item dari index 1 hingga sebelum index 4 (total 3 item)
+                  .slice(1, 4)
                   .map((data: News) => (
                     <CardSmall
                       href='#'
                       key={data?.id}
-                      srcImage={data?.thumbnail}
+                      srcImage={sanitizeImageUrl(data?.thumbnail)}
                       title={data?.title}
                       description={data?.content.slice(0, 100)}
                       createdAt={data?.createdAt ?? undefined}
@@ -110,14 +72,6 @@ export default async function HomePage() {
               ) : (
                 <p>Loading berita lainnya...</p>
               )}
-            </div>
-            <div className='mt-10 flex justify-center'>
-              <Link
-                href='/blog/news'
-                className={buttonVariants({ variant: 'outline' })}
-              >
-                Lihat berita lainnya
-              </Link>
             </div>
           </div>
         </section>
@@ -130,12 +84,12 @@ export default async function HomePage() {
             <div className='space-y-8'>
               {articles.length > 0 ? (
                 articles
-                  .slice(1, 4) // Ambil item dari index 1 hingga sebelum index 4 (total 3 item)
+                  .slice(0, 4)
                   .map((data: Article) => (
                     <CardSmall
                       href='#'
                       key={data?.id}
-                      srcImage={data?.thumbnail}
+                      srcImage={sanitizeImageUrl(data?.thumbnail)}
                       title={data?.title}
                       description={data?.content.slice(0, 100)}
                       createdAt={data?.createdAt ?? undefined}
@@ -144,34 +98,6 @@ export default async function HomePage() {
               ) : (
                 <p>Loading berita lainnya...</p>
               )}
-            </div>
-            <div className='mt-10 flex justify-center'>
-              <Link
-                href='/blog/article'
-                className={buttonVariants({ variant: 'outline' })}
-              >
-                Lihat Article lainnya
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        <section id='kegiatan' className='py-16'>
-          <div className='container mx-auto'>
-            <h2 className='mb-8 text-center text-3xl font-bold text-[#025908]'>
-              Kegiatan Terbaru
-            </h2>
-            <div className='grid gap-8 md:grid-cols-3 m-4'>
-              {dummyKegiatanData?.map((data, index) => (
-                <CardSmallLanding
-                  key={index}
-                  styleCard='bg-white rounded-lg shadow-md p-4'
-                  styleTitle='text-xl font-bold text-[#025908]'
-                  styleDescription='mt-2 text-gray-600'
-                  title={data?.title}
-                  description={data?.description}
-                />
-              ))}
             </div>
           </div>
         </section>

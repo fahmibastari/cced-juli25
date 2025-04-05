@@ -30,7 +30,7 @@ export const newVerification = async (token: string) => {
       emailVerified: new Date(),
       email: existingToken.email,
     },
-  })
+  })  
 
   await prisma.verificationToken.delete({
     where: {

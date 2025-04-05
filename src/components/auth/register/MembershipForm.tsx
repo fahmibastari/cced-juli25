@@ -1,6 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
 import {
   Form,
   FormControl,
@@ -39,6 +40,7 @@ interface MembershipFormProps {
 }
 
 const MembershipForm = ({ onBack, data }: MembershipFormProps) => {
+  const router = useRouter()
   const [memberType, setMemberType] = useState<MemberType>('MAHASISWA_UNILA')
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
@@ -64,9 +66,16 @@ const MembershipForm = ({ onBack, data }: MembershipFormProps) => {
     startTransition(() => {
       setIsPending(true)
       registerMember(data).then((data) => {
+        if (data?.error) {
+          setErrorMessage(data.error)
+          setIsPending(false)
+          return
+        }
         setSuccessMessage(data?.message ?? '')
-        setErrorMessage(data?.error ?? '')
         setIsPending(false)
+        setTimeout(() => {
+          router.push('/login') 
+        }, 1000)
       })
     })
   }

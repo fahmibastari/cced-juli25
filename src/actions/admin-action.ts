@@ -1,6 +1,7 @@
 'use server'
 
 import prisma from '@/lib/prisma'
+import { saveFile } from '@/lib/file-handler'
 
 export const getUsers = async () => {
   try {
@@ -10,10 +11,64 @@ export const getUsers = async () => {
       },
     })
     return user
+    
   } catch {
     return null
   }
 }
+
+export const verifyCompanyByUserId = async (userId: string) => {
+  try {
+    // Fetch the user
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    })
+
+    if (!user) {
+      return { error: 'User not found.' }
+    }
+
+    // Update emailVerified timestamp
+    await prisma.user.update({
+      where: { id: userId },
+      data: { emailVerified: new Date() },
+    })
+
+    // If the user is a COMPANY, verify the associated company too
+    if (user.role === 'COMPANY') {
+      const company = await prisma.company.findFirst({
+        where: { userId },
+      })
+
+      if (!company) {
+        return { error: 'Company not found for this user.' }
+      }
+
+      await prisma.company.update({
+        where: { id: company.id },
+        data: { isVerified: true },
+      })
+
+      // Optional: delete any requestVerified record
+      await prisma.requestVerified.deleteMany({
+        where: { companyId: company.id },
+      })
+
+      return {
+        success: `Company "${company.companyName}" verified and user's email marked as verified.`,
+      }
+    }
+
+    return { success: 'User email marked as verified.' }
+  } catch (error) {
+    console.error('Error verifying:', error)
+    return {
+      error: 'An error occurred while verifying. Please try again.',
+    }
+  }
+}
+
+
 
 export const getCompanies = async () => {
   try {
@@ -86,6 +141,21 @@ export const getContents = async () => {
     })
     return { news, article }
   } catch {
+    return null
+  }
+}
+
+export const getContent = async (id: string) => {
+  try {
+    const news = await prisma.news.findUnique({ where: { id } })
+    if (news) return { type: 'news', content: news }
+
+    const article = await prisma.article.findUnique({ where: { id } })
+    if (article) return { type: 'article', content: article }
+
+    return null
+  } catch (error) {
+    console.error('Error fetching content:', error)
     return null
   }
 }
@@ -205,5 +275,43 @@ export const deleteRequestVerified = async (id: string, companyId: string) => {
       error:
         'An error occurred while prosessing the request verified. Please try again.',
     }
+  }
+}
+
+
+export const createContent = async (
+  type: 'news' | 'article',
+  title: string,
+  content: string,
+  thumbnail?: File // Accept File instead of string URL
+) => {
+  try {
+    const slug = title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '')
+
+    // ✅ Upload thumbnail if provided
+    let thumbnailUrl = ''
+    if (thumbnail) {
+      const uploadedFile = await saveFile('uploads/thumbnails', thumbnail)
+      thumbnailUrl = uploadedFile.src // Store the file URL in DB
+    }
+
+    // ✅ Save content to the database
+    if (type === 'news') {
+      await prisma.news.create({
+        data: { title, content, thumbnail: thumbnailUrl, slug },
+      })
+    } else {
+      await prisma.article.create({
+        data: { title, content, thumbnail: thumbnailUrl, slug },
+      })
+    }
+
+    return { success: `${type.charAt(0).toUpperCase() + type.slice(1)} created successfully!` }
+  } catch (error) {
+    console.error(`Error creating ${type}:`, error)
+    return { error: `An error occurred while creating the ${type}. Please try again.` }
   }
 }

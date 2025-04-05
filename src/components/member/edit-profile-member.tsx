@@ -725,66 +725,6 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
         </CardFooter>
       </Card>
 
-      {/* CV Upload Section */}
-      <Card className="shadow-lg p-6">
-      <CardHeader>
-        <p className="text-lg font-semibold text-green-700 mb-4">Edit CV Anda</p>
-        {errorMessageCv && <FormError message={errorMessageCv} />}
-        {successMessageCv && <FormSuccess message={successMessageCv} />}
-      </CardHeader>
-
-      <CardContent>
-      <div className='mb-4 flex justify-between'>
-                 <p className="text-md font-medium text-gray-700 mb-2">
-            Upload Your CV (PDF or Word)
-          </p>
-          <Button
-          type="submit"
-          onClick={handleEditCv}
-          disabled={isPending }
-        >
-          {isPending ? 'Menyimpan...' : 'Simpan Perubahan'}
-        </Button>
-              </div>
-        <div className="mb-4">
-
-         
-          <div className="flex items-start space-x-4 flex-col gap-4">
-            <input
-              type="file"
-              accept=".pdf,.doc,.docx"
-              className="w-full border-2"
-              onChange={handleCvChange}
-            />
-            {data.member.cv && (
-                <a
-                  href={`${data.member.cv}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-blue-600 hover:underline"
-                >
-                    Preview
-                </a>
-              )}
-          </div>
-        </div>
-
-     
-      </CardContent>
-
-
-      <CardFooter className="text-center pt-6 border-t">
-        <Link
-          href="/dashboard"
-          className="text-green-600 hover:text-green-700 font-medium"
-        >
-          Kembali ke Dashboard
-        </Link>
-      </CardFooter>
-      </Card>
-
-
-
       {/* section Skills data */}
       <Card className='shadow-lg'>
         <CardHeader>

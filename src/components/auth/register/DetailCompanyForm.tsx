@@ -1,6 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
 import {
   Form,
   FormControl,
@@ -39,7 +40,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
   const [successMessage, setSuccessMessage] = useState('')
   const [isPending, setIsPending] = useState(false)
   const [logoFile, setLogoFile] = useState<File | null>(null)
-
+  const router = useRouter()
   const form = useForm<z.infer<typeof companySchema>>({
     resolver: zodResolver(companySchema),
     defaultValues: {
@@ -69,9 +70,17 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
     startTransition(() => {
       setIsPending(true)
       registerCompany(data).then((response) => {
+        if (response?.error) {
+          setErrorMessage(response.error)
+          setIsPending(false)
+          return
+        }
+      
         setSuccessMessage(response?.message ?? '')
-        setErrorMessage(response?.error ?? '')
         setIsPending(false)
+        setTimeout(() => {
+          router.push('/login')
+        }, 1000)
       })
     })
   }
@@ -179,25 +188,29 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name='ownership'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Kepemilikan Perusahaan</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        disabled={form.formState.isSubmitting}
-                        placeholder='Kepemilikan Perusahaan'
-                        className='border-2 border-gray-100 shadow-sm'
-                        type='text'
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <FormField
+              control={form.control}
+              name='ownership'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Kepemilikan Perusahaan</FormLabel>
+                  <FormControl>
+                    <select
+                      {...field}
+                      disabled={form.formState.isSubmitting}
+                      className='w-full border-2 border-gray-100 bg-white shadow-sm rounded-md p-2'
+                    >
+                      <option value=''>Pilih Kepemilikan</option>
+                      <option value='Perusahaan kecil'>Perusahaan kecil</option>
+                      <option value='Perusahaan menengah'>Perusahaan menengah</option>
+                      <option value='Perusahaan besar'>Perusahaan besar</option>
+                    </select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
               <FormField
                 control={form.control}
                 name='phone'

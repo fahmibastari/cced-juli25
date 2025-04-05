@@ -50,7 +50,10 @@ const CardBig = ({
               })}
             </p>
           )}
-          <p className='mb-4 text-gray-700'>{description}......</p>
+        <div
+          className='mb-4 text-gray-600'
+          dangerouslySetInnerHTML={{ __html: description }}
+        />
           <Button
             variant='link'
             className='h-auto p-0 font-normal text-green-500'

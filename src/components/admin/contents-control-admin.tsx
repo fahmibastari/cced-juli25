@@ -16,6 +16,7 @@ import ButtonAction from './utils/action-button'
 import { deleteArticle, deleteNews } from '@/actions/admin-action'
 import { FormError } from '../auth/form-error'
 import { FormSuccess } from '../auth/form-succsess'
+import Link from 'next/link'
 
 interface ContentsControlProps {
   news: News[]
@@ -27,6 +28,7 @@ const ContentsControl = ({ news, article }: ContentsControlProps) => {
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
   const [contentsData, setContentsData] = useState<News[] | Article[]>(news)
+
   const handleClickDelete = async (id: string) => {
     try {
       if (currentData === 'News') {
@@ -46,6 +48,7 @@ const ContentsControl = ({ news, article }: ContentsControlProps) => {
       alert('Terjadi kesalahan saat menghapus konten')
     }
   }
+
   return (
     <main className='p-6'>
       <h1 className='text-2xl font-bold text-[#025908] mb-4'>
@@ -74,6 +77,11 @@ const ContentsControl = ({ news, article }: ContentsControlProps) => {
         >
           Article
         </Button>
+        <Link href='/admin/content-create'>
+          <Button size={'sm'} className='px-4' variant='outline'>
+            Buat Konten Baru
+          </Button>
+        </Link>
       </div>
       {errorMessage && <FormError message={errorMessage} />}
       {successMessage && <FormSuccess message={successMessage} />}
@@ -104,9 +112,12 @@ const ContentsControl = ({ news, article }: ContentsControlProps) => {
                     ? content.title
                     : `${content.title.slice(0, 80)}...`}
                 </TableCell>
-                <TableCell>{content.createdAt.toLocaleDateString()}</TableCell>
-                <TableCell>{content.updatedAt.toLocaleDateString()}</TableCell>
-                <TableCell className='text-right'>
+                <TableCell>{new Date(content.createdAt).toLocaleDateString()}</TableCell>
+                <TableCell>{new Date(content.updatedAt).toLocaleDateString()}</TableCell>
+                <TableCell className='text-right flex gap-2 justify-end'>
+                  <Link href={`/admin/content-create?id=${content.id}`}>
+                    <Button size='sm' variant='secondary'>Edit</Button>
+                  </Link>
                   <ButtonAction
                     id={content.id}
                     handleClickDelete={() => handleClickDelete(content.id)}

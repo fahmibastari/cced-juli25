@@ -11,6 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import ButtonActionUsers from './utils/action-button'
+import { verifyCompanyByUserId } from '@/actions/admin-action'
 import { useState } from 'react'
 import { User } from '@prisma/client'
 import { FormError } from '../auth/form-error'
@@ -19,6 +20,7 @@ import { FormSuccess } from '../auth/form-succsess'
 interface UsersControlProps {
   users: User[]
 }
+
 
 const UsersControl = ({ users }: UsersControlProps) => {
   const [usersData, setUsersData] = useState<User[]>(users)
@@ -39,6 +41,23 @@ const UsersControl = ({ users }: UsersControlProps) => {
       }
     } catch {
       setErrorMessage('Terjadi kesalahan saat menghapus pengguna')
+      setSuccessMessage('')
+    }
+  }
+
+
+  const handleClickVerifikasi = async (id: string) => {
+    try {
+      const response = await verifyCompanyByUserId(id) // call new function here
+      if (response.success) {
+        setSuccessMessage(response.success)
+        setErrorMessage('')
+      } else if (response.error) {
+        setErrorMessage(response.error)
+        setSuccessMessage('')
+      }
+    } catch {
+      setErrorMessage('Terjadi kesalahan saat memproses permintaan')
       setSuccessMessage('')
     }
   }
@@ -74,10 +93,12 @@ const UsersControl = ({ users }: UsersControlProps) => {
                 <TableCell>{user.role}</TableCell>
                 <TableCell>{user.id}</TableCell>
                 <TableCell className='text-right'>
-                  <ButtonActionUsers
-                    id={user.id}
-                    handleClickDelete={() => handleClickDelete(user.id)}
-                  />
+                <ButtonActionUsers
+                  id={user.id}
+                  isVerified={!!user.emailVerified}
+                  handleClickDelete={() => handleClickDelete(user.id)}
+                  handleClickVerifikasi={() => handleClickVerifikasi(user.id)}
+                />
                 </TableCell>
               </TableRow>
             ))

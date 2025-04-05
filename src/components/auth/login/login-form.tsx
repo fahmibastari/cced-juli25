@@ -31,7 +31,7 @@ export default function LoginPage() {
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: '',
-      password: '',
+      password: '12345678',
     },
   })
   function handleClickShowPassword() {
