@@ -41,6 +41,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
   const [isPending, setIsPending] = useState(false)
   const [logoFile, setLogoFile] = useState<File | null>(null)
   const router = useRouter()
+  const [berkasFile, setBerkasFile] = useState<File | null>(null)
   const form = useForm<z.infer<typeof companySchema>>({
     resolver: zodResolver(companySchema),
     defaultValues: {
@@ -61,11 +62,37 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
     },
   })
 
+  const handleBerkasChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0]
+      const allowedTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'image/png',
+        'image/jpeg',
+        'image/jpg',
+        'image/webp',
+      ]
+      if (!allowedTypes.includes(file.type)) {
+        setErrorMessage('Hanya PDF, Word, dan gambar yang diperbolehkan.')
+        return
+      }
+  
+      setErrorMessage('')
+      setSuccessMessage('Berkas berhasil dipilih!')
+      setBerkasFile(file)
+    }
+  }
+
   const handleSubmit = (data: z.infer<typeof companySchema>) => {
     setErrorMessage('')
     setSuccessMessage('')
     if (logoFile) {
       data.logo = logoFile
+    }
+    if (berkasFile) {
+      data.berkas = berkasFile
     }
     startTransition(() => {
       setIsPending(true)
@@ -107,6 +134,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
     }
   }
   
+  
 
   return (
     <CardWrapper
@@ -140,6 +168,32 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                   {logoFile && (
                     <div className='text-sm text-green-600'>
                       File terpilih: {logoFile.name}
+                    </div>
+                  )}
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <FormLabel>Berkas Perusahaan (PDF/Word/Gambar)</FormLabel>
+            <div className='mt-2 cursor-pointer rounded-lg border-2 border-dashed p-4 text-center'>
+              <input
+                type='file'
+                accept='.pdf,.doc,.docx,.png,.jpg,.jpeg,.webp'
+                className='hidden'
+                id='berkas-upload'
+                onChange={handleBerkasChange}
+              />
+              <label htmlFor='berkas-upload' className='cursor-pointer'>
+                <div className='flex flex-col items-center w-full h-40 justify-center gap-8'>
+                  <ImagePlus className='h-10 w-10 text-gray-400' />
+                  <div className='text-sm text-gray-600'>
+                    Upload PDF, Word, atau Gambar (berkas pendukung perusahaan)
+                  </div>
+                  {berkasFile && (
+                    <div className='text-sm text-green-600'>
+                      File terpilih: {berkasFile.name}
                     </div>
                   )}
                 </div>

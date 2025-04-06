@@ -1,6 +1,6 @@
 'use client'
 
-import { deleteUser } from '@/actions/admin-action'
+import { deleteUser, verifyCompanyByUserId } from '@/actions/admin-action'
 import {
   Table,
   TableBody,
@@ -11,19 +11,25 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import ButtonActionUsers from './utils/action-button'
-import { verifyCompanyByUserId } from '@/actions/admin-action'
 import { useState } from 'react'
-import { User } from '@prisma/client'
+import { User, Company, File } from '@prisma/client'
 import { FormError } from '../auth/form-error'
 import { FormSuccess } from '../auth/form-succsess'
 
-interface UsersControlProps {
-  users: User[]
+// ✅ Add these interfaces right after your imports
+interface ExtendedUser extends User {
+  company?: Company & {
+    berkas?: File
+  }
 }
 
+interface UsersControlProps {
+  users: ExtendedUser[]
+}
 
+// Your component
 const UsersControl = ({ users }: UsersControlProps) => {
-  const [usersData, setUsersData] = useState<User[]>(users)
+  const [usersData, setUsersData] = useState<ExtendedUser[]>(users)
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
 
@@ -45,10 +51,9 @@ const UsersControl = ({ users }: UsersControlProps) => {
     }
   }
 
-
   const handleClickVerifikasi = async (id: string) => {
     try {
-      const response = await verifyCompanyByUserId(id) // call new function here
+      const response = await verifyCompanyByUserId(id)
       if (response.success) {
         setSuccessMessage(response.success)
         setErrorMessage('')
@@ -75,6 +80,7 @@ const UsersControl = ({ users }: UsersControlProps) => {
             <TableHead>Nama Lengkap</TableHead>
             <TableHead>Role</TableHead>
             <TableHead>ID</TableHead>
+            <TableHead>Berkas</TableHead>
             <TableHead className='text-right'>Action</TableHead>
           </TableRow>
         </TableHeader>
@@ -86,19 +92,33 @@ const UsersControl = ({ users }: UsersControlProps) => {
               </TableCell>
             </TableRow>
           ) : (
-            usersData.map((user: User) => (
+            usersData.map((user) => (
               <TableRow key={user.id}>
                 <TableCell className='font-medium'>{user.email}</TableCell>
                 <TableCell>{user.fullname}</TableCell>
                 <TableCell>{user.role}</TableCell>
                 <TableCell>{user.id}</TableCell>
+                <TableCell>
+                  {user.role === 'COMPANY' && user.company?.berkas ? (
+                    <a
+                      href={user.company.berkas.src}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='text-blue-500 underline'
+                    >
+                      Download
+                    </a>
+                  ) : (
+                    '-'
+                  )}
+                </TableCell>
                 <TableCell className='text-right'>
-                <ButtonActionUsers
-                  id={user.id}
-                  isVerified={!!user.emailVerified}
-                  handleClickDelete={() => handleClickDelete(user.id)}
-                  handleClickVerifikasi={() => handleClickVerifikasi(user.id)}
-                />
+                  <ButtonActionUsers
+                    id={user.id}
+                    isVerified={!!user.emailVerified}
+                    handleClickDelete={() => handleClickDelete(user.id)}
+                    handleClickVerifikasi={() => handleClickVerifikasi(user.id)}
+                  />
                 </TableCell>
               </TableRow>
             ))

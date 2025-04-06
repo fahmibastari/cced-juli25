@@ -68,6 +68,7 @@ export const companySchema = z
     email: z.string().email(),
     password: z.string().min(8),
     confirmPassword: z.string().min(8),
+    berkas: z.any().optional(),
     logo: z
       .instanceof(File)
       .refine((file) => file.type.startsWith('image/'), {

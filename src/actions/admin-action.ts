@@ -17,6 +17,31 @@ export const getUsers = async () => {
   }
 }
 
+export const getUsersWithBerkas = async () => {
+  try {
+    const users = await prisma.user.findMany({
+      include: {
+        company: {
+          include: {
+            berkas: {
+              select: {
+                src: true
+              }
+            }
+          }
+        }
+      },
+      orderBy: {
+        updatedAt: 'desc',
+      },
+    })
+    return users
+  } catch (err) {
+    console.error(err)
+    return null
+  }
+}
+
 export const verifyCompanyByUserId = async (userId: string) => {
   try {
     // Fetch the user

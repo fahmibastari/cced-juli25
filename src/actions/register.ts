@@ -81,8 +81,15 @@ export const registerCompany = async (value: z.infer<typeof companySchema>) => {
     publicMail,
     bio,
     logo,
+    berkas,
   } = data
+  
   const logoFile = logo ? await saveFile('company-logos', logo) : undefined
+  const berkasFile = berkas ? await saveFile('company-berkas', berkas) : undefined
+
+  if (!berkasFile) {
+      return { error: 'Berkas is required' }
+  }
 
   if (!logoFile) {
     return { error: 'Logo is required' }
@@ -110,6 +117,7 @@ export const registerCompany = async (value: z.infer<typeof companySchema>) => {
     data: {
       userId: user.id,
       logoId: logoFile.id,
+      berkasId: berkasFile.id,
       companyName,
       industry,
       ownership,
