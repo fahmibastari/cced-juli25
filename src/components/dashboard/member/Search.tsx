@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input'
 const Seacrh = () => {
   return (
     <div className='mb-4 flex justify-center gap-2'>
-      <Input placeholder='Cari Lowongan' className='max-w-sm' />
+      {/* <Input placeholder='Cari Lowongan' className='max-w-sm' />
       <Input placeholder='Lokasi' className='max-w-xs' />
       <Button variant='outline'>
         <svg
@@ -22,7 +22,7 @@ const Seacrh = () => {
           <circle cx='11' cy='11' r='8' />
           <path d='m21 21-4.3-4.3' />
         </svg>
-      </Button>
+      </Button> */}
     </div>
   )
 }

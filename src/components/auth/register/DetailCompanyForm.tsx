@@ -23,6 +23,7 @@ import { Role } from '@prisma/client'
 import { registerCompany } from '@/actions/register'
 import { ImagePlus } from 'lucide-react'
 import { Textarea } from '@/components/ui/textarea'
+import sector from '@/data/industrySector'
 
 interface CompanyFormProps {
   onBack: () => void
@@ -230,13 +231,18 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                   <FormItem>
                     <FormLabel>Bidang Industry</FormLabel>
                     <FormControl>
-                      <Input
+                      <select
                         {...field}
                         disabled={form.formState.isSubmitting}
-                        placeholder='Bidang Industry'
-                        className='border-2 border-gray-100 shadow-sm'
-                        type='text'
-                      />
+                        className='w-full border-2 border-gray-100 bg-white shadow-sm rounded-md p-2'
+                      >
+                        <option value=''>Pilih Bidang Industry</option>
+                        {sector.map((industry, idx) => (
+                          <option key={idx} value={industry}>
+                            {industry}
+                          </option>
+                        ))}
+                      </select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -1,8 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 'use client'
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Button } from '@/components/ui/button'
+import { usePathname } from 'next/navigation'
 
 interface ButtonActionProps {
   id: string
@@ -17,25 +18,27 @@ const ButtonAction = ({
   handleClickDelete,
   handleClickVerifikasi,
 }: ButtonActionProps) => {
+  const pathname = usePathname()
+
+  const isUserPage = pathname === '/admin/users'
+
   return (
     <div className='flex gap-4 justify-end'>
       <Button onClick={handleClickDelete} variant='destructive' size='sm'>
         Hapus
       </Button>
 
-      {isVerified ? (
-        <Button size='sm' variant='outline' disabled>
-          Verified
-        </Button>
-      ) : (
-        <Button onClick={handleClickVerifikasi} size='sm' variant='outline'>
-          Verifikasi
-        </Button>
+      {isUserPage && (
+        isVerified ? (
+          <Button size='sm' variant='outline' disabled>
+            Verified
+          </Button>
+        ) : (
+          <Button onClick={handleClickVerifikasi} size='sm' variant='outline'>
+            Verifikasi
+          </Button>
+        )
       )}
-
-      <Button size='sm' variant='default'>
-        Detail {id.slice(0, 5)}
-      </Button>
     </div>
   )
 }

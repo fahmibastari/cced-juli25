@@ -49,7 +49,7 @@ const AddJob = () => {
       description: '',
       salary: '',
       requirements: [],
-      location: '',
+      location: ' ',
       deadline: new Date(),
       status: '',
       skills: [],
@@ -121,7 +121,7 @@ const AddJob = () => {
                         placeholder='Enter an location for the job'
                         className='border-2 border-gray-100 shadow-sm'
                         type='text'
-                        value={field.value ?? ''}
+                        value={field.value ?? ' '}
                       />
                     </FormControl>
                     <FormMessage />

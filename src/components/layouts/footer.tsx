@@ -16,7 +16,7 @@ const Footer = () => {
             className='text-gray-200 underline'
           >
             {' '}
-            wildan.cooliah@gmail.com
+            mail@mail.com
           </Link>
         </Label>
         <Label className='mt-2'>

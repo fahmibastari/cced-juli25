@@ -19,7 +19,7 @@ const CardBig = ({
   createdAt,
 }: CardBigProps) => {
   return (
-    <Link href={href} className='block'>
+    <div  className='block'>
       <Card className='mb-6 hover:shadow-lg transition-shadow text-gray-700'>
         <CardContent className='p-6'>
           <div className='relative h-[450px] w-full group rounded-md overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300'>
@@ -56,13 +56,13 @@ const CardBig = ({
         />
           <Button
             variant='link'
-            className='h-auto p-0 font-normal text-green-500'
+            className='h-auto p-0 font-normal text-green-500'   
           >
             Baca selengkapnya...
           </Button>
         </CardContent>
       </Card>
-    </Link>
+    </div>
   )
 }
 

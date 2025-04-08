@@ -15,7 +15,8 @@ interface DashboardCompanyProps {
 const DashboardCompany = ({ jobs }: DashboardCompanyProps) => {
   const [jobsData, setJobsData] = useState<Job[]>(jobs)
   const [filter, setFilter] = useState<string>('all')
-
+  
+  console.log(jobsData);
   const handleClickDelete = async (id: string) => {
     const updatedJobs = jobsData.filter((job) => job.id !== id)
     setJobsData(updatedJobs)
@@ -23,19 +24,36 @@ const DashboardCompany = ({ jobs }: DashboardCompanyProps) => {
   }
 
   const applyFilter = () => {
+    const now = Date.now()
+  
+    const updatedJobs = jobsData.map((job) => {
+      const deadlineTime =
+        typeof job.deadline === 'string'
+          ? new Date(job.deadline).getTime()
+          : job.deadline?.getTime()
+  
+      if (job.status === 'aktif' && deadlineTime && deadlineTime < now) {
+        return { ...job, status: 'nonaktif' }
+      }
+      return job
+    })
+  
     switch (filter) {
       case 'aktif':
-        return jobsData.filter((job) => job.status === 'aktif')
+        return updatedJobs.filter((job) => job.status === 'aktif')
       case 'nonaktif':
-        return jobsData.filter((job) => job.status === 'nonaktif')
+        return updatedJobs.filter((job) => job.status === 'nonaktif')
       case 'selesai':
-        return jobsData.filter((job) => job.status === 'selesai')
+        return updatedJobs.filter((job) => job.status === 'selesai')
       case 'draft':
-        return jobsData.filter((job) => job.status === 'draft')
+        return updatedJobs.filter((job) => job.status === 'draft')
       default:
-        return jobsData
+        return updatedJobs
     }
   }
+  
+  
+  
 
   const jobsDataFiltered = applyFilter()
 

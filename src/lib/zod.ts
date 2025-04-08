@@ -104,7 +104,7 @@ export const JobSchema = z.object({
   location: z.string().nullable().optional(),
   deadline: z.date().nullable().optional(),
   status: z.string().nullable().optional(),
-  skills: z.array(z.string()).min(1, 'At least one skill is required'),
+  skills: z.array(z.string()).min(0, 'At least one skill is required'),
   type: z.string().nullable().optional(),
   salary: z.string().nullable().optional(),
 })

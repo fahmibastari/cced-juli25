@@ -1,23 +1,12 @@
 import Link from 'next/link'
 import { Label } from '../ui/label'
-import { Button, buttonVariants } from '../ui/button'
-import {
-  dummyFiturData,
-  dummyKegiatanData,
-  dummyManfaatData,
-} from '@/data/FiturData'
-import CardSmallLanding from './utils/CardSmallLanding'
-import { type Article, type News } from '@prisma/client'
-import CardBig from '../blog/utils/CardBig'
-import CardSmall from '../blog/utils/CardSmall'
+import { Button } from '../ui/button'
+import HomePageClient from './HomePageClient'
 import { getArticles, getNews } from '@/data/data'
 
 export default async function HomePage() {
   const news = await getNews()
   const articles = await getArticles()
-  const featuredNews = news[0]
-
-  const sanitizeImageUrl = (url: string) => url.startsWith('blob:') ? '' : url;
 
   return (
     <div className='bg-white text-gray-800'>
@@ -37,71 +26,9 @@ export default async function HomePage() {
           </Link>
         </div>
       </header>
-      {/* ----------------- CONTENT ------------------ */}
-      <div>
-        <section id='berita' className='py-16'>
-          <div className='container mx-auto p-10'>
-            <h2 className='mb-12 text-center text-3xl font-bold text-[#025908]'>
-              Berita Terbaru
-            </h2>
-            {featuredNews ? (
-              <CardBig
-                href='#'
-                srcImage={sanitizeImageUrl(featuredNews?.thumbnail)}
-                title={featuredNews?.title}
-                description={featuredNews?.content.slice(0, 250)}
-                createdAt={featuredNews?.createdAt ?? undefined}
-              />
-            ) : (
-              <p>Loading berita terbaru...</p>
-            )}
-            <div className='grid gap-3 md:grid-cols-3'>
-              {news.length > 0 ? (
-                news
-                  .slice(1, 4)
-                  .map((data: News) => (
-                    <CardSmall
-                      href='#'
-                      key={data?.id}
-                      srcImage={sanitizeImageUrl(data?.thumbnail)}
-                      title={data?.title}
-                      description={data?.content.slice(0, 100)}
-                      createdAt={data?.createdAt ?? undefined}
-                    />
-                  ))
-              ) : (
-                <p>Loading berita lainnya...</p>
-              )}
-            </div>
-          </div>
-        </section>
 
-        <section id='artikel' className='bg-gray-100 py-16'>
-          <div className='container mx-auto'>
-            <h2 className='mb-8 text-center text-3xl font-bold text-[#025908]'>
-              Artikel Pilihan
-            </h2>
-            <div className='space-y-8'>
-              {articles.length > 0 ? (
-                articles
-                  .slice(0, 4)
-                  .map((data: Article) => (
-                    <CardSmall
-                      href='#'
-                      key={data?.id}
-                      srcImage={sanitizeImageUrl(data?.thumbnail)}
-                      title={data?.title}
-                      description={data?.content.slice(0, 100)}
-                      createdAt={data?.createdAt ?? undefined}
-                    />
-                  ))
-              ) : (
-                <p>Loading berita lainnya...</p>
-              )}
-            </div>
-          </div>
-        </section>
-      </div>
+      {/* ----------------- CONTENT ------------------ */}
+      <HomePageClient news={news} articles={articles} />
     </div>
   )
 }

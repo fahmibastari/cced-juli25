@@ -25,7 +25,7 @@ const CardSmall = ({
   createdAt,
 }: CardSmallProps) => {
   return (
-    <Link href={href} className='block'>
+    <div  className='block'>
       <Card className='mb-6 hover:shadow-lg transition-shadow text-gray-700'>
         <CardHeader className='p-4'>
           <div className='relative h-[350px] w-full group rounded-md overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300'>
@@ -73,7 +73,7 @@ const CardSmall = ({
           </Button>
         </CardFooter>
       </Card>
-    </Link>
+    </div>
   )
 }
 
