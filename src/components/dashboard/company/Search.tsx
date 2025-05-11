@@ -12,7 +12,7 @@ const Seacrh = () => {
           <Search />
         </Button>
       </div> */}
-      <Button variant='outline' className='md:mr-40'>
+      <Button variant='outline' className='md:mr-40 bg-green-500 text-white'>
         <Link href='company/add-job'>Tambah Lowongan</Link>
       </Button>
     </div>

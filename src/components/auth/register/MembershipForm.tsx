@@ -79,6 +79,7 @@ const MembershipForm = ({ onBack, data }: MembershipFormProps) => {
       })
     })
   }
+
   return (
     <CardWrapper
       headerLabel='Register'
@@ -122,14 +123,14 @@ const MembershipForm = ({ onBack, data }: MembershipFormProps) => {
               name='nim'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>NIM</FormLabel>
+                  <FormLabel>NPM</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
-                      disabled={form.formState.isSubmitting}
-                      placeholder='Masukkan NIM/NPM'
-                      className='border-2 border-gray-100 shadow-sm'
-                      type='text'
+                      disabled={form.formState.isSubmitting || (memberType === 'ALUMNI_NON_UNILA' || memberType === 'MAHASISWA_NON_UNILA')}
+                      placeholder="Masukkan NPM Unila"
+                      className="border-2 border-gray-100 shadow-sm"
+                      type="text"
                     />
                   </FormControl>
                   <FormMessage />
@@ -146,9 +147,9 @@ const MembershipForm = ({ onBack, data }: MembershipFormProps) => {
                     <Input
                       {...field}
                       disabled={form.formState.isSubmitting}
-                      placeholder='fullname'
-                      className='border-2 border-gray-100 shadow-sm'
-                      type='text'
+                      placeholder="Nomor telepon"
+                      className="border-2 border-gray-100 shadow-sm"
+                      type="text"
                     />
                   </FormControl>
                   <FormMessage />
@@ -157,21 +158,21 @@ const MembershipForm = ({ onBack, data }: MembershipFormProps) => {
             />
             {errorMessage && <FormError message={errorMessage} />}
             {successMessage && <FormSuccess message={successMessage} />}
-            <div className='flex justify-between pt-4'>
+            <div className="flex justify-between pt-4">
               <Button
-                type='button'
+                type="button"
                 disabled={form.formState.isSubmitting || isPending}
-                className='w-full bg-slate-500 text-white hover:bg-slate-600 mx-6'
+                className="w-full bg-slate-500 text-white hover:bg-slate-600 mx-6"
                 onClick={onBack}
               >
-                {isPending ? 'Loading...' : 'kembali'}
+                {isPending ? 'Loading...' : 'Kembali'}
               </Button>
               <Button
-                type='submit'
+                type="submit"
                 disabled={form.formState.isSubmitting || isPending}
-                className='w-full bg-green-500 text-white hover:bg-green-600 mx-6'
+                className="w-full bg-green-500 text-white hover:bg-green-600 mx-6"
               >
-                {isPending ? 'Loading...' : 'lanjut'}
+                {isPending ? 'Loading...' : 'Lanjut'}
               </Button>
             </div>
           </div>

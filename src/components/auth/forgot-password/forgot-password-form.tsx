@@ -42,16 +42,16 @@ const ForgotPasswordForm = () => {
           setSuccess(data.success)
         })
         .catch(() => {
-          setError('Something went wrong!')
+          setError('Terjadi kesalahan!')
         })
     })
   }
   return (
     <CardWrapper
-      headerLabel='Forgot Password'
-      description='Reset Your Password'
-      paragraphSwitchButton='already remember the password?'
-      switchButtonLabel='Back to Login'
+      headerLabel='Lupa Password'
+      description='Reset Password Anda'
+      paragraphSwitchButton='Sudah ingat password?'
+      switchButtonLabel='Kembali ke Login'
       switchButtonHref='/login'
     >
       <Form {...form}>
@@ -88,7 +88,7 @@ const ForgotPasswordForm = () => {
             type='submit'
             disabled={isPending}
           >
-            Send Reset Password
+            Kirim Reset Password
           </Button>
         </form>
       </Form>

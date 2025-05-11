@@ -5,13 +5,15 @@ import { type Article, type News } from '@prisma/client'
 import CardBig from '../blog/utils/CardBig'
 import CardSmall from '../blog/utils/CardSmall'
 import ArticleModal from '../blog/utils/ArticleModal'
+import JobCardPublic from '../dashboard/member/JobCardPublic' // ✅ Ganti JobCard
+
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 
 interface Props {
-  news: News[]
-  articles: Article[]
+  jobs: any[] // idealnya pakai interface Job
 }
 
-const HomePageClient = ({ news, articles }: Props) => {
+const HomePageClient = ({ jobs }: Props) => {
   const [modalData, setModalData] = useState<
     (News | Article) & { type: 'news' | 'article' } | null
   >(null)
@@ -19,84 +21,33 @@ const HomePageClient = ({ news, articles }: Props) => {
   const handleCloseModal = () => setModalData(null)
 
   const sanitizeImageUrl = (url: string) => (url.startsWith('blob:') ? '' : url)
-  const featuredNews = news[0]
 
   return (
     <>
-      <section id='berita' className='py-16'>
-        <div className='container mx-auto p-10'>
-          <h2 className='mb-12 text-center text-3xl font-bold text-[#025908]'>
-            Berita Terbaru
-          </h2>
-          {featuredNews ? (
-            <div onClick={() => setModalData({ ...featuredNews, type: 'news' })}>
-              <CardBig
-                href='#'
-                srcImage={sanitizeImageUrl(featuredNews.thumbnail)}
-                title={featuredNews.title}
-                description={featuredNews.content.slice(0, 250)}
-                createdAt={featuredNews.createdAt ?? undefined}
-              />
-            </div>
-          ) : (
-            <p>Loading berita terbaru...</p>
-          )}
+      {/* Bagian Lowongan Pekerjaan */}
+<section id='lowongan' className='py-16'>
+  <div className='container mx-auto'>
+    {jobs.length > 0 ? (
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4'>
+        {jobs.map((job) => (
+          <JobCardPublic
+            key={job.id}
+            jobId={job.id}
+            companyLogo={job.companyLogo}
+            companyName={job.companyName}
+            title={job.title}
+            location={job.location}
+            deadline={new Date(job.deadline)}
+            salary={job.salary}
+          />
+        ))}
+      </div>
+    ) : (
+      <p className='text-center text-gray-500'>Loading jobs...</p>
+    )}
+  </div>
+</section>
 
-          <div className='grid gap-3 md:grid-cols-3 mt-6'>
-            {news.length > 0 ? (
-              news.slice(1, 4).map((data) => (
-                <div key={data.id} onClick={() => setModalData({ ...data, type: 'news' })}>
-                  <CardSmall
-                    href='#'
-                    srcImage={sanitizeImageUrl(data.thumbnail)}
-                    title={data.title}
-                    description={data.content.slice(0, 100)}
-                    createdAt={data.createdAt ?? undefined}
-                  />
-                </div>
-              ))
-            ) : (
-              <p>Loading berita lainnya...</p>
-            )}
-          </div>
-        </div>
-      </section>
-
-      <section id='artikel' className='bg-gray-100 py-16'>
-        <div className='container mx-auto'>
-          <h2 className='mb-8 text-center text-3xl font-bold text-[#025908]'>
-            Artikel Pilihan
-          </h2>
-          <div className='space-y-8'>
-            {articles.length > 0 ? (
-              articles.slice(0, 4).map((data) => (
-                <div key={data.id} onClick={() => setModalData({ ...data, type: 'article' })}>
-                  <CardSmall
-                    href='#'
-                    srcImage={sanitizeImageUrl(data.thumbnail)}
-                    title={data.title}
-                    description={data.content.slice(0, 100)}
-                    createdAt={data.createdAt ?? undefined}
-                  />
-                </div>
-              ))
-            ) : (
-              <p>Loading artikel lainnya...</p>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {modalData && (
-        <ArticleModal
-          isOpen={!!modalData}
-          onClose={handleCloseModal}
-          title={modalData.title}
-          content={modalData.content}
-          thumbnail={sanitizeImageUrl(modalData.thumbnail)}
-          createdAt={modalData.createdAt ?? undefined}
-        />
-      )}
     </>
   )
 }

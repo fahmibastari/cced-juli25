@@ -116,7 +116,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0]
-      const maxSize = 100 * 1024 // 100 KB
+      const maxSize = 2 * 1024 * 1024; // 2 MB = 2 * 1024 * 1024 bytes
       const validTypes = ['image/png', 'image/webp', 'image/jpeg', 'image/jpg']
   
       if (!validTypes.includes(file.type)) {
@@ -125,7 +125,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
       }
   
       if (file.size > maxSize) {
-        setErrorMessage('Ukuran file maksimal 100 KB.')
+        setErrorMessage('Ukuran file maksimal 2 MB.')
         return
       }
   
@@ -139,10 +139,10 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
 
   return (
     <CardWrapper
-      headerLabel='Register'
-      description='Fill the form below to create an account'
-      paragraphSwitchButton='Already have an account? '
-      switchButtonLabel='Sign In'
+      headerLabel='Daftar Akun'
+      description='Isi formulir di bawah ini untuk membuat akun penyedia kerja'
+      paragraphSwitchButton='Sudah punya akun? '
+      switchButtonLabel='Masuk'
       switchButtonHref='/login'
       size='w-full max-w-4xl'
     >
@@ -163,8 +163,8 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 <div className='flex flex-col items-center w-full h-40 justify-center gap-8'>
                   <ImagePlus className='h-10 w-10 text-gray-400' />
                   <div className='text-sm text-gray-600'>
-                    Set logo perusahaan. Hanya file berformat *.png, *.webp ,*.jpg dan *.jpeg
-                    dengan ukuran maksimal 100 KB.
+                    Logo perusahaan. Hanya file berformat *.png, *.webp ,*.jpg dan *.jpeg
+                    dengan ukuran maksimal 2 MB.
                   </div>
                   {logoFile && (
                     <div className='text-sm text-green-600'>
@@ -177,7 +177,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
           </div>
 
           <div>
-            <FormLabel>Berkas Perusahaan (PDF/Word/Gambar)</FormLabel>
+            <FormLabel>Berkas Perusahaan (PDF/Word/Gambar)*</FormLabel>
             <div className='mt-2 cursor-pointer rounded-lg border-2 border-dashed p-4 text-center'>
               <input
                 type='file'
@@ -190,7 +190,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 <div className='flex flex-col items-center w-full h-40 justify-center gap-8'>
                   <ImagePlus className='h-10 w-10 text-gray-400' />
                   <div className='text-sm text-gray-600'>
-                    Upload PDF, Word, atau Gambar (berkas pendukung perusahaan)
+                    Upload PDF, Word, atau Gambar (Berkas Perusahaan Terverifikasi)
                   </div>
                   {berkasFile && (
                     <div className='text-sm text-green-600'>
@@ -210,7 +210,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 name='companyName'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nama Perusahaaan</FormLabel>
+                    <FormLabel>Nama Perusahaaan*</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -229,14 +229,14 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 name='industry'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Bidang Industry</FormLabel>
+                    <FormLabel>Bidang Industri*</FormLabel>
                     <FormControl>
                       <select
                         {...field}
                         disabled={form.formState.isSubmitting}
                         className='w-full border-2 border-gray-100 bg-white shadow-sm rounded-md p-2'
                       >
-                        <option value=''>Pilih Bidang Industry</option>
+                        <option value=''>Pilih Bidang Industri</option>
                         {sector.map((industry, idx) => (
                           <option key={idx} value={industry}>
                             {industry}
@@ -253,7 +253,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
               name='ownership'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Kepemilikan Perusahaan</FormLabel>
+                  <FormLabel>Kepemilikan Perusahaan*</FormLabel>
                   <FormControl>
                     <select
                       {...field}
@@ -276,7 +276,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 name='phone'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nomor Telephone</FormLabel>
+                    <FormLabel>Nomor Telephone*</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -295,7 +295,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 name='companyPhone'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nomor Telephone Perusahaan</FormLabel>
+                    <FormLabel>Nomor Telephone Perusahaan*</FormLabel>
                     <FormControl>
                       <Input
                         {...field}

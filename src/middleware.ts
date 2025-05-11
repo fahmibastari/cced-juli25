@@ -29,68 +29,48 @@ export default auth((req) => {
   const isAssessmentRoute = nextUrl.pathname.startsWith(assessmentPrefix)
   const isAboutRoute = nextUrl.pathname.startsWith(aboutPrefix)
 
+  const isJobDetailRoute = nextUrl.pathname.startsWith('/jobs')
+
   // Allow spesific admin
-  // Izinkan hanya jika rute cocok dengan `adminRoutes`
-  if (pathname === adminRoutes) {
+  if (pathname === adminRoutes) return
+
+  // Allow blog, kegiatan, assessment, about, public API, and auth API routes
+  if (
+    isBlogRoute ||
+    iskegiatanRoute ||
+    isAssessmentRoute ||
+    isAboutRoute ||
+    isApiPublicRoute ||
+    isApiAuthRoute
+  ) {
     return
   }
 
-  // Allow blog routes
-  if (isBlogRoute) {
-    return // Kembali tanpa melakukan apa-apa
-  }
-
-  // Allow kegiatan routes
-  if (iskegiatanRoute) {
-    return // Kembali tanpa melakukan apa-apa
-  }
-
-  // Allow assessment routes
-  if (isAssessmentRoute) {
-    return // Kembali tanpa melakukan apa-apa
-  }
-
-  // Allow about routes
-  if (isAboutRoute) {
-    return // Kembali tanpa melakukan apa-apa
-  }
-
-  // Allow API Public routes
-  if (isApiPublicRoute) {
-    return // Kembali tanpa melakukan apa-apa
-  }
-
-  // Allow API Auth routes
-  if (isApiAuthRoute) {
-    return // Kembali tanpa melakukan apa-apa
-  }
-
   // Allow public routes
-  if (isPublicRoute) {
-    return // Kembali tanpa melakukan apa-apa
-  }
+  if (isPublicRoute) return
+
+  // ✅ Allow access to /jobs and /jobs/[id]
+  if (isJobDetailRoute) return
 
   // Redirect logged-in users trying to access auth routes
   if (isAuthRoute) {
     if (isLoggedIn) {
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
     }
-    return // Kembali tanpa melakukan apa-apa
+    return
   }
 
-  // Protect private routes (e.g., /settings)
+  // Protect all other routes
   if (!isLoggedIn) {
     return Response.redirect(new URL('/login', nextUrl))
   }
 
-  return // Allow access to all other routes for logged-in users
+  return
 })
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
     '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
     '/(api|trpc)(.*)',
   ],
 }

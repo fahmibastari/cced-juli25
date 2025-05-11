@@ -39,6 +39,8 @@ export async function addNewJob(formData: z.infer<typeof JobSchema>) {
       type,
       salary,
       deadline,
+      employmentType,
+      workTime,
     } = validatedFields.data
 
     const newJob = await prisma.job.create({
@@ -53,6 +55,8 @@ export async function addNewJob(formData: z.infer<typeof JobSchema>) {
         status: status ?? null,
         type: type ?? null,
         deadline: deadline ?? null,
+        employmentType: formData.employmentType,  // Pastikan ini ditambahkan
+        workTime: formData.workTime,              // Pastikan ini ditambahkan
       },
     })
 
@@ -127,6 +131,8 @@ export async function updateJob(
         status: status ?? null,
         type: type ?? null,
         deadline: deadline ?? null,
+        employmentType: formData.employmentType,  // Pastikan ini ditambahkan
+        workTime: formData.workTime, 
       },
     })
 
@@ -142,27 +148,26 @@ export async function updateJob(
 }
 
 export async function getJob(id: string) {
-  try {
-    const data = await prisma.job.findUnique({
-      where: { id: id },
-      include: {
-        jobApplication: {
-          include: {
-            member: {
-              include: {
-                user: true,
-              },
+  const data = await prisma.job.findUnique({
+    where: { id },
+    include: {
+      jobApplication: {
+        include: {
+          member: {
+            include: {
+              user: true,
             },
           },
         },
-        company: true,
       },
-    })
-    return { data }
-  } catch (error) {
-    console.error('An error occurred while fetching the job:', error)
-  }
+      company: true,
+    },
+  })
+
+  return { data } // ✅ ini saja cukup!
 }
+
+
 
 export async function getDetailJobApplicant(id: string) {
   try {

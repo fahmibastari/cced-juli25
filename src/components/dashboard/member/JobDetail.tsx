@@ -53,6 +53,16 @@ const JobDetail = ({ detailData, onClickQuickApply }: JobDetailProps) => {
                 {detailData?.salary || 'Deskripsi'}
               </p>
             </section>
+            <section>
+  <h3 className='mb-3 text-lg font-semibold text-gray-800'>Status Pegawai</h3>
+  <p className='text-gray-600'>{detailData.employmentType ?? '-'}</p>
+</section>
+
+<section>
+  <h3 className='mb-3 text-lg font-semibold text-gray-800'>Waktu Kerja</h3>
+  <p className='text-gray-600'>{detailData.workTime ?? '-'}</p>
+</section>
+
 
             <section>
               <h3 className='mb-3 text-lg font-semibold text-gray-800'>

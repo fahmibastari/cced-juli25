@@ -80,10 +80,10 @@ const RegistrationFormMember = ({
   }
   return (
     <CardWrapper
-      headerLabel='Register'
-      description='Fill the form below to create an account'
-      paragraphSwitchButton='Already have an account? '
-      switchButtonLabel='Sign In'
+      headerLabel='Daftar Akun'
+      description='Isi formulir di bawah ini untuk membuat akun pencari kerja'
+      paragraphSwitchButton='Sudah punya akun? '
+      switchButtonLabel='Masuk'
       switchButtonHref='/login'
     >
       <Form {...form}>
@@ -118,7 +118,7 @@ const RegistrationFormMember = ({
                     <Input
                       {...field}
                       disabled={form.formState.isSubmitting}
-                      placeholder='fullname'
+                      placeholder='Nama Lengkap'
                       className='border-2 border-gray-100 shadow-sm'
                       type='text'
                     />
@@ -137,7 +137,7 @@ const RegistrationFormMember = ({
                     <Input
                       {...field}
                       disabled={form.formState.isSubmitting}
-                      placeholder='Enter an email address'
+                      placeholder='Masukkan email'
                       className='border-2 border-gray-100 shadow-sm'
                       type='email'
                     />
@@ -186,7 +186,7 @@ const RegistrationFormMember = ({
                 name='confirmPassword'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
+                    <FormLabel>Konfirmasi Password</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -223,14 +223,14 @@ const RegistrationFormMember = ({
                 className='w-full bg-slate-500 text-white hover:bg-slate-600 mx-6'
                 onClick={onBack}
               >
-                {isPending ? 'Loading...' : 'kembali'}
+                {isPending ? 'Loading...' : 'Kembali'}
               </Button>
               <Button
                 type='submit'
                 disabled={form.formState.isSubmitting || isPending}
                 className='w-full bg-green-500 text-white hover:bg-green-600 mx-6'
               >
-                {isPending ? 'Loading...' : 'lanjut'}
+                {isPending ? 'Loading...' : 'Lanjut'}
               </Button>
             </div>
           </div>

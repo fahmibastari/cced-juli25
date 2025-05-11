@@ -15,6 +15,20 @@ import { getJob } from '@/actions/company-action'
 import { JobApplication } from '@prisma/client'
 import ListDetailAplicants from './list-detail-aplicants'
 
+const handleDownloadExcel = async () => {
+  const response = await fetch('/api/export-excel', {
+    method: 'GET',
+  });
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'daftar_pelamar.xlsx'; // Nama file Excel yang akan diunduh
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 const DetailJob = () => {
   const token = useSearchParams().get('token')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -71,6 +85,18 @@ const DetailJob = () => {
                 {detailData?.location || 'Lokasi'}
               </p>
             </section>
+            <section>
+  <h3 className='mb-3 text-lg font-semibold text-gray-800'>Status Pegawai</h3>
+  <p className='text-gray-600'>{detailData?.employmentType ?? '-'}</p>
+</section>
+
+<section>
+  <h3 className='mb-3 text-lg font-semibold text-gray-800'>Waktu Kerja</h3>
+  <p className='text-gray-600'>{detailData?.workTime ?? '-'}</p>
+</section>
+
+
+
 
             <section>
               <h3 className='mb-3 text-lg font-semibold text-gray-800'>
@@ -120,7 +146,7 @@ const DetailJob = () => {
                 {detailData?.status || 'Tidak ada status'}
               </p>
             </section>
-
+            <button onClick={handleDownloadExcel}>Download Excel</button>  {/* Tombol untuk mengunduh Excel */}
             <section>
               <h3 className='mb-3 text-lg font-semibold text-gray-800'>
                 Pelamar
@@ -143,12 +169,13 @@ const DetailJob = () => {
           </div>
         </div>
       </CardContent>
+      
       <CardFooter className='text-center pt-6 border-t'>
         <Link
           href='/dashboard'
           className='text-lg font-medium text-green-600 hover:text-green-700 hover:underline'
         >
-          Back to Dashboard
+          Kembali ke dashboard
         </Link>
       </CardFooter>
     </Card>

@@ -24,15 +24,15 @@ const RoleSelection = ({ onSelectRole, onSubmit }: RoleSelectionProps) => {
   const roles: RoleOption[] = [
     {
       id: Role.MEMBER,
-      title: 'Member',
+      title: 'Pencari Kerja',
       icon: <UserIcon className='h-12 w-12' />,
-      description: 'Akun personal biasa',
+      description: 'Akun personal untuk pencari kerja',
     },
     {
       id: Role.COMPANY,
-      title: 'Perusahaan',
+      title: 'Penyedia Kerja',
       icon: <BriefcaseIcon className='h-12 w-12' />,
-      description: 'Akun business/perusahaan',
+      description: 'Akun perusahaan/penyedia kerja',
     },
   ]
 
@@ -45,9 +45,9 @@ const RoleSelection = ({ onSelectRole, onSubmit }: RoleSelectionProps) => {
     <CardWrapper
       headerLabel='Daftar Akun'
       description='Pilih jenis akun yang kamu buat.'
-      switchButtonLabel='Sign In'
+      switchButtonLabel='Login'
       switchButtonHref='/login'
-      paragraphSwitchButton='already have an account? '
+      paragraphSwitchButton='Sudah punya akun? '
     >
       <div className='space-y-6'>
         <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>

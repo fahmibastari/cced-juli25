@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+'use client'
+
 import Link from 'next/link'
 import {
   Card,
@@ -9,6 +10,10 @@ import {
   CardTitle,
 } from '../ui/card'
 import Image from 'next/image'
+import { signOut } from 'next-auth/react'
+import { Button } from '../ui/button'
+
+
 
 interface ProfileMemberProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,27 +34,36 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
                 fill
               />
             </div>
-            <div>
+            <div className='max-w-[600px]'>
               <CardTitle className='text-xl font-bold text-green-800 mb-3'>
-                {data.fullname || 'Fullname'}
+                {data.fullname || 'Nama Lengkap'}
               </CardTitle>
               <CardDescription className='text-sm text-gray-500'>
-                {data.member.about || 'about me'}
+                {data.member.about || 'Tentang Saya'}
               </CardDescription>
             </div>
           </div>
         </CardHeader>
       </Card>
+      <div className='mb-6 flex justify-end'>
+  <Button
+    onClick={() => signOut({ callbackUrl: '/' })}
+    variant='destructive'
+    className='text-sm font-semibold'
+  >
+    Logout
+  </Button>
+</div>
 
       <Card className='mb-6'>
         <CardHeader>
           <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
-            Personal Information
+            Informasi Personal
           </CardTitle>
         </CardHeader>
         <CardContent className='mb-3 text-sm font-semibold text-gray-800'>
           <div className='flex items-center gap-3 mb-2'>
-            <span className='text-gray-900'>Fullname:</span>
+            <span className='text-gray-900'>Nama Lengkap:</span>
             <span className='text-gray-600'>{data.fullname || '-'}</span>
           </div>
           <div className='flex items-center gap-3 mb-2'>
@@ -57,7 +71,7 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
             <span className='text-gray-600'>{data.email || '-'}</span>
           </div>
           <div className='flex items-center gap-3 mb-2'>
-            <span className='text-gray-900'>Role:</span>
+            <span className='text-gray-900'>Peran:</span>
             <span className='text-gray-600'>
               {data.role.toLowerCase() || '-'}
             </span>
@@ -69,15 +83,15 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
             </span>
           </div>
           <div className='flex items-center gap-3 mb-2'>
-            <span className='text-gray-900'>NIM:</span>
+            <span className='text-gray-900'>NPM Unila:</span>
             <span className='text-gray-600'>{data.member.nim || '-'}</span>
           </div>
           <div className='flex items-center gap-3 mb-2'>
-            <span className='text-gray-900'>Nomor Telfon:</span>
+            <span className='text-gray-900'>Nomor Telepon:</span>
             <span className='text-gray-600'>{data.member.phone || '-'}</span>
           </div>
           <div className='flex items-center gap-3 mb-2'>
-            <span className='text-gray-900'>Address:</span>
+            <span className='text-gray-900'>Alamat:</span>
             <span className='text-gray-600'>
               {data?.member?.address || '-'}
             </span>
@@ -102,7 +116,7 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
       <Card className='mb-6'>
         <CardHeader>
           <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
-            PekerJaan Dilamar
+            Pekerjaan yang Dilamar
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -116,7 +130,7 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
               )}
             </ul>
           ) : (
-            <p>Tidak ada PekerJaan</p>
+            <p>Tidak ada pekerjaan yang dilamar</p>
           )}
         </CardContent>
       </Card>
@@ -131,7 +145,7 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
           {data?.member?.resume ? (
             <p>{data?.member?.resume}</p>
           ) : (
-            <p>Belum Melengkapi Resume</p>
+            <p>Belum melengkapi resume</p>
           )}
         </CardContent>
       </Card>
@@ -139,7 +153,7 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
       <Card className='mb-6'>
         <CardHeader>
           <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
-            Skills
+            Keahlian
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -150,7 +164,7 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
               ))}
             </ul>
           ) : (
-            <p>Tidak ada skill</p>
+            <p>Tidak ada keahlian</p>
           )}
         </CardContent>
       </Card>
@@ -158,75 +172,18 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
       <Card className='mb-6'>
         <CardHeader>
           <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
-            Interests
+            Ketertarikan
           </CardTitle>
         </CardHeader>
         <CardContent>
           {data.member?.interests?.length > 0 ? (
             <ul className='list-disc space-y-2 pl-6 text-gray-700'>
-              {data.member?.interests?.map((skill: string) => (
-                <li key={skill}>{skill}</li>
+              {data.member?.interests?.map((interest: string) => (
+                <li key={interest}>{interest}</li>
               ))}
             </ul>
           ) : (
             <p>Tidak ada ketertarikan</p>
-          )}
-        </CardContent>
-      </Card>
-
-      <Card className='mb-6'>
-        <CardHeader>
-          <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
-            Experience
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {data.member?.experience?.length > 0 ? (
-            <ul className='list-disc space-y-2 pl-6 text-gray-700'>
-              {data.member?.experience?.map((exp: any, index: number) => (
-                <li key={index}>test</li>
-              ))}
-            </ul>
-          ) : (
-            <p>Tidak ada Pengalaman</p>
-          )}
-        </CardContent>
-      </Card>
-
-      <Card className='mb-6'>
-        <CardHeader>
-          <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
-            EduCation
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {data.member?.education?.length > 0 ? (
-            <ul className='list-disc space-y-2 pl-6 text-gray-700'>
-              {data.member?.education?.map((edu: any, index: number) => (
-                <li key={index}>test</li>
-              ))}
-            </ul>
-          ) : (
-            <p>Tidak ada Pendidikan</p>
-          )}
-        </CardContent>
-      </Card>
-
-      <Card className='mb-6'>
-        <CardHeader>
-          <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
-            Assessment
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {data.member?.assessment?.length > 0 ? (
-            <ul className='list-disc space-y-2 pl-6 text-gray-700'>
-              {data.member?.assessment?.map((ass: any, index: number) => (
-                <li key={index}>test</li>
-              ))}
-            </ul>
-          ) : (
-            <p>Tidak ada Assessment</p>
           )}
         </CardContent>
       </Card>

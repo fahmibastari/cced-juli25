@@ -96,8 +96,7 @@ const CompaniesControl = ({ companies }: CompaniesControlProps) => {
                 <TableCell className='text-right'>
                   <ButtonAction
                     id={company.id}
-                    handleClickDelete={() => handleClickDelete(company.id)}
-                  />
+                    handleClickDelete={() => handleClickDelete(company.id)} isVerified={false}                  />
                 </TableCell>
               </TableRow>
             ))

@@ -37,6 +37,7 @@ import {
 import { getJob, updateJob } from '@/actions/company-action'
 import { X } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
+import { Job } from '@prisma/client'
 
 const EditJob = () => {
   const [errorMessage, setErrorMessage] = useState('')
@@ -48,14 +49,15 @@ const EditJob = () => {
     resolver: zodResolver(JobSchema),
     defaultValues: {
       title: '',
-      description: '',
-      salary: '',
-      requirements: [],
-      location: '',
-      deadline: new Date(),
-      status: '',
-      skills: [],
-      type: '',
+  description: '',
+  salary: '',
+  requirements: [],
+  location: ' ',
+  deadline: new Date(),
+  employmentType: '',
+  workTime: '',
+  skills: [],
+  type: '',
     },
   })
 
@@ -64,7 +66,7 @@ const EditJob = () => {
       if (token) {
         const response = await getJob(token)
         if (response?.data) {
-          const job = response.data
+          const job: Job = response.data
           form.reset({
             title: job.title || '',
             salary: job.salary || '',
@@ -75,6 +77,8 @@ const EditJob = () => {
             status: job.status || '',
             skills: job.skills || [],
             type: job.type || '',
+            employmentType: job.employmentType || '',
+            workTime: job.workTime || '',
           })
         }
       }
@@ -112,10 +116,10 @@ const EditJob = () => {
     <Card className='mx-auto my-8 w-full max-w-3xl bg-white shadow-lg'>
       <CardHeader className='text-center space-y-2 pb-8 border-b'>
         <CardTitle className='text-3xl font-bold text-green-700'>
-          Edit Job Posting
+          Edit Lowongan Pekerjaan
         </CardTitle>
         <CardDescription className='text-gray-600'>
-          Fill in the details below to create a new job opportunity
+        Lengkapi informasi berikut untuk memperbarui lowongan pekerjaan
         </CardDescription>
       </CardHeader>
       <CardContent className='pt-8'>
@@ -127,12 +131,12 @@ const EditJob = () => {
                 name='title'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Title</FormLabel>
+                    <FormLabel>Judul Pekerjaan</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         disabled={form.formState.isSubmitting}
-                        placeholder='Enter an title for the job'
+                        placeholder='Masukkan judul pekerjaan'
                         className='border-2 border-gray-100 shadow-sm'
                         type='text'
                       />
@@ -147,12 +151,12 @@ const EditJob = () => {
                 name='salary'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Salary</FormLabel>
+                    <FormLabel>Gaji</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         disabled={form.formState.isSubmitting}
-                        placeholder='Enter an range salary for the job'
+                        placeholder='Masukkan kisaran gaji'
                         className='border-2 border-gray-100 shadow-sm'
                         type='text'
                         value={field.value ?? ''}
@@ -168,12 +172,12 @@ const EditJob = () => {
                 name='location'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Location</FormLabel>
+                    <FormLabel>Lokasi</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         disabled={form.formState.isSubmitting}
-                        placeholder='Enter an location for the job'
+                        placeholder='Masukkan lokasi pekerjaan'
                         className='border-2 border-gray-100 shadow-sm'
                         type='text'
                         value={field.value ?? ''}
@@ -184,40 +188,41 @@ const EditJob = () => {
                 )}
               />
 
-              <FormField
+<FormField
                 control={form.control}
                 name='description'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>Deskripsi Pekerjaan</FormLabel>
                     <FormControl>
-                      <Input
-                        {...field}
-                        disabled={form.formState.isSubmitting}
-                        placeholder='Enter an description for the job'
-                        className='border-2 border-gray-100 shadow-sm'
-                        type='text'
-                        value={field.value ?? ''}
-                      />
+                    <textarea
+  {...field}
+  value={field.value ?? ''}
+  disabled={form.formState.isSubmitting}
+  placeholder='Masukkan deskripsi pekerjaan'
+  className='border-2 border-gray-100 shadow-sm w-full rounded-md p-2 h-32 resize-y'
+/>
+
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
 
               <FormField
                 control={form.control}
                 name='status'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Status</FormLabel>
+                    <FormLabel>Status Lowongan</FormLabel>
                     <Select
                       disabled={isPending}
                       onValueChange={field.onChange}
                       value={field.value || ''}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder='Select job status' />
+                        <SelectValue placeholder='Status Lowongan' />
                       </SelectTrigger>
                       <SelectContent>
                         {jobStatus.map((status) => (
@@ -231,17 +236,64 @@ const EditJob = () => {
                   </FormItem>
                 )}
               />
+<FormField
+  control={form.control}
+  name="employmentType"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Status Pegawai</FormLabel>
+      <Select
+        disabled={form.formState.isSubmitting}
+        onValueChange={field.onChange}
+        value={field.value || ''}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Pilih status pegawai" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="Pekerja Tetap">Pekerja Tetap</SelectItem>
+          <SelectItem value="Kontrak">Kontrak</SelectItem>
+          <SelectItem value="Magang">Magang</SelectItem>
+        </SelectContent>
+      </Select>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
 
+<FormField
+  control={form.control}
+  name="workTime"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Waktu Kerja</FormLabel>
+      <Select
+        disabled={form.formState.isSubmitting}
+        onValueChange={field.onChange}
+        value={field.value || ''}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Pilih waktu kerja" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="Full Time">Full Time</SelectItem>
+          <SelectItem value="Part Time">Part Time</SelectItem>
+        </SelectContent>
+      </Select>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
               <FormField
                 control={form.control}
                 name='skills'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Required Skills</FormLabel>
+                    <FormLabel>Keahlian yang dibutuhkan</FormLabel>
                     {/* Input untuk menambahkan skill manual */}
                     <FormControl>
                       <Input
-                        placeholder='Type a skill and press Enter'
+                        placeholder='Ketik keahlian lalu tekan Enter'
                         disabled={isPending}
                         onKeyDown={(e) => {
                           if (
@@ -287,19 +339,19 @@ const EditJob = () => {
                 )}
               />
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name='type'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Job Type</FormLabel>
+                    <FormLabel>Jenis Pekerjaan</FormLabel>
                     <Select
                       disabled={isPending}
                       onValueChange={field.onChange}
                       value={field.value || ''}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder='Select job type' />
+                        <SelectValue placeholder='Pilih Jenis Pekerjaan' />
                       </SelectTrigger>
                       <SelectContent>
                         {jobTypes.map((type) => (
@@ -312,17 +364,17 @@ const EditJob = () => {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
 
               <FormField
                 control={form.control}
                 name='requirements'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Requirements</FormLabel>
+                    <FormLabel>Persyaratan</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='Type a skill and press Enter'
+                        placeholder='Ketik persyaratan lalu tekan Enter'
                         disabled={isPending}
                         onKeyDown={(e) => {
                           if (
@@ -367,32 +419,38 @@ const EditJob = () => {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name='deadline'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Date</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        value={
-                          field.value
-                            ? new Date(field.value).toISOString().split('T')[0]
-                            : ''
-                        }
-                        onChange={(e) =>
-                          field.onChange(new Date(e.target.value))
-                        }
-                        disabled={form.formState.isSubmitting}
-                        className='border-2 border-gray-100 shadow-sm'
-                        type='date'
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+<FormField
+  control={form.control}
+  name="deadline"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Tanggal Tenggat</FormLabel>
+      <FormControl>
+        <Input
+          {...field}
+          value={
+            field.value
+              ? new Date(field.value).toISOString().split('T')[0] // Convert if valid
+              : '' // Set to empty string if invalid or empty
+          }
+          onChange={(e) => {
+            const newDate = new Date(e.target.value);
+            if (!isNaN(newDate.getTime())) {
+              field.onChange(newDate); // Ensure the date is valid
+            } else {
+              field.onChange(null); // If invalid date, set to null
+            }
+          }}
+          disabled={form.formState.isSubmitting}
+          className="border-2 border-gray-100 shadow-sm"
+          type="date"
+        />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
 
               {errorMessage && <FormError message={errorMessage} />}
               {successMessage && <FormSuccess message={successMessage} />}
@@ -405,10 +463,10 @@ const EditJob = () => {
                 {isPending ? (
                   <div className='flex items-center justify-center gap-2'>
                     <BeatLoader />
-                    Processing...
+                    Memproses...
                   </div>
                 ) : (
-                  'Update Job'
+                  'Perbarui Lowongan'
                 )}
               </Button>
             </div>
@@ -420,7 +478,7 @@ const EditJob = () => {
           href='/dashboard'
           className='text-green-600 hover:text-green-700 font-medium'
         >
-          Back to Dashboard
+          Kembali ke Dashboard
         </Link>
       </CardFooter>
     </Card>

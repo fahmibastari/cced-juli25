@@ -80,10 +80,10 @@ const RegistrationFormCompany = ({
   }
   return (
     <CardWrapper
-      headerLabel='Register'
-      description='Fill the form below to create an account'
-      paragraphSwitchButton='Already have an account? '
-      switchButtonLabel='Sign In'
+      headerLabel='Daftar Akun'
+      description='Isi formulir di bawah ini untuk membuat akun penyedia Kerja'
+      paragraphSwitchButton='Sudah Punya akun? '
+      switchButtonLabel='Masuk'
       switchButtonHref='/login'
     >
       <Form {...form}>
@@ -186,7 +186,7 @@ const RegistrationFormCompany = ({
                 name='confirmPassword'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
+                    <FormLabel>Konfirmasi Password</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -223,14 +223,14 @@ const RegistrationFormCompany = ({
                 className='w-full bg-slate-500 text-white hover:bg-slate-600 mx-6'
                 onClick={onBack}
               >
-                {isPending ? 'Loading...' : 'kembali'}
+                {isPending ? 'Loading...' : 'K  embali'}
               </Button>
               <Button
                 type='submit'
                 disabled={form.formState.isSubmitting || isPending}
                 className='w-full bg-green-500 text-white hover:bg-green-600 mx-6'
               >
-                {isPending ? 'Loading...' : 'lanjut'}
+                {isPending ? 'Loading...' : 'Lanjut'}
               </Button>
             </div>
           </div>

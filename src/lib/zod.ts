@@ -42,22 +42,20 @@ export const userSchema = z
   })
 
 // Member schema extending userSchema
-export const memberSchema = z
-  .object({
-    role: z.nativeEnum(Role).nullable(),
-    username: z.string().min(3),
-    fullname: z.string().min(3),
-    email: z.string().email(),
-    password: z.string().min(8),
-    confirmPassword: z.string().min(8),
-    memberType: z.nativeEnum(MemberType),
-    nim: z.string().min(10),
-    phone: z.string().min(10),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords must match',
-    path: ['confirmPassword'],
-  })
+export const memberSchema = z.object({
+  role: z.string(),
+  username: z.string().min(3),
+  fullname: z.string().min(3),
+  email: z.string().email(),
+  password: z.string().min(6),
+  confirmPassword: z.string().min(6),
+  memberType: z.enum(['ALUMNI_UNILA', 'MAHASISWA_UNILA', 'ALUMNI_NON_UNILA', 'MAHASISWA_NON_UNILA']),
+  nim: z.string().min(10, { message: 'Harus berisi setidaknya 10 karakter!' }).optional(),
+  phone: z.string().min(10),
+}).refine(data => data.password === data.confirmPassword, {
+  message: 'Passwords don’t match',
+  path: ['confirmPassword'],
+});
 
 // Company schema extending userSchema
 export const companySchema = z
@@ -107,6 +105,8 @@ export const JobSchema = z.object({
   skills: z.array(z.string()).min(0, 'At least one skill is required'),
   type: z.string().nullable().optional(),
   salary: z.string().nullable().optional(),
+  employmentType: z.string().optional(), // Pastikan ini ada
+  workTime: z.string().optional(),  
 })
 
 // Validasi untuk model JobApplication

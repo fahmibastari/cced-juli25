@@ -19,9 +19,9 @@ const DataNotFound = () => {
         </div>
       </CardContent>
       <CardFooter className='flex justify-center'>
-        <Button variant={'outline'}>
+        {/* <Button variant={'outline'}>
           <Link href='company/add-job'>Tambah Lowongan</Link>
-        </Button>
+        </Button> */}
       </CardFooter>
     </Card>
   )

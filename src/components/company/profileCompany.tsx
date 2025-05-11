@@ -18,6 +18,8 @@ import { useState } from 'react'
 import { createRequestVerified } from '@/actions/company-action'
 import { FormError } from '../auth/form-error'
 import { FormSuccess } from '../auth/form-succsess'
+import { signOut } from 'next-auth/react'
+
 
 interface ProfileCompanyProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,15 +36,15 @@ const ProfileCompany = ({ data }: ProfileCompanyProps) => {
   // Hapus useEffect yang ada
 
   const handleAjukan = async () => {
-    const res = await createRequestVerified(data.company.id)
-    setErrorMessage(res?.error ?? '')
-    setSuccessMessage(res?.success ?? '')
-
-    // Langsung set waiting ke true saat berhasil request
+    const res = await createRequestVerified(data.company.id);
+    setErrorMessage(res?.error ?? '');
+    setSuccessMessage(res?.success ?? '');
+  
     if (res?.success) {
-      setCheckIsWaiting(true)
+      setCheckIsWaiting(true);
     }
-  }
+  };
+  
   return (
     <div className='max-w-4xl mx-auto p-6'>
       <Card className='mb-6'>
@@ -56,7 +58,7 @@ const ProfileCompany = ({ data }: ProfileCompanyProps) => {
                 fill
               />
             </div>
-            <div>
+            <div className='max-w-[600px]'>
               <CardTitle className='text-xl font-bold text-green-800 mb-3'>
                 {data.company.companyName || 'Fullname'}
               </CardTitle>
@@ -86,7 +88,15 @@ const ProfileCompany = ({ data }: ProfileCompanyProps) => {
           )}
         </CardHeader>
       </Card>
-
+      <div className='mb-6 flex justify-end'>
+  <Button
+    onClick={() => signOut({ callbackUrl: '/' })}
+    variant='destructive'
+    className='text-sm font-semibold'
+  >
+    Logout
+  </Button>
+</div>
       <Card className='mb-6'>
         <CardHeader>
           <CardTitle className='text-3xl font-bold text-green-800 mb-3'>

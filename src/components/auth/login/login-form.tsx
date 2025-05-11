@@ -51,10 +51,10 @@ export default function LoginPage() {
   }
   return (
     <CardWrapper
-      headerLabel='👋Hello and Welcome Back!'
-      description='Login to your account'
-      paragraphSwitchButton="Don't have an account? "
-      switchButtonLabel='Sign Up'
+      headerLabel='Selamat Datang!'
+      description='Masuk menggunakan akun yang sudah kamu daftarkan'
+      paragraphSwitchButton="Belum punya akun? "
+      switchButtonLabel='Daftar'
       switchButtonHref='/register'
     >
       <Form {...form}>
@@ -70,7 +70,7 @@ export default function LoginPage() {
                     <Input
                       {...field}
                       disabled={form.formState.isSubmitting}
-                      placeholder='Enter an email address'
+                      placeholder='Masukkan alamat email'
                       className='border-2 border-gray-100 shadow-sm'
                       type='email'
                     />
@@ -118,7 +118,7 @@ export default function LoginPage() {
                 variant='link'
                 className='p-0 text-green-500 hover:text-green-600'
               >
-                <Link href={'/forgot-password'}>Forgot Password?</Link>
+                <Link href={'/forgot-password'}>Lupa Password?</Link>
               </Button>
             </div>
             {errorMessage && <FormError message={errorMessage} />}
@@ -128,7 +128,7 @@ export default function LoginPage() {
               disabled={form.formState.isSubmitting || isPending}
               className='w-full bg-green-500 text-white hover:bg-green-600'
             >
-              {isPending ? 'Loading...' : 'Sign In'}
+              {isPending ? 'Loading...' : 'Masuk'}
             </Button>
           </div>
         </form>

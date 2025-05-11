@@ -51,14 +51,26 @@ export async function getJobs() {
       },
       include: {
         jobApplication: true,
-        company: true,
+        company: {
+          include: {
+            logo: true,  // Include the logo file
+          },
+        },
       },
-    })
-    return { data }
+    });
+
+    // Map over the jobs to include the company logo URL
+    const jobsWithLogo = data.map(job => ({
+      ...job,
+      companyLogoUrl: job.company.logo ? job.company.logo.src : null, // Add logo URL if available
+    }));
+
+    return { data: jobsWithLogo };
   } catch (error) {
-    console.error('An error occurred while fetching the job:', error)
+    console.error('An error occurred while fetching the job:', error);
   }
 }
+
 
 export async function getMemberById(id: string) {
   try {

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
@@ -9,6 +8,7 @@ import NavMenu from './NavMenu'
 import Search from './Search'
 import React, { useState } from 'react'
 import { User } from '@prisma/client'
+import { useRouter } from 'next/navigation'
 
 interface DashboardMemberProps {
   jobs: any
@@ -17,13 +17,15 @@ interface DashboardMemberProps {
 
 const DashboardMember = ({ jobs, user }: DashboardMemberProps) => {
   const [selectedJob, setSelectedJob] = useState<any>(jobs[0] || null)
+  const router = useRouter()
+
   const handleQuickApply = () => {
-    console.log('Quick apply clicked')
+    if (!selectedJob) return
+    router.push(`/member/apply-job?token=${selectedJob.id}&user=${user.id}`)
   }
 
   const handleSelectJob = (job: any) => {
     setSelectedJob(job)
-    console.log(`Selected job: ${job.title}`)
   }
 
   const handleClickForYou = () => {
@@ -61,7 +63,7 @@ const DashboardMember = ({ jobs, user }: DashboardMemberProps) => {
                 {jobs.map(
                   (job: {
                     id: React.Key | null | undefined
-                    companyLogo: string | undefined
+                    companyLogoUrl: string | undefined
                     companyName: string
                     title: string
                     location: string
@@ -72,7 +74,7 @@ const DashboardMember = ({ jobs, user }: DashboardMemberProps) => {
                       key={job.id}
                       jobId={job.id as string}
                       userId={user.id}
-                      companyLogo={job.companyLogo}
+                      companyLogo={job.companyLogoUrl}
                       companyName={job.companyName}
                       title={job.title}
                       location={job.location}
