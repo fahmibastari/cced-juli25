@@ -22,14 +22,14 @@ const HeaderCompany = ({ companyName, industri, logo }: HeaderCompanyProps) => {
           </Avatar>
         </Link>
         <div>
-          <h2 className='text-lg font-bold'>{companyName || 'Perusahaan'}</h2>
+          <h2 className='text-lg font-bold'>{companyName || 'Penyedia Kerja'}</h2>
           <p className='text-sm'>Bidang Industri : {industri || 'Industri'}</p>
         </div>
       </div>
       <div className='flex items-center gap-4'>
         <Button variant='outline'>
           <Link href='/company/edit-profile-company'>
-            Edit Profil Perusahaan
+            Edit Profil Penyedia Kerja
           </Link>
         </Button>
       </div>

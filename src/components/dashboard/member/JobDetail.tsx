@@ -21,14 +21,14 @@ const JobDetail = ({ detailData, onClickQuickApply }: JobDetailProps) => {
                 {detailData?.title}
               </h2>
               <p className='text-sm text-gray-500 pt-3'>
-                Dibuat oleh : {detailData?.company?.companyName || 'Perusahaan'}
+                Dibuat oleh : {detailData?.company?.companyName || 'Penyedia Kerja'}
               </p>
             </div>
             <div className='space-x-2'>
               <Button variant='ghost' size='icon'>
                 <Share2 className='h-4 w-4' />
               </Button>
-              <Button onClick={onClickQuickApply}>Quick Apply</Button>
+              <Button onClick={onClickQuickApply}>Lamar Cepat</Button>
             </div>
           </div>
         </CardTitle>

@@ -27,6 +27,7 @@ import * as z from 'zod'
 import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea'
 import Link from 'next/link'
+import sector from '@/data/industrySector'
 
 interface EditProfileCompanyProps {
   data: any
@@ -293,13 +294,18 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                       <FormItem>
                         <FormLabel>Bidang Industri</FormLabel>
                         <FormControl>
-                          <Input
-                            {...field}
-                            disabled={formPersonal.formState.isSubmitting}
-                            placeholder='Bidang Industri'
-                            className='border-2 border-gray-100 shadow-sm'
-                            type='text'
-                          />
+                        <select
+                        {...field}
+                        disabled={formPersonal.formState.isSubmitting}
+                        className='w-full border-2 border-gray-100 bg-white shadow-sm rounded-md p-2'
+                      >
+                        <option value=''>Pilih Bidang Industri</option>
+                        {sector.map((industry, idx) => (
+                          <option key={idx} value={industry}>
+                            {industry}
+                          </option>
+                        ))}
+                      </select>
                         </FormControl>
                         <FormMessage />
                       </FormItem>

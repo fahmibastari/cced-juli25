@@ -92,7 +92,7 @@ const ApplyJobForm = () => {
                 {job?.title}
               </h2>
               <p className='text-sm text-gray-500 pt-3'>
-                Dibuat oleh : {job?.company?.companyName || 'Perusahaan'}
+                Dibuat oleh : {job?.company?.companyName || 'Penyedia Kerja'}
               </p>
             </div>
           </div>
@@ -139,7 +139,7 @@ const ApplyJobForm = () => {
 
             <section>
               <h3 className='mb-3 text-lg font-semibold text-gray-800'>
-                Skills
+                Keahlian
               </h3>
               <ul className='list-disc space-y-2 pl-6 text-gray-700'>
                 {job?.skills ? (
@@ -147,17 +147,17 @@ const ApplyJobForm = () => {
                     <li key={index}>{item}</li>
                   ))
                 ) : (
-                  <p>Tidak ada skills</p>
+                  <p>Tidak ada keahlian</p>
                 )}
               </ul>
             </section>
 
             <section>
               <h3 className='mb-3 text-lg font-semibold text-gray-800'>
-                Deadline
+                Tenggat Waktu
               </h3>
               <p className='text-gray-600'>
-                {job?.deadline?.toLocaleDateString('id-ID') || 'Deadline'}
+                {job?.deadline?.toLocaleDateString('id-ID') || 'Tenggat Waktu'}
               </p>
             </section>
 
@@ -186,10 +186,10 @@ const ApplyJobForm = () => {
                 {isPending ? (
                   <div className='flex items-center justify-center gap-2'>
                     <BeatLoader />
-                    Processing...
+                    Memproses...
                   </div>
                 ) : (
-                  'Apply Job!'
+                  'Lamar lowongan!'
                 )}
               </Button>
             </div>
@@ -201,7 +201,7 @@ const ApplyJobForm = () => {
           href='/dashboard'
           className='text-green-600 hover:text-green-700 font-medium'
         >
-          Back to Dashboard
+          Kembali ke Dashboard
         </Link>
       </CardFooter>
     </Card>

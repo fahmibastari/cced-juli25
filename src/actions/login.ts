@@ -12,7 +12,7 @@ export const login = async (data: z.infer<typeof signInSchema>) => {
   const validatedFields = signInSchema.safeParse(data)
 
   if (!validatedFields.success) {
-    return { error: 'Invalid fields!' }
+    return { error: 'Bidang tidak valid!' }
   }
 
   const { email, password } = validatedFields.data
@@ -20,15 +20,15 @@ export const login = async (data: z.infer<typeof signInSchema>) => {
   const existingUser = await getUserByEmail(email)
 
   if (!existingUser || !existingUser?.email || !existingUser?.password) {
-    return { error: 'Invalid credentials!' }
+    return { error: 'Kredensial tidak valid!' }
   }
 
   if (!existingUser.emailVerified) {
     await generateVerificationToken(existingUser.email)
     if(existingUser.role==="COMPANY"){
-        return { success: 'Waiting for Verification!' }
+        return { success: 'Menunggu Verifikasi!' }
     }
-    return { success: 'Confirmation Email Sent!' }
+    return { success: 'Email Konfirmasi Dikirim!' }
   }
 
   try {
@@ -42,9 +42,9 @@ export const login = async (data: z.infer<typeof signInSchema>) => {
     if (e instanceof AuthError) {
       switch (e.type) {
         case 'CredentialsSignin':
-          return { error: 'Invalid Credentials' }
+          return { error: 'Kredensial Tidak Valid' }
         default:
-          return { error: 'Something went wrong' }
+          return { error: 'Terjadi Kesalahan' }
       }
     }
     throw e

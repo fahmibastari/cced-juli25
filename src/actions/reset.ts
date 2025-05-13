@@ -10,7 +10,7 @@ export const reset = async (data: z.infer<typeof forgotPasswordSchema>) => {
   const validateField = forgotPasswordSchema.safeParse(data)
 
   if (!validateField.success) {
-    return { error: 'Invalid Email!' }
+    return { error: 'Email tidak valid!' }
   }
 
   const { email } = validateField.data
@@ -18,11 +18,11 @@ export const reset = async (data: z.infer<typeof forgotPasswordSchema>) => {
   const user = await getUserByEmail(email)
 
   if (!user) {
-    return { error: 'Email not found!' }
+    return { error: 'Email tidak ditemukan!' }
   }
 
   const existingToken = await generatePasswordResetToken(email)
   await sendPasswordResetEmail(existingToken.email, existingToken.token)
 
-  return { success: 'Email sent!' }
+  return { success: 'Email berhasil dikirim!' }
 }

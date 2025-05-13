@@ -14,7 +14,7 @@ import { Role } from '@prisma/client'
 export const registerMember = async (value: z.infer<typeof memberSchema>) => {
   const validatedFields = memberSchema.safeParse(value)
   if (!validatedFields.success) {
-    return { error: 'Please fill all the fields' }
+    return { error: 'Harap lengkapi semua kolom' }
   }
 
   const { data } = validatedFields
@@ -24,13 +24,13 @@ export const registerMember = async (value: z.infer<typeof memberSchema>) => {
 
   const emailExists = await getUserByEmail(email)
   if (emailExists) {
-    return { error: 'Email already exists' }
+    return { error: 'Email sudah terdaftar' }
   }
   // Hash password
   const hashedPassword = await bcrypt.hash(password, 10)
   const emailVerified = role === 'MEMBER' ? new Date(Date.now()) : null;
 
-  // Create user
+  // Membuat pencari kerja
   const user = await prisma.user.create({
     data: {
       username,
@@ -64,7 +64,7 @@ export const registerCompany = async (value: z.infer<typeof companySchema>) => {
   // Validasi input
   const validatedFields = companySchema.safeParse(value)
   if (!validatedFields.success) {
-    return { error: 'Please fill all the fields' }
+    return { error: 'Harap lengkapi semua kolom' }
   }
 
   const { data } = validatedFields
@@ -94,23 +94,23 @@ export const registerCompany = async (value: z.infer<typeof companySchema>) => {
   ])
 
   if (emailExists) {
-    return { error: 'Email already exists' }
+    return { error: 'Email sudah terdaftar' }
   }
 
   // Pastikan berkas dan logo ada
   if (!berkasFile) {
-    return { error: 'Berkas is required' }
+    return { error: 'Berkas diperlukan' }
   }
 
   if (!logoFile) {
-    return { error: 'Logo is required' }
+    return { error: 'Logo diperlukan' }
   }
 
   // Hash password dengan rounds lebih rendah (8 lebih cepat)
   const hashedPassword = await bcrypt.hash(password, 8)
 
   try {
-    // Create user in the database
+    // Membuat pencari kerja di database
     const user = await prisma.user.create({
       data: {
         username,
@@ -121,7 +121,7 @@ export const registerCompany = async (value: z.infer<typeof companySchema>) => {
       },
     })
 
-    // Create company record
+    // Membuat penyedia kerja
     await prisma.company.create({
       data: {
         userId: user.id,
@@ -138,31 +138,30 @@ export const registerCompany = async (value: z.infer<typeof companySchema>) => {
       },
     })
 
-    // Generate email verification token
+    // Menghasilkan token verifikasi email
     const verificationToken = await generateVerificationToken(email)
 
-    // Send verification email
+    // Mengirimkan email verifikasi
     await sendVerificationEmail(verificationToken.email, verificationToken.token)
 
-    // Return success response
+    // Kembali dengan respons sukses
     return {
       success: true,
       message: 'Akun berhasil dibuat, silahkan tunggu admin mengverifikasi akun anda.',
       role,
     }
   } catch (error) {
-    console.error('Error during registration:', error)
+    console.error('Terjadi kesalahan saat registrasi:', error)
     return {
-      error: 'Something went wrong during the registration process.',
+      error: 'Terjadi kesalahan selama proses registrasi.',
     }
   }
 }
 
-
 export const registerAdmin = async (value: z.infer<typeof userSchema>) => {
   const validatedFields = userSchema.safeParse(value)
   if (!validatedFields.success) {
-    return { error: 'Please fill all the fields' }
+    return { error: 'Harap lengkapi semua kolom' }
   }
 
   const { data } = validatedFields
@@ -170,13 +169,13 @@ export const registerAdmin = async (value: z.infer<typeof userSchema>) => {
 
   const emailExists = await getUserByEmail(email)
   if (emailExists) {
-    return { error: 'Email already exists' }
+    return { error: 'Email sudah terdaftar' }
   }
   // Hash password
   const hashedPassword = await bcrypt.hash(password, 10)
   try {
     const emailVerified = role === 'MEMBER' ? new Date(Date.now()) : null;
-    // Create user
+    // Membuat pencari kerja
     await prisma.user.create({
 
       data: {
@@ -190,11 +189,11 @@ export const registerAdmin = async (value: z.infer<typeof userSchema>) => {
     })
 
     return {
-      success: 'Account created successfully!',
+      success: 'Akun berhasil dibuat!',
     }
   } catch {
     return {
-      error: 'Something went wrong',
+      error: 'Terjadi kesalahan',
     }
   }
 }

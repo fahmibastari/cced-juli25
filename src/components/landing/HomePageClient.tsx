@@ -43,7 +43,7 @@ const HomePageClient = ({ jobs }: Props) => {
         ))}
       </div>
     ) : (
-      <p className='text-center text-gray-500'>Loading jobs...</p>
+      <p className='text-center text-gray-500'>Memuat lowongan...</p>
     )}
   </div>
 </section>

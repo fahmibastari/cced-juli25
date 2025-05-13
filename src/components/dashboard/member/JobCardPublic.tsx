@@ -48,7 +48,7 @@ const JobCardPublic = ({
         <div className='flex items-center justify-between'>
           <div className='space-y-1'>
             <p className='text-sm text-gray-500'>
-              Deadline: {deadline.toLocaleDateString('id-ID')}
+            Tenggat Waktu: {deadline.toLocaleDateString('id-ID')}
             </p>
             {salary && <p className='text-sm font-medium'>{salary}</p>}
           </div>

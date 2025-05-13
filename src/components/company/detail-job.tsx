@@ -89,7 +89,7 @@ const DetailJob = () => {
           {detailData?.title || 'Title'}
         </CardTitle>
         <CardDescription className='text-sm text-gray-500'>
-          Dibuat oleh : {detailData?.company?.companyName || 'Perusahaan'}
+          Dibuat oleh : {detailData?.company?.companyName || 'Penyedia Kerja'}
         </CardDescription>
       </CardHeader>
       <CardContent className='pt-8'>
@@ -151,7 +151,7 @@ const DetailJob = () => {
 
             <section>
               <h3 className='mb-3 text-lg font-semibold text-gray-800'>
-                Skills
+              Keahlian
               </h3>
               <ul className='list-disc space-y-2 pl-6 text-gray-700'>
                 {detailData?.skills ? (
@@ -159,14 +159,14 @@ const DetailJob = () => {
                     <li key={index}>{item}</li>
                   ))
                 ) : (
-                  <p>Tidak ada skills</p>
+                  <p>Tidak ada Keahlian</p>
                 )}
               </ul>
             </section>
             {detailData?.type&&(
             <section>
               <h3 className='mb-3 text-lg font-semibold text-gray-800'>
-                Link Lamarann
+                Link Lamaran Eksternal
               </h3>
               <a
   href={detailData?.type ? (detailData?.type.startsWith('http') ? detailData?.type : `http://${detailData?.type}`) : '#'}
@@ -178,7 +178,7 @@ const DetailJob = () => {
             )}
             <section>
               <h3 className='mb-3 text-lg font-semibold text-gray-800'>
-                Deadline
+                Tenggat Waktu
               </h3>
               <p className='text-gray-600'>
                 {detailData?.deadline?.toLocaleDateString('id-ID') ||

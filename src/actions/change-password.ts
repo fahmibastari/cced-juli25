@@ -13,30 +13,30 @@ export const changePassword = async (
   const validateField = resetPasswordSchema.safeParse(data)
 
   if (!validateField.success) {
-    return { error: 'Invalid Email!' }
+    return { error: 'Email Tidak Valid!' }
   }
 
   const { password } = validateField.data
 
   if (!token) {
-    return { error: 'Invalid Token!' }
+    return { error: 'Token Tidak Valid!' }
   }
 
   const existingToken = await getPasswordResetTokenByToken(token)
 
   if (!existingToken) {
-    return { error: 'Something Went Worng!' }
+    return { error: 'Terjadi Kesalahan!' }
   }
 
   const hasExpired = new Date(existingToken.expires) < new Date()
   if (hasExpired) {
-    return { error: 'Token has expired!' }
+    return { error: 'Token Telah Kedaluwarsa!' }
   }
 
   const user = await getUserByEmail(existingToken.email)
 
   if (!user) {
-    return { error: 'Something Went Worng!' }
+    return { error: 'Terjadi Kesalahan!' }
   }
 
   await prisma.user.update({
@@ -54,5 +54,5 @@ export const changePassword = async (
     },
   })
 
-  return { success: 'Password Changed!' }
+  return { success: 'Kata Sandi Berhasil Diubah!' }
 }

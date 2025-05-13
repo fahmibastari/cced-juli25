@@ -465,7 +465,7 @@ const AddJob = () => {
                 {isPending ? (
                   <div className='flex items-center justify-center gap-2'>
                     <BeatLoader />
-                    Processing...
+                    Memproses...
                   </div>
                 ) : (
                   'Buat Lowongan'

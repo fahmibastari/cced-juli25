@@ -471,7 +471,7 @@ const EditJob = () => {
   name="deadline"
   render={({ field }) => (
     <FormItem>
-      <FormLabel>Tanggal Tenggat</FormLabel>
+      <FormLabel>Tenggat Waktu</FormLabel>
       <FormControl>
         <Input
           {...field}

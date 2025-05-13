@@ -21,7 +21,7 @@ const JobDetailPublic = ({ job }: JobDetailPublicProps) => {
         <CardTitle>
           <h2 className='text-4xl font-bold text-green-800'>{job.title}</h2>
           <p className='text-sm text-gray-500 pt-2'>
-            Dibuat oleh: {job.company?.companyName ?? 'Perusahaan'}
+            Dibuat oleh: {job.company?.companyName ?? 'Penyedia Kerja'}
           </p>
         </CardTitle>
       </CardHeader>
@@ -69,7 +69,7 @@ const JobDetailPublic = ({ job }: JobDetailPublicProps) => {
           </section>
 
           <section>
-            <h3 className='mb-3 text-lg font-semibold text-gray-800'>Skills</h3>
+            <h3 className='mb-3 text-lg font-semibold text-gray-800'>Keahlian</h3>
             {job.skills?.length ? (
               <ul className='list-disc space-y-2 pl-6 text-gray-700'>
                 {job.skills.map((item, index) => (
@@ -77,12 +77,12 @@ const JobDetailPublic = ({ job }: JobDetailPublicProps) => {
                 ))}
               </ul>
             ) : (
-              <p className='text-gray-600'>Tidak ada skills</p>
+              <p className='text-gray-600'>Tidak ada Keahlian</p>
             )}
           </section>
 
           <section>
-            <h3 className='mb-3 text-lg font-semibold text-gray-800'>Deadline</h3>
+            <h3 className='mb-3 text-lg font-semibold text-gray-800'>Tenggat Waktu</h3>
             <p className='text-gray-600'>
               {job.deadline ? new Date(job.deadline).toLocaleDateString('id-ID') : '-'}
             </p>

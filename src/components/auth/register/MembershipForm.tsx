@@ -82,12 +82,12 @@ const MembershipForm = ({ onBack, data }: MembershipFormProps) => {
 
   return (
     <CardWrapper
-      headerLabel='Register'
-      description='Fill the form below to create an account'
-      paragraphSwitchButton='Already have an account? '
-      switchButtonLabel='Sign In'
-      switchButtonHref='/login'
-    >
+  headerLabel='Daftar'
+  description='Isi formulir di bawah ini untuk membuat akun'
+  paragraphSwitchButton='Sudah punya akun? '
+  switchButtonLabel='Masuk'
+  switchButtonHref='/login'
+>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-6'>
           <div className='grid grid-cols-2 gap-4 md:grid-cols-4'>

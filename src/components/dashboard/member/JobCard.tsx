@@ -60,7 +60,7 @@ const JobCard = ({
           </div>
           <Button>
             <Link href={`/member/apply-job?token=${jobId}&user=${userId}`}>
-              apply
+              Lamar
             </Link>
           </Button>
         </div>

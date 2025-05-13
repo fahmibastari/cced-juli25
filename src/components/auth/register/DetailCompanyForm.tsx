@@ -150,7 +150,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
         <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-6'>
           {/* Logo Upload Section */}
           <div>
-            <FormLabel>Logo Perusahaan</FormLabel>
+            <FormLabel>Logo Penyedia Kerja</FormLabel>
             <div className='mt-2 cursor-pointer rounded-lg border-2 border-dashed p-4 text-center'>
               <input
                 type='file'
@@ -163,7 +163,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 <div className='flex flex-col items-center w-full h-40 justify-center gap-8'>
                   <ImagePlus className='h-10 w-10 text-gray-400' />
                   <div className='text-sm text-gray-600'>
-                    Logo perusahaan. Hanya file berformat *.png, *.webp ,*.jpg dan *.jpeg
+                    Logo Penyedia Kerja. Hanya file berformat *.png, *.webp ,*.jpg dan *.jpeg
                     dengan ukuran maksimal 2 MB.
                   </div>
                   {logoFile && (
@@ -177,7 +177,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
           </div>
 
           <div>
-            <FormLabel>Berkas Perusahaan (PDF/Word/Gambar)*</FormLabel>
+            <FormLabel>Berkas Penyedia Kerja (PDF/Word/Gambar)*</FormLabel>
             <div className='mt-2 cursor-pointer rounded-lg border-2 border-dashed p-4 text-center'>
               <input
                 type='file'
@@ -190,7 +190,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 <div className='flex flex-col items-center w-full h-40 justify-center gap-8'>
                   <ImagePlus className='h-10 w-10 text-gray-400' />
                   <div className='text-sm text-gray-600'>
-                    Upload PDF, Word, atau Gambar (Berkas Perusahaan Terverifikasi)
+                    Upload PDF, Word, atau Gambar (Berkas Penyedia Kerja Terverifikasi)
                   </div>
                   {berkasFile && (
                     <div className='text-sm text-green-600'>
@@ -215,7 +215,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                       <Input
                         {...field}
                         disabled={form.formState.isSubmitting}
-                        placeholder='Nama Perusahaan'
+                        placeholder='Nama Penyedia Kerja'
                         className='border-2 border-gray-100 shadow-sm'
                         type='text'
                       />
@@ -253,7 +253,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
               name='ownership'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Kepemilikan Perusahaan*</FormLabel>
+                  <FormLabel>Kepemilikan Penyedia Kerja*</FormLabel>
                   <FormControl>
                     <select
                       {...field}
@@ -261,9 +261,9 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                       className='w-full border-2 border-gray-100 bg-white shadow-sm rounded-md p-2'
                     >
                       <option value=''>Pilih Kepemilikan</option>
-                      <option value='Perusahaan kecil'>Perusahaan kecil</option>
-                      <option value='Perusahaan menengah'>Perusahaan menengah</option>
-                      <option value='Perusahaan besar'>Perusahaan besar</option>
+                      <option value='Perusahaan kecil'>Perusahaan Kecil</option>
+                      <option value='Perusahaan menengah'>Perusahaan Menengah</option>
+                      <option value='Perusahaan besar'>Perusahaan Besar</option>
                     </select>
                   </FormControl>
                   <FormMessage />
@@ -295,12 +295,12 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 name='companyPhone'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nomor Telephone Perusahaan*</FormLabel>
+                    <FormLabel>Nomor Telephone Penyedia Kerja*</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         disabled={form.formState.isSubmitting}
-                        placeholder='Nomor Telephone Perusahaan'
+                        placeholder='Nomor Telephone Penyedia Kerja'
                         className='border-2 border-gray-100 shadow-sm'
                         type='text'
                       />
@@ -316,12 +316,12 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 name='website'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Website Perusahaan</FormLabel>
+                    <FormLabel>Website Penyedia Kerja</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         disabled={form.formState.isSubmitting}
-                        placeholder='Website Perusahaan'
+                        placeholder='Website Penyedia Kerja'
                         className='border-2 border-gray-100 shadow-sm'
                         type='text'
                       />
@@ -354,12 +354,12 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 name='bio'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Biodata Perusahaan</FormLabel>
+                    <FormLabel>Biodata Penyedia Kerja</FormLabel>
                     <FormControl>
                       <Textarea
                         {...field}
                         disabled={form.formState.isSubmitting}
-                        placeholder='Biodata Perusahaan'
+                        placeholder='Biodata Penyedia Kerja'
                         className='border-2 border-gray-100 shadow-sm h-[216px]'
                       />
                     </FormControl>

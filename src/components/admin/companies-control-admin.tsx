@@ -48,25 +48,25 @@ const CompaniesControl = ({ companies }: CompaniesControlProps) => {
   return (
     <main className='p-6'>
       <h1 className='text-2xl font-bold text-[#025908] mb-4'>
-        Tabel Perusahaan
+        Tabel Penyedia Kerja
       </h1>
       {errorMessage && <FormError message={errorMessage} />}
       {successMessage && <FormSuccess message={successMessage} />}
       <Table className='mt-4'>
-        <TableCaption>Daftar List Perusahaan</TableCaption>
+        <TableCaption>Daftar List Penyedia Kerja</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className='w-[100px]'>Email</TableHead>
-            <TableHead>Nama Perusahaan</TableHead>
+            <TableHead>Nama Penyedia Kerja</TableHead>
             <TableHead>Industri</TableHead>
             <TableHead>Status Kepemilikan</TableHead>
             <TableHead>Nomor Telepon</TableHead>
-            <TableHead>Nomor Telepon Perusahaan</TableHead>
+            <TableHead>Nomor Telepon Penyedia Kerja</TableHead>
             <TableHead>Website</TableHead>
             <TableHead>Alamat</TableHead>
             <TableHead>Kota</TableHead>
             <TableHead>Terverisikasi</TableHead>
-            <TableHead>ID Perusahaan</TableHead>
+            <TableHead>ID Penyedia Kerja</TableHead>
             <TableHead className='text-right'>Action</TableHead>
           </TableRow>
         </TableHeader>

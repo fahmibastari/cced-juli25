@@ -12,7 +12,7 @@ export default async function Page() {
     return (
       <RoleGate accessRole={Role.COMPANY}>
         <div className='flex h-screen items-center justify-center w-full'>
-          <FormError message='You are not allowed to access this page, please wait until your company is verified' />
+          <FormError message='Anda tidak diizinkan mengakses halaman ini, harap tunggu hingga penyedia kerja Anda diverifikasi.' />
         </div>
       </RoleGate>
     )

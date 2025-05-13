@@ -235,16 +235,16 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
           setIsPending(false)
         })
         .catch((err) => {
-          console.error('Error updating personal information:', err)
+          console.error('Terjadi kesalahan saat memperbarui informasi pribadi:', err)
           setErrorMessagePersonal(
-            'Terjadi kesalahan saat memperbarui informasi personal.'
+            'Terjadi kesalahan saat memperbarui informasi pribadi.'
           )
           setSuccessMessagePersonal('')
           setIsPending(false)
         })
     })
   }
-
+  
   const onSubmitResume = (value: z.infer<typeof updateMemberSchema>) => {
     setErrorMessageResume('')
     setSuccessMessageResume('')
@@ -257,7 +257,7 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
           setIsPending(false)
         })
         .catch((err) => {
-          console.error('Error updating resume information:', err)
+          console.error('Terjadi kesalahan saat memperbarui informasi resume:', err)
           setErrorMessageResume(
             'Terjadi kesalahan saat memperbarui informasi resume.'
           )
@@ -266,6 +266,7 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
         })
     })
   }
+  
 
   const onSubmitSkills = (value: z.infer<typeof updateMemberSchema>) => {
     setErrorMessageSkills('')
@@ -279,15 +280,16 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
           setIsPending(false)
         })
         .catch((err) => {
-          console.error('Error updating skills information:', err)
+          console.error('Terjadi kesalahan saat memperbarui informasi keahlian:', err)
           setErrorMessageSkills(
-            'Terjadi kesalahan saat memperbarui informasi skills.'
+            'Terjadi kesalahan saat memperbarui informasi keahlian.'
           )
           setSuccessMessageSkills('')
           setIsPending(false)
         })
     })
   }
+  
 
   const onSubmitInterests = (value: z.infer<typeof updateMemberSchema>) => {
     setErrorMessageInterests('')
@@ -301,15 +303,15 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
           setIsPending(false)
         })
         .catch((err) => {
-          console.error('Error updating interests information:', err)
+          console.error('Terjadi kesalahan saat memperbarui informasi ketertarikan:', err)
           setErrorMessageInterests(
-            'Terjadi kesalahan saat memperbarui informasi interests.'
+            'Terjadi kesalahan saat memperbarui informasi ketertarikan.'
           )
           setSuccessMessageInterests('')
           setIsPending(false)
         })
     })
-  }
+  }  
 
   return (
     <div className='max-w-6xl mx-auto p-8 w-full'>
@@ -801,7 +803,7 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
       <Card className='shadow-lg'>
         <CardHeader>
           <p className='text-lg font-semibold text-green-700 mb-4'>
-            Edit Skill Anda
+            Edit Keahlian Anda
           </p>
           {errorMessageSkills && <FormError message={errorMessageSkills} />}
           {successMessageSkills && (
@@ -827,11 +829,11 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
                   name='skills'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tambahkan Skill Anda</FormLabel>
+                      <FormLabel>Tambahkan Keahlian Anda</FormLabel>
                       {/* Input untuk menambahkan skill manual */}
                       <FormControl>
                         <Input
-                          placeholder='Tulis disini dan tekan enter untuk menambahkan skill'
+                          placeholder='Tulis disini dan tekan enter untuk menambahkan Keahlian'
                           disabled={isPending}
                           onKeyDown={(e) => {
                             if (
