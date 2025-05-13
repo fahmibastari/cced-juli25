@@ -51,6 +51,9 @@ const AddJob = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
   const [isPending, setIsPending] = useState(false)
+  const [applyType, setApplyType] = useState<'internal' | 'external'>('internal')
+  const [externalUrl, setExternalUrl] = useState('')
+
 
   const form = useForm<z.infer<typeof JobSchema>>({
     resolver: zodResolver(JobSchema),
@@ -319,33 +322,6 @@ const AddJob = () => {
                 )}
               />
 
-              {/* <FormField
-                control={form.control}
-                name='type'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Jenis Pekerjaan</FormLabel>
-                    <Select
-                      disabled={isPending}
-                      onValueChange={field.onChange}
-                      value={field.value || ''}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder='Pilih jenis pekerjaan' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {jobTypes.map((type) => (
-                          <SelectItem key={type} value={type.toLowerCase()}>
-                            {type}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
-
               <FormField
                 control={form.control}
                 name='requirements'
@@ -429,6 +405,44 @@ const AddJob = () => {
     </FormItem>
   )}
 />
+<FormField
+  control={form.control}
+  name='type'
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Tipe Apply</FormLabel>
+      <Select
+        onValueChange={(value) => {
+          field.onChange(value)
+          setApplyType(value as 'internal' | 'external')
+        }}
+        value={field.value || 'internal'}
+        disabled={isPending}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder='Pilih tipe apply' />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value='internal'>Internal</SelectItem>
+          <SelectItem value='external'>External</SelectItem>
+        </SelectContent>
+      </Select>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+{applyType === 'external' && (
+  <FormItem>
+    <FormLabel>URL External</FormLabel>
+    <textarea
+      placeholder='Masukkan URL untuk apply pekerjaan'
+      className='border-2 border-gray-100 shadow-sm'
+      value={externalUrl}
+      onChange={(e:any) => setExternalUrl(e.target.value)}
+      disabled={isPending}
+    />
+  </FormItem>
+)}
 
 
               {errorMessage && <FormError message={errorMessage} />}
