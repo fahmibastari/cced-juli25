@@ -29,9 +29,7 @@ export const applyJob = async (
     const { data } = validatedFields
     const { notes, resumeMember } = data
 
-    if (!resumeMember?.trim()) {
-      return { error: 'Please provide your resume' }
-    }
+
 
     // Check if job exists
     const job = await prisma.job.findUnique({
