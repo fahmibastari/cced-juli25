@@ -27,7 +27,7 @@ export const applyJob = async (
     }
 
     const { data } = validatedFields
-    const { notes, resumeMember } = data
+    const { notes } = data
 
 
 
@@ -71,7 +71,7 @@ export const applyJob = async (
         jobId,
         memberId: member?.id ?? '',
         notes: notes || 'seleksi berkas',
-        resumeMember: resumeMember,
+        resumeMember: "null",
       },
     })
 

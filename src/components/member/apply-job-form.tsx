@@ -42,7 +42,7 @@ const ApplyJobForm = () => {
   const form = useForm<z.infer<typeof JobApplicationSchema>>({
     resolver: zodResolver(JobApplicationSchema),
     defaultValues: {
-      resumeMember: '',
+      resumeMember: 'null',
     },
   })
 
