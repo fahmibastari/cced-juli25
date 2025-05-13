@@ -268,20 +268,7 @@
           </CardContent>
         </Card>
 
-        <Card className='mb-6'>
-          <CardHeader>
-            <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
-              Resume Pendaftaran
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {detailData?.member?.resume ? (
-              <p>{detailData?.member?.resume}</p>
-            ) : (
-              <p>{detailData?.resumeMember}</p>
-            )}
-          </CardContent>
-        </Card>
+
 
         <Card className='mb-6'>
           <CardHeader>

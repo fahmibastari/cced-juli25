@@ -24,11 +24,13 @@ interface ExtendedUser extends User {
 }
 
 interface UsersControlProps {
-  users: ExtendedUser[]
+  users: any,
+  authenticatedUser: any,
 }
 
 // Your component
-const UsersControl = ({ users }: UsersControlProps) => {
+const UsersControl = ({ users,authenticatedUser }: UsersControlProps) => {
+  console.log(authenticatedUser);
   const [usersData, setUsersData] = useState<ExtendedUser[]>(users)
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
@@ -115,6 +117,7 @@ const UsersControl = ({ users }: UsersControlProps) => {
                 <TableCell className='text-right'>
                   <ButtonActionUsers
                     id={user.id}
+                    showDelete={authenticatedUser.id!==user.id} 
                     isVerified={!!user.emailVerified}
                     handleClickDelete={() => handleClickDelete(user.id)}
                     handleClickVerifikasi={() => handleClickVerifikasi(user.id)}

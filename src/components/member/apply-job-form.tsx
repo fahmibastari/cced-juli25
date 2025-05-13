@@ -174,25 +174,6 @@ const ApplyJobForm = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
             <div className='space-y-6'>
-              <FormField
-                control={form.control}
-                name='resumeMember'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Resume Anda</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        {...field}
-                        value={field.value ?? ''} // Add a null check here
-                        disabled={form.formState.isSubmitting}
-                        placeholder='Ceritakan tentang diri Anda'
-                        className='border-2 border-gray-100 shadow-sm h-[216px]'
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
               {errorMessage && <FormError message={errorMessage} />}
               {successMessage && <FormSuccess message={successMessage} />}

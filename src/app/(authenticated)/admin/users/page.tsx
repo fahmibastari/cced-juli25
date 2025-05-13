@@ -3,6 +3,8 @@ export const metadata = {
   title: 'CCED',
   description: 'Dibuat oleh CCED',
 };
+import { currentUser } from '@/lib/authenticate'
+
 
 import { getUsersWithBerkas } from '@/actions/admin-action';
 import UsersControl from '@/components/admin/user-control-admin';
@@ -11,9 +13,10 @@ import { Role } from '@prisma/client';
 
 export default async function Page() {
   const users = await getUsersWithBerkas();
+  const authenticatedUser = await currentUser();
   return (
     <RoleGate accessRole={Role.ADMIN}>
-      <UsersControl users={(users || []) as any} />
+     <UsersControl users={users || []} authenticatedUser={authenticatedUser} />
     </RoleGate>
   );
 }
