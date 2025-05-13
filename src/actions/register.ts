@@ -28,6 +28,7 @@ export const registerMember = async (value: z.infer<typeof memberSchema>) => {
   }
   // Hash password
   const hashedPassword = await bcrypt.hash(password, 10)
+  const emailVerified = role === 'MEMBER' ? new Date(Date.now()) : null;
 
   // Create user
   const user = await prisma.user.create({
@@ -36,6 +37,7 @@ export const registerMember = async (value: z.infer<typeof memberSchema>) => {
       fullname,
       email,
       password: hashedPassword,
+      emailVerified,
       role: role as Role,
     },
   })
@@ -44,7 +46,7 @@ export const registerMember = async (value: z.infer<typeof memberSchema>) => {
     data: {
       userId: user.id,
       memberType,
-      nim,
+      nim: nim ?? '',
       phone,
     },
   })
@@ -53,19 +55,19 @@ export const registerMember = async (value: z.infer<typeof memberSchema>) => {
 
   return {
     success: true,
-    message: 'Account created successfully Please Verifiy your email',
+    message: 'Akun berhasil dibuat.',
     role,
   }
 }
 
 export const registerCompany = async (value: z.infer<typeof companySchema>) => {
+  // Validasi input
   const validatedFields = companySchema.safeParse(value)
   if (!validatedFields.success) {
     return { error: 'Please fill all the fields' }
   }
 
   const { data } = validatedFields
-
   const {
     username,
     fullname,
@@ -83,60 +85,79 @@ export const registerCompany = async (value: z.infer<typeof companySchema>) => {
     logo,
     berkas,
   } = data
-  
-  const logoFile = logo ? await saveFile('company-logos', logo) : undefined
-  const berkasFile = berkas ? await saveFile('company-berkas', berkas) : undefined
 
+  // Parallel tasks (cek email, simpan logo dan berkas)
+  const [emailExists, logoFile, berkasFile] = await Promise.all([
+    getUserByEmail(email),
+    logo ? saveFile('company-logos', logo) : undefined,
+    berkas ? saveFile('company-berkas', berkas) : undefined,
+  ])
+
+  if (emailExists) {
+    return { error: 'Email already exists' }
+  }
+
+  // Pastikan berkas dan logo ada
   if (!berkasFile) {
-      return { error: 'Berkas is required' }
+    return { error: 'Berkas is required' }
   }
 
   if (!logoFile) {
     return { error: 'Logo is required' }
   }
 
-  const emailExists = await getUserByEmail(email)
-  if (emailExists) {
-    return { error: 'Email already exists' }
-  }
-  // Hash password
-  const hashedPassword = await bcrypt.hash(password, 10)
+  // Hash password dengan rounds lebih rendah (8 lebih cepat)
+  const hashedPassword = await bcrypt.hash(password, 8)
 
-  // Create user
-  const user = await prisma.user.create({
-    data: {
-      username,
-      fullname,
-      email,
-      password: hashedPassword,
-      role: role as Role,
-    },
-  })
+  try {
+    // Create user in the database
+    const user = await prisma.user.create({
+      data: {
+        username,
+        fullname,
+        email,
+        password: hashedPassword,
+        role: role as Role,
+      },
+    })
 
-  await prisma.company.create({
-    data: {
-      userId: user.id,
-      logoId: logoFile.id,
-      berkasId: berkasFile.id,
-      companyName,
-      industry,
-      ownership,
-      phone,
-      companyPhone,
-      website,
-      publicMail,
-      bio,
-    },
-  })
-  const verificationToken = await generateVerificationToken(email)
-  await sendVerificationEmail(verificationToken.email, verificationToken.token)
+    // Create company record
+    await prisma.company.create({
+      data: {
+        userId: user.id,
+        logoId: logoFile.id,
+        berkasId: berkasFile.id,
+        companyName,
+        industry,
+        ownership,
+        phone,
+        companyPhone,
+        website,
+        publicMail,
+        bio,
+      },
+    })
 
-  return {
-    success: true,
-    message: 'Account created successfully Please Verifiy your email',
-    role,
+    // Generate email verification token
+    const verificationToken = await generateVerificationToken(email)
+
+    // Send verification email
+    await sendVerificationEmail(verificationToken.email, verificationToken.token)
+
+    // Return success response
+    return {
+      success: true,
+      message: 'Akun berhasil dibuat, silahkan tunggu admin mengverifikasi akun anda.',
+      role,
+    }
+  } catch (error) {
+    console.error('Error during registration:', error)
+    return {
+      error: 'Something went wrong during the registration process.',
+    }
   }
 }
+
 
 export const registerAdmin = async (value: z.infer<typeof userSchema>) => {
   const validatedFields = userSchema.safeParse(value)
@@ -154,14 +175,16 @@ export const registerAdmin = async (value: z.infer<typeof userSchema>) => {
   // Hash password
   const hashedPassword = await bcrypt.hash(password, 10)
   try {
+    const emailVerified = role === 'MEMBER' ? new Date(Date.now()) : null;
     // Create user
     await prisma.user.create({
+
       data: {
         username,
         fullname,
         email,
         password: hashedPassword,
-        emailVerified: new Date(Date.now()),
+        emailVerified, 
         role: role as Role,
       },
     })

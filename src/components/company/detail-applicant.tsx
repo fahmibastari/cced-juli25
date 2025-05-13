@@ -98,6 +98,20 @@
       })
     }
     const notesData = ['seleksi berkas', 'dalam komunikasi', 'belum sesuai']
+    const getAge = (birthDate: string | Date): number => {
+      const birth = new Date(birthDate);
+      const today = new Date();
+      let age = today.getFullYear() - birth.getFullYear();
+      const m = today.getMonth() - birth.getMonth();
+    
+      // Jika belum lewat bulan ulang tahun, kurangi usia satu tahun
+      if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+        age--;
+      }
+    
+      return age;
+    };
+    
     return (
       <div className='max-w-4xl mx-auto p-6'>
         <Card className='mb-6'>
@@ -253,12 +267,14 @@
               </span>
             </div>
             <div className='flex items-center gap-3 mb-2'>
-              <span className='text-gray-900'>Tanggal Lahir:</span>
-              <span className='text-gray-600'>
-              {detailData?.member?.birthDate ? new Date(detailData.member.birthDate).toLocaleDateString('id-ID') : '-'}
+  <span className='text-gray-900'>Tanggal Lahir:</span>
+  <span className='text-gray-600'>
+    {detailData?.member?.birthDate
+      ? `${new Date(detailData?.member.birthDate).toLocaleDateString('id-ID')} (${getAge(detailData?.member.birthDate)} tahun)`
+      : '-'}
+  </span>
+</div>
 
-              </span>
-            </div>
             <div className='flex items-center gap-3 mb-2'>
               <span className='text-gray-900'>Jenis Kelamin:</span>
               <span className='text-gray-600'>

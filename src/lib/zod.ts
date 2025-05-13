@@ -50,7 +50,7 @@ export const memberSchema = z.object({
   password: z.string().min(6),
   confirmPassword: z.string().min(6),
   memberType: z.enum(['ALUMNI_UNILA', 'MAHASISWA_UNILA', 'ALUMNI_NON_UNILA', 'MAHASISWA_NON_UNILA']),
-  nim: z.string().min(10, { message: 'Harus berisi setidaknya 10 karakter!' }).optional(),
+  nim: z.string().optional(),
   phone: z.string().min(10),
 }).refine(data => data.password === data.confirmPassword, {
   message: 'Passwords don’t match',

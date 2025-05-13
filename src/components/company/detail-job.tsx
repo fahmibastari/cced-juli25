@@ -127,7 +127,19 @@ const DetailJob = () => {
                 )}
               </ul>
             </section>
-
+            {detailData?.type&&(
+            <section>
+              <h3 className='mb-3 text-lg font-semibold text-gray-800'>
+                Link Lamarann
+              </h3>
+              <a
+  href={detailData?.type ? (detailData?.type.startsWith('http') ? detailData?.type : `http://${detailData?.type}`) : '#'}
+  className='text-gray-600'
+>
+  {detailData?.type || 'Link Eksternal Lamaran'}
+</a>
+            </section>
+            )}
             <section>
               <h3 className='mb-3 text-lg font-semibold text-gray-800'>
                 Deadline

@@ -38,12 +38,15 @@ import { getJob, updateJob } from '@/actions/company-action'
 import { X } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import { Job } from '@prisma/client'
+import { Textarea } from '../ui/textarea'
 
 const EditJob = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
   const [isPending, setIsPending] = useState(false)
   const token = useSearchParams().get('token')
+  const [applyType, setApplyType] = useState<'internal' | 'external'>('internal')
+  const [externalUrl, setExternalUrl] = useState('')
 
   const form = useForm<z.infer<typeof JobSchema>>({
     resolver: zodResolver(JobSchema),
@@ -338,6 +341,50 @@ const EditJob = () => {
                   </FormItem>
                 )}
               />
+
+<FormItem>
+      <FormLabel>Tipe Apply</FormLabel>
+      <Select
+        onValueChange={(value) => {
+          setApplyType(value as 'internal' | 'external')
+        }}
+        value={applyType || 'internal'}
+        disabled={isPending}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder='Pilih tipe apply' />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value='internal'>Internal</SelectItem>
+          <SelectItem value='external'>External</SelectItem>
+        </SelectContent>
+      </Select>
+      <FormMessage />
+    </FormItem>
+    {applyType === 'external' && (
+<FormField
+  control={form.control}
+  name='type'
+  render={({ field }) => (
+    <FormItem>
+    <FormLabel>URL External</FormLabel>
+    <Textarea
+    {...field}
+    disabled={form.formState.isSubmitting}
+      placeholder='Masukkan URL untuk apply pekerjaan'
+      className='border-2 border-gray-100 shadow-sm'
+
+      onChange={(e) => {
+        field.onChange(e.target.value);
+      }}
+      value={field.value ?? ''}
+    />
+      <FormMessage />
+  </FormItem>
+  )}
+/>
+
+)}
 
               {/* <FormField
                 control={form.control}
