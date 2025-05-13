@@ -11,23 +11,11 @@ import {
 } from '../ui/card'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { getJob } from '@/actions/company-action'
+import { getJob ,getDetailJobApplicant} from '@/actions/company-action'
 import { JobApplication } from '@prisma/client'
 import ListDetailAplicants from './list-detail-aplicants'
 
-const handleDownloadExcel = async () => {
-  const response = await fetch('/api/export-excel', {
-    method: 'GET',
-  });
-  const blob = await response.blob();
-  const url = window.URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = 'daftar_pelamar.xlsx'; // Nama file Excel yang akan diunduh
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
+
 
 const DetailJob = () => {
   const token = useSearchParams().get('token')
@@ -41,11 +29,59 @@ const DetailJob = () => {
         if (response?.data) {
           const job = response.data
           setDetailData(job)
+  console.log(job.jobApplication)
+
         }
       }
     }
     fetchAndSetData()
+
   }, [token])
+  const handleDownloadExcel = () => {
+    const jobApplications = detailData.jobApplication;
+  
+    if (!Array.isArray(jobApplications) || jobApplications.length === 0) return;
+  
+    const rows = jobApplications.map((app) => {
+      const member = app.member;
+      return {
+        fullname: member?.user?.fullname || '',
+        email: member?.user?.email || '',
+        nim: member?.nim || '',
+        phone: member?.phone || '',
+        address: member?.address || '',
+        city: member?.city || '',
+        birthDate: member?.birthDate ? new Date(member.birthDate).toISOString().split('T')[0] : '',
+        gender: member?.gender || '',
+        about: member?.about || '',
+        skills: member?.skills?.join(', ') || '',
+        interests: member?.interests?.join(', ') || '',
+        resume: member?.resume || '',
+        notes: app?.notes || '',
+      };
+    });
+  
+    const headers = Object.keys(rows[0]);
+    const csvContent = [
+      headers.join(','),
+      ...rows.map((row: any) =>
+        headers.map((key) => {
+          const value = row[key];
+          return typeof value === 'string' && (value.includes(',') || value.includes('"'))
+            ? `"${value.replace(/"/g, '""')}"`
+            : value;
+        }).join(',')
+      )
+    ].join('\n');
+  
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'all-applicants.csv');
+    link.click();
+  };
+  
   return (
     <Card className='mx-auto my-12 w-full max-w-3xl rounded-lg bg-white shadow-xl'>
       <CardHeader className='text-center space-y-3 pb-8 border-b'>
