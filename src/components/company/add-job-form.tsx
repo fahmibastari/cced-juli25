@@ -36,6 +36,7 @@ import {
 } from '../ui/card'
 import { addNewJob } from '@/actions/company-action'
 import { X } from 'lucide-react'
+import { Textarea } from '../ui/textarea'
 
 function formatRupiah(value: string) {
   // Menghapus semua karakter selain angka
@@ -77,6 +78,7 @@ const AddJob = () => {
     startTransition(() => {
       setIsPending(true)
       // todo: implement submit logic
+      console.log(data)
       addNewJob(data).then((data) => {
         setSuccessMessage(data?.success ?? '')
         setErrorMessage(data?.error ?? '')
@@ -405,18 +407,14 @@ const AddJob = () => {
     </FormItem>
   )}
 />
-<FormField
-  control={form.control}
-  name='type'
-  render={({ field }) => (
+
     <FormItem>
       <FormLabel>Tipe Apply</FormLabel>
       <Select
         onValueChange={(value) => {
-          field.onChange(value)
           setApplyType(value as 'internal' | 'external')
         }}
-        value={field.value || 'internal'}
+        value={applyType || 'internal'}
         disabled={isPending}
       >
         <SelectTrigger>
@@ -429,19 +427,30 @@ const AddJob = () => {
       </Select>
       <FormMessage />
     </FormItem>
-  )}
-/>
+
 {applyType === 'external' && (
-  <FormItem>
+<FormField
+  control={form.control}
+  name='type'
+  render={({ field }) => (
+    <FormItem>
     <FormLabel>URL External</FormLabel>
-    <textarea
+    <Textarea
+    {...field}
+    disabled={form.formState.isSubmitting}
       placeholder='Masukkan URL untuk apply pekerjaan'
       className='border-2 border-gray-100 shadow-sm'
-      value={externalUrl}
-      onChange={(e:any) => setExternalUrl(e.target.value)}
-      disabled={isPending}
+
+      onChange={(e) => {
+        field.onChange(e.target.value);
+      }}
+      value={field.value ?? ''}
     />
+      <FormMessage />
   </FormItem>
+  )}
+/>
+
 )}
 
 
