@@ -31,34 +31,49 @@ const JobCard = ({
 }: JobCardProps) => {
   return (
     <Card
-      className='relative mb-4 cursor-pointer focus:bg-gray-100'
+      className="relative mb-4 cursor-pointer focus:bg-gray-100 hover:shadow-md transition-shadow duration-200"
       onClick={onSelectJob}
+      tabIndex={0}
+      role="button"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          onSelectJob()
+        }
+      }}
     >
-      <CardHeader className='relative flex flex-col space-y-0 pb-2'>
-        <div className='mb-2 flex justify-between'>
-          <div className='flex items-center space-x-2'>
-            <Avatar className='h-6 w-6'>
-              <AvatarImage src={companyLogo} />
-              <AvatarFallback>
-                <User />
-              </AvatarFallback>
-            </Avatar>
-            <div className='text-sm text-gray-500'>{companyName}</div>
-          </div>
+      <CardHeader className="relative flex flex-col space-y-1 pb-2">
+        <div className="flex items-center space-x-3 mb-2">
+          <Avatar className="h-8 w-8">
+            <AvatarImage src={companyLogo} />
+            <AvatarFallback>
+              <User className="h-5 w-5" />
+            </AvatarFallback>
+          </Avatar>
+          <div className="text-sm text-gray-600">{companyName}</div>
         </div>
 
-        <CardTitle className='text-lg font-bold'>{title}</CardTitle>
-        <div className='text-sm'>{location}</div>
+        <CardTitle className="text-lg font-semibold text-gray-900">{title}</CardTitle>
+        <div className="text-sm text-gray-500">{location}</div>
       </CardHeader>
+
       <CardContent>
-        <div className='flex items-center justify-between'>
-          <div className='space-y-1'>
-            <p className='text-sm text-gray-500'>
-              Deadline: {deadline.toLocaleDateString('id-ID')}
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <p className="text-sm text-gray-500">
+              Deadline:{' '}
+              <span className="font-medium text-gray-700">
+                {deadline.toLocaleDateString('id-ID', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                })}
+              </span>
             </p>
-            {salary && <p className='text-sm font-medium'>{salary}</p>}
+            {salary && (
+              <p className="text-sm font-semibold text-green-700">{salary}</p>
+            )}
           </div>
-          <Button>
+          <Button asChild variant="secondary" size="sm">
             <Link href={`/member/apply-job?token=${jobId}&user=${userId}`}>
               Lamar
             </Link>

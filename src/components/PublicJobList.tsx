@@ -28,15 +28,15 @@ const PublicJobList = ({ jobs }: PublicJobListProps) => {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {jobs.map((job) => (
         <JobCardPublic
-          key={job.id}
-          jobId={job.id}
-          companyLogo={job.companyLogo}
-          companyName={job.companyName}
-          title={job.title}
-          location={job.location}
-          deadline={new Date(job.deadline)}
-          salary={job.salary}
-        />
+        key={job.id}
+        jobId={job.id}
+        companyLogo={job.companyLogo}
+        companyName={job.companyName}
+        title={job.title}
+        location={job.location}
+        deadline={new Date(job.deadline)}
+        salary={job.salary}
+      />      
       ))}
     </div>
   )

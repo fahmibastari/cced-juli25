@@ -105,7 +105,7 @@ const ApplyJobForm = () => {
               <h3 className='mb-3 text-lg font-semibold text-gray-800'>
                 Deskripsi Pekerjaan
               </h3>
-              <p className='text-gray-600'>{job?.description || 'Deskripsi'}</p>
+              <p className='text-gray-600 whitespace-pre-wrap'>{job?.description || 'Deskripsi'}</p>
             </section>
 
             <section>

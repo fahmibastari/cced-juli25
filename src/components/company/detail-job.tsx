@@ -99,7 +99,7 @@ const DetailJob = () => {
               <h3 className='mb-3 text-lg font-semibold text-gray-800'>
                 Deskripsi Pekerjaan
               </h3>
-              <p className='text-gray-600'>
+              <p className='text-gray-600 whitespace-pre-wrap'>
                 {detailData?.description || 'Deskripsi'}
               </p>
             </section>

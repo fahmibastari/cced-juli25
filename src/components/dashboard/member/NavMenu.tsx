@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 
+
 interface NavMenuProps {
   handleClickForYou: () => void
   handleClickFind: () => void

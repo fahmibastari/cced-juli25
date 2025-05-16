@@ -273,7 +273,7 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                     name='companyName'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nama Penyedia Kerjan</FormLabel>
+                        <FormLabel>Nama Penyedia Kerja</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
@@ -318,14 +318,17 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                       <FormItem>
                         <FormLabel>Kepemilikan Penyedia Kerja</FormLabel>
                         <FormControl>
-                          <Input
-                            {...field}
-                            disabled={formPersonal.formState.isSubmitting}
-                            placeholder='Kepemilikan Penyedia Kerja'
-                            className='border-2 border-gray-100 shadow-sm'
-                            type='text'
-                          />
-                        </FormControl>
+                      <select
+                        {...field}
+                        disabled={formPersonal.formState.isSubmitting}
+                        className="w-full border-2 border-gray-100 bg-white shadow-sm rounded-md p-2"
+                      >
+                        <option value="">Pilih Kepemilikan</option>
+                        <option value="Perusahaan kecil">Perusahaan Kecil</option>
+                        <option value="Perusahaan menengah">Perusahaan Menengah</option>
+                        <option value="Perusahaan besar">Perusahaan Besar</option>
+                      </select>
+                    </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}

@@ -17,6 +17,7 @@ interface CardWrapperProps {
   switchButtonHref: string
   paragraphSwitchButton: string
   size?: string
+  className?: string
 }
 
 export const CardWrapper = ({
