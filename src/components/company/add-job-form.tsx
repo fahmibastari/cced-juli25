@@ -36,24 +36,39 @@ import {
 } from '../ui/card'
 import { addNewJob } from '@/actions/company-action'
 import { X } from 'lucide-react'
+import { Textarea } from '../ui/textarea'
+
+function formatRupiah(value: string) {
+  // Menghapus semua karakter selain angka
+  value = value.replace(/\D/g, '');
+
+  // Memformat angka menjadi format rupiah dengan titik sebagai pemisah ribuan
+  if (value === '') return '';
+  const number = parseInt(value, 10);
+  return 'Rp ' + number.toLocaleString('id-ID'); // Format angka dengan titik
+}
 
 const AddJob = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
   const [isPending, setIsPending] = useState(false)
+  const [applyType, setApplyType] = useState<'internal' | 'external'>('internal')
+  const [externalUrl, setExternalUrl] = useState('')
+
 
   const form = useForm<z.infer<typeof JobSchema>>({
     resolver: zodResolver(JobSchema),
     defaultValues: {
       title: '',
-      description: '',
-      salary: '',
-      requirements: [],
-      location: ' ',
-      deadline: new Date(),
-      status: '',
-      skills: [],
-      type: '',
+  description: '',
+  salary: '',
+  requirements: [],
+  location: ' ',
+  deadline: new Date(),
+  employmentType: '',
+  workTime: '',
+  skills: [],
+  type: '',
     },
   })
 
@@ -63,6 +78,7 @@ const AddJob = () => {
     startTransition(() => {
       setIsPending(true)
       // todo: implement submit logic
+      console.log(data)
       addNewJob(data).then((data) => {
         setSuccessMessage(data?.success ?? '')
         setErrorMessage(data?.error ?? '')
@@ -78,10 +94,10 @@ const AddJob = () => {
     <Card className='mx-auto my-8 w-full max-w-3xl bg-white shadow-lg'>
       <CardHeader className='text-center space-y-2 pb-8 border-b'>
         <CardTitle className='text-3xl font-bold text-green-700'>
-          Create New Job Posting
+          Buat Lowongan Pekerjaan Baru
         </CardTitle>
         <CardDescription className='text-gray-600'>
-          Fill in the details below to create a new job opportunity
+          Isi detail berikut untuk membuat peluang pekerjaan baru
         </CardDescription>
       </CardHeader>
       <CardContent className='pt-8'>
@@ -93,12 +109,12 @@ const AddJob = () => {
                 name='title'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Title</FormLabel>
+                    <FormLabel>Judul</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         disabled={form.formState.isSubmitting}
-                        placeholder='Enter an title for the job'
+                        placeholder='Masukkan judul untuk pekerjaan'
                         className='border-2 border-gray-100 shadow-sm'
                         type='text'
                       />
@@ -113,12 +129,12 @@ const AddJob = () => {
                 name='location'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Location</FormLabel>
+                    <FormLabel>Lokasi</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         disabled={form.formState.isSubmitting}
-                        placeholder='Enter an location for the job'
+                        placeholder='Masukkan lokasi pekerjaan'
                         className='border-2 border-gray-100 shadow-sm'
                         type='text'
                         value={field.value ?? ' '}
@@ -129,61 +145,66 @@ const AddJob = () => {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name='salary'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Salary</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        disabled={form.formState.isSubmitting}
-                        placeholder='Enter an range salary for the job'
-                        className='border-2 border-gray-100 shadow-sm'
-                        type='text'
-                        value={field.value ?? ''}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+<FormField
+      control={form.control}
+      name="salary"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Gaji</FormLabel>
+          <FormControl>
+            <Input
+              {...field}
+              disabled={form.formState.isSubmitting}
+              placeholder="Masukkan kisaran gaji untuk pekerjaan"
+              className="border-2 border-gray-100 shadow-sm"
+              type="text"
+              value={field.value ?? ''}
+              onChange={(e) => {
+                // Memformat nilai input saat ada perubahan
+                field.onChange(formatRupiah(e.target.value));
+              }}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
 
-              <FormField
-                control={form.control}
-                name='description'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        disabled={form.formState.isSubmitting}
-                        placeholder='Enter an description for the job'
-                        className='border-2 border-gray-100 shadow-sm'
-                        type='text'
-                        value={field.value ?? ''}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+<FormField
+  control={form.control}
+  name="description"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Deskripsi</FormLabel>
+      <FormControl>
+        <textarea
+          {...field}
+          disabled={form.formState.isSubmitting}
+          placeholder="Masukkan deskripsi untuk pekerjaan"
+          className="border-2 border-grey-300 shadow-sm w-full p-2 resize-none focus:outline-none focus:ring-2 focus:ring-green-500 rounded-lg" // Menambahkan border-radius
+          value={field.value ?? ''}
+        />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+
 
               <FormField
                 control={form.control}
                 name='status'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Status</FormLabel>
+                    <FormLabel>Status Lowongan</FormLabel>
                     <Select
                       disabled={isPending}
                       onValueChange={field.onChange}
                       value={field.value || ''}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder='Select job status' />
+                        <SelectValue placeholder='Pilih status pekerjaan' />
                       </SelectTrigger>
                       <SelectContent>
                         {jobStatus.map((status) => (
@@ -198,16 +219,66 @@ const AddJob = () => {
                 )}
               />
 
+<FormField
+  control={form.control}
+  name="employmentType"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Status Pegawai</FormLabel>
+      <Select
+        disabled={form.formState.isSubmitting}
+        onValueChange={field.onChange}
+        value={field.value || ''}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Pilih status pegawai" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="Pekerja Tetap">Pekerja Tetap</SelectItem>
+          <SelectItem value="Kontrak">Kontrak</SelectItem>
+          <SelectItem value="Magang">Magang</SelectItem>
+        </SelectContent>
+      </Select>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+<FormField
+  control={form.control}
+  name="workTime"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Waktu Kerja</FormLabel>
+      <Select
+        disabled={form.formState.isSubmitting}
+        onValueChange={field.onChange}
+        value={field.value || ''}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Pilih waktu kerja" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="Full Time">Full Time</SelectItem>
+          <SelectItem value="Part Time">Part Time</SelectItem>
+        </SelectContent>
+      </Select>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+
               <FormField
                 control={form.control}
                 name='skills'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Required Skills</FormLabel>
-                    {/* Input untuk menambahkan skill manual */}
+                    <FormLabel>Keterampilan yang Dibutuhkan</FormLabel>
+                    {/* Input untuk menambahkan keterampilan manual */}
                     <FormControl>
                       <Input
-                        placeholder='Type a skill and press Enter'
+                        placeholder='Ketik keterampilan dan tekan Enter'
                         disabled={isPending}
                         onKeyDown={(e) => {
                           if (
@@ -225,7 +296,7 @@ const AddJob = () => {
                         className='border-2 border-gray-100 shadow-sm mb-2'
                       />
                     </FormControl>
-                    {/* Menampilkan daftar skill */}
+                    {/* Menampilkan daftar keterampilan */}
                     <div className='mt-2 flex flex-wrap gap-2'>
                       {field.value?.map((skill) => (
                         <div
@@ -248,33 +319,6 @@ const AddJob = () => {
                         </div>
                       ))}
                     </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name='type'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Job Type</FormLabel>
-                    <Select
-                      disabled={isPending}
-                      onValueChange={field.onChange}
-                      value={field.value || ''}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder='Select job type' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {jobTypes.map((type) => (
-                          <SelectItem key={type} value={type.toLowerCase()}>
-                            {type}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -285,10 +329,10 @@ const AddJob = () => {
                 name='requirements'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Requirements</FormLabel>
+                    <FormLabel>Persyaratan</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='Type a skill and press Enter'
+                        placeholder='Ketik persyaratan dan tekan Enter'
                         disabled={isPending}
                         onKeyDown={(e) => {
                           if (
@@ -333,32 +377,82 @@ const AddJob = () => {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name='deadline'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Date</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        value={
-                          field.value
-                            ? new Date(field.value).toISOString().split('T')[0]
-                            : ''
-                        }
-                        onChange={(e) =>
-                          field.onChange(new Date(e.target.value))
-                        }
-                        disabled={form.formState.isSubmitting}
-                        className='border-2 border-gray-100 shadow-sm'
-                        type='date'
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+<FormField
+  control={form.control}
+  name="deadline"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Tanggal</FormLabel>
+      <FormControl>
+        <Input
+          {...field}
+          value={
+            field.value
+              ? new Date(field.value).toISOString().split("T")[0] // Pastikan field.value adalah tanggal yang valid
+              : ""
+          }
+          onChange={(e) => {
+            // Pastikan nilai yang dimasukkan valid sebagai tanggal sebelum diproses
+            const newDate = new Date(e.target.value);
+            if (!isNaN(newDate.getTime())) {
+              field.onChange(newDate);
+            }
+          }}
+          disabled={form.formState.isSubmitting}
+          className="border-2 border-gray-100 shadow-sm"
+          type="date"
+        />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+    <FormItem>
+      <FormLabel>Tipe Apply</FormLabel>
+      <Select
+        onValueChange={(value) => {
+          setApplyType(value as 'internal' | 'external')
+        }}
+        value={applyType || 'internal'}
+        disabled={isPending}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder='Pilih tipe apply' />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value='internal'>Internal</SelectItem>
+          <SelectItem value='external'>External</SelectItem>
+        </SelectContent>
+      </Select>
+      <FormMessage />
+    </FormItem>
+
+{applyType === 'external' && (
+<FormField
+  control={form.control}
+  name='type'
+  render={({ field }) => (
+    <FormItem>
+    <FormLabel>URL External</FormLabel>
+    <Textarea
+    {...field}
+    disabled={form.formState.isSubmitting}
+      placeholder='Masukkan URL untuk apply pekerjaan'
+      className='border-2 border-gray-100 shadow-sm'
+
+      onChange={(e) => {
+        field.onChange(e.target.value);
+      }}
+      value={field.value ?? ''}
+    />
+      <FormMessage />
+  </FormItem>
+  )}
+/>
+
+)}
+
 
               {errorMessage && <FormError message={errorMessage} />}
               {successMessage && <FormSuccess message={successMessage} />}
@@ -371,10 +465,10 @@ const AddJob = () => {
                 {isPending ? (
                   <div className='flex items-center justify-center gap-2'>
                     <BeatLoader />
-                    Processing...
+                    Memproses...
                   </div>
                 ) : (
-                  'Create Job'
+                  'Buat Lowongan'
                 )}
               </Button>
             </div>
@@ -386,7 +480,7 @@ const AddJob = () => {
           href='/dashboard'
           className='text-green-600 hover:text-green-700 font-medium'
         >
-          Back to Dashboard
+          Kembali ke Dashboard
         </Link>
       </CardFooter>
     </Card>

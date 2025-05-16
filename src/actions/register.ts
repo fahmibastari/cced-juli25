@@ -14,7 +14,7 @@ import { Role } from '@prisma/client'
 export const registerMember = async (value: z.infer<typeof memberSchema>) => {
   const validatedFields = memberSchema.safeParse(value)
   if (!validatedFields.success) {
-    return { error: 'Please fill all the fields' }
+    return { error: 'Harap lengkapi semua kolom' }
   }
 
   const { data } = validatedFields
@@ -24,18 +24,20 @@ export const registerMember = async (value: z.infer<typeof memberSchema>) => {
 
   const emailExists = await getUserByEmail(email)
   if (emailExists) {
-    return { error: 'Email already exists' }
+    return { error: 'Email sudah terdaftar' }
   }
   // Hash password
   const hashedPassword = await bcrypt.hash(password, 10)
+  const emailVerified = role === 'MEMBER' ? new Date(Date.now()) : null;
 
-  // Create user
+  // Membuat pencari kerja
   const user = await prisma.user.create({
     data: {
       username,
       fullname,
       email,
       password: hashedPassword,
+      emailVerified,
       role: role as Role,
     },
   })
@@ -44,7 +46,7 @@ export const registerMember = async (value: z.infer<typeof memberSchema>) => {
     data: {
       userId: user.id,
       memberType,
-      nim,
+      nim: nim ?? '',
       phone,
     },
   })
@@ -53,19 +55,19 @@ export const registerMember = async (value: z.infer<typeof memberSchema>) => {
 
   return {
     success: true,
-    message: 'Account created successfully Please Verifiy your email',
+    message: 'Akun berhasil dibuat.',
     role,
   }
 }
 
 export const registerCompany = async (value: z.infer<typeof companySchema>) => {
+  // Validasi input
   const validatedFields = companySchema.safeParse(value)
   if (!validatedFields.success) {
-    return { error: 'Please fill all the fields' }
+    return { error: 'Harap lengkapi semua kolom' }
   }
 
   const { data } = validatedFields
-
   const {
     username,
     fullname,
@@ -83,65 +85,83 @@ export const registerCompany = async (value: z.infer<typeof companySchema>) => {
     logo,
     berkas,
   } = data
-  
-  const logoFile = logo ? await saveFile('company-logos', logo) : undefined
-  const berkasFile = berkas ? await saveFile('company-berkas', berkas) : undefined
 
+  // Parallel tasks (cek email, simpan logo dan berkas)
+  const [emailExists, logoFile, berkasFile] = await Promise.all([
+    getUserByEmail(email),
+    logo ? saveFile('company-logos', logo) : undefined,
+    berkas ? saveFile('company-berkas', berkas) : undefined,
+  ])
+
+  if (emailExists) {
+    return { error: 'Email sudah terdaftar' }
+  }
+
+  // Pastikan berkas dan logo ada
   if (!berkasFile) {
-      return { error: 'Berkas is required' }
+    return { error: 'Berkas diperlukan' }
   }
 
   if (!logoFile) {
-    return { error: 'Logo is required' }
+    return { error: 'Logo diperlukan' }
   }
 
-  const emailExists = await getUserByEmail(email)
-  if (emailExists) {
-    return { error: 'Email already exists' }
-  }
-  // Hash password
-  const hashedPassword = await bcrypt.hash(password, 10)
+  // Hash password dengan rounds lebih rendah (8 lebih cepat)
+  const hashedPassword = await bcrypt.hash(password, 8)
 
-  // Create user
-  const user = await prisma.user.create({
-    data: {
-      username,
-      fullname,
-      email,
-      password: hashedPassword,
-      role: role as Role,
-    },
-  })
+  try {
+    // Membuat pencari kerja di database
+    const user = await prisma.user.create({
+      data: {
+        username,
+        fullname,
+        email,
+        password: hashedPassword,
+        role: role as Role,
+      },
+    })
 
-  await prisma.company.create({
-    data: {
-      userId: user.id,
-      logoId: logoFile.id,
-      berkasId: berkasFile.id,
-      companyName,
-      industry,
-      ownership,
-      phone,
-      companyPhone,
-      website,
-      publicMail,
-      bio,
-    },
-  })
-  const verificationToken = await generateVerificationToken(email)
-  await sendVerificationEmail(verificationToken.email, verificationToken.token)
+    // Membuat penyedia kerja
+    await prisma.company.create({
+      data: {
+        userId: user.id,
+        logoId: logoFile.id,
+        berkasId: berkasFile.id,
+        companyName,
+        industry,
+        ownership,
+        phone,
+        companyPhone,
+        website,
+        publicMail,
+        bio,
+      },
+    })
 
-  return {
-    success: true,
-    message: 'Account created successfully Please Verifiy your email',
-    role,
+    // Menghasilkan token verifikasi email
+    const verificationToken = await generateVerificationToken(email)
+
+    // Mengirimkan email verifikasi
+    await sendVerificationEmail(verificationToken.email, verificationToken.token)
+
+    // Kembali dengan respons sukses
+    return {
+      success: true,
+      message: 'Akun berhasil dibuat, silahkan tunggu admin mengverifikasi akun anda.',
+      role,
+    }
+  } catch (error) {
+    console.error('Terjadi kesalahan saat registrasi:', error)
+    return {
+      error: 'Terjadi kesalahan selama proses registrasi.',
+    }
   }
 }
 
 export const registerAdmin = async (value: z.infer<typeof userSchema>) => {
   const validatedFields = userSchema.safeParse(value)
   if (!validatedFields.success) {
-    return { error: 'Please fill all the fields' }
+    return { error: 'Harap lengkapi semua kolom' }
   }
 
   const { data } = validatedFields
@@ -149,29 +169,31 @@ export const registerAdmin = async (value: z.infer<typeof userSchema>) => {
 
   const emailExists = await getUserByEmail(email)
   if (emailExists) {
-    return { error: 'Email already exists' }
+    return { error: 'Email sudah terdaftar' }
   }
   // Hash password
   const hashedPassword = await bcrypt.hash(password, 10)
   try {
-    // Create user
+    const emailVerified = role === 'MEMBER' ? new Date(Date.now()) : null;
+    // Membuat pencari kerja
     await prisma.user.create({
+
       data: {
         username,
         fullname,
         email,
         password: hashedPassword,
-        emailVerified: new Date(Date.now()),
+        emailVerified, 
         role: role as Role,
       },
     })
 
     return {
-      success: 'Account created successfully!',
+      success: 'Akun berhasil dibuat!',
     }
   } catch {
     return {
-      error: 'Something went wrong',
+      error: 'Terjadi kesalahan',
     }
   }
 }

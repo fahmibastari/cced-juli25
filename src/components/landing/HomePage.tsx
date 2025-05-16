@@ -2,33 +2,36 @@ import Link from 'next/link'
 import { Label } from '../ui/label'
 import { Button } from '../ui/button'
 import HomePageClient from './HomePageClient'
-import { getArticles, getNews } from '@/data/data'
+import prisma from '@/lib/prisma'
 
 export default async function HomePage() {
-  const news = await getNews()
-  const articles = await getArticles()
+  const jobs = await prisma.job.findMany({
+    where: {
+      status: 'aktif',
+      deadline: {
+        gte: new Date(),
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    take: 9,
+  })
 
   return (
-    <div className='bg-white text-gray-800'>
-      {/* ----------------- HEADER ------------------ */}
-      <header className='bg-gradient-to-r from-[#025908] to-[#038f0a] py-16 text-white shadow-2xl'>
-        <div className='container mx-auto flex h-96 flex-col justify-center text-center'>
-          <Label className='text-4xl font-bold leading-tight lg:text-5xl'>
-            Selamat Datang di Center for Career & Entrepreurship Development
-          </Label>
-          <Label className='mt-4 text-lg lg:text-xl'>
-            Solusi mudah untuk mencari pekerjaan dan merekrut karyawan terbaik.
-          </Label>
-          <Link href='#'>
-            <Button className='mt-8 rounded-lg bg-white px-8 py-4 text-xl font-semibold text-[#025908] shadow-lg transition-transform duration-300 ease-in-out hover:bg-gray-100 hover:scale-105'>
-              Jelajahi Fitur
-            </Button>
-          </Link>
+    <div className="bg-white text-gray-800 min-h-screen">
+      <section className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-green-800 mb-10 tracking-tight">
+          Lowongan Terbaru
+        </h2>
+        <HomePageClient jobs={jobs} />
+        {/* Jika kamu mau tombol lihat semua */}
+        <div className="text-center">
+          <Button asChild variant="default">
+            <Link href="/login">Lihat Semua Lowongan</Link>
+          </Button>
         </div>
-      </header>
-
-      {/* ----------------- CONTENT ------------------ */}
-      <HomePageClient news={news} articles={articles} />
+      </section>
     </div>
   )
 }

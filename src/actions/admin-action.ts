@@ -50,7 +50,7 @@ export const verifyCompanyByUserId = async (userId: string) => {
     })
 
     if (!user) {
-      return { error: 'User not found.' }
+      return { error: 'Pengguna tidak ditemukan.' }
     }
 
     // Update emailVerified timestamp
@@ -66,7 +66,7 @@ export const verifyCompanyByUserId = async (userId: string) => {
       })
 
       if (!company) {
-        return { error: 'Company not found for this user.' }
+        return { error: 'Penyedia Kerja tidak ditemukan untuk pengguna ini.' }
       }
 
       await prisma.company.update({
@@ -80,15 +80,15 @@ export const verifyCompanyByUserId = async (userId: string) => {
       })
 
       return {
-        success: `Company "${company.companyName}" verified and user's email marked as verified.`,
+        success: `Penyedia Kerja "${company.companyName}" Terverifikasi dan email pengguna ditandai sebagai terverifikasi.`,
       }
     }
 
-    return { success: 'User email marked as verified.' }
+    return { success: 'Email pengguna ditandai sebagai terverifikasi.' }
   } catch (error) {
-    console.error('Error verifying:', error)
+    console.error('Kesalahan dalam verifikasi:', error)
     return {
-      error: 'An error occurred while verifying. Please try again.',
+      error: 'Terjadi kesalahan saat memverifikasi. Silakan coba lagi.',
     }
   }
 }
@@ -180,7 +180,7 @@ export const getContent = async (id: string) => {
 
     return null
   } catch (error) {
-    console.error('Error fetching content:', error)
+    console.error('Kesalahan dalam mengambil konten.', error)
     return null
   }
 }
@@ -204,10 +204,10 @@ export const getRequestVerification = async () => {
 export const deleteUser = async (id: string) => {
   try {
     await prisma.user.delete({ where: { id } })
-    return { success: 'User successfully deleted!' }
+    return { success: 'Pengguna berhasil dihapus!' }
   } catch {
     return {
-      error: 'An error occurred while deleting the user. Please try again.',
+      error: 'Terjadi kesalahan saat menghapus pengguna. Silakan coba lagi.',
     }
   }
 }
@@ -215,10 +215,10 @@ export const deleteUser = async (id: string) => {
 export const deleteCompany = async (id: string) => {
   try {
     await prisma.company.delete({ where: { id } })
-    return { success: 'Company successfully deleted!' }
+    return { success: 'Penyedia kerja berhasil dihapus!' }
   } catch {
     return {
-      error: 'An error occurred while deleting the company. Please try again.',
+      error: 'Terjadi kesalahan saat menghapus penyedia kerja. Silakan coba lagi.',
     }
   }
 }
@@ -226,32 +226,10 @@ export const deleteCompany = async (id: string) => {
 export const deleteMember = async (id: string) => {
   try {
     await prisma.member.delete({ where: { id } })
-    return { success: 'Member successfully deleted!' }
+    return { success: 'Pencari kerja berhasil dihapus!' }
   } catch {
     return {
-      error: 'An error occurred while deleting the member. Please try again.',
-    }
-  }
-}
-
-export const deleteNews = async (id: string) => {
-  try {
-    await prisma.news.delete({ where: { id } })
-    return { success: 'News successfully deleted!' }
-  } catch {
-    return {
-      error: 'An error occurred while deleting the news. Please try again.',
-    }
-  }
-}
-
-export const deleteArticle = async (id: string) => {
-  try {
-    await prisma.article.delete({ where: { id } })
-    return { success: 'Article successfully deleted!' }
-  } catch {
-    return {
-      error: 'An error occurred while deleting the article. Please try again.',
+      error: 'Terjadi kesalahan saat menghapus pencari kerja. Silakan coba lagi.',
     }
   }
 }
@@ -259,10 +237,10 @@ export const deleteArticle = async (id: string) => {
 export const deleteJob = async (id: string) => {
   try {
     await prisma.job.delete({ where: { id } })
-    return { success: 'Job successfully deleted!' }
+    return { success: 'Lowongan berhasil dihapus!' }
   } catch {
     return {
-      error: 'An error occurred while deleting the job. Please try again.',
+      error: 'Terjadi kesalahan saat menghapus lowongan. Silakan coba lagi.',
     }
   }
 }
@@ -274,14 +252,14 @@ export const deleteRequestVerified = async (id: string, companyId: string) => {
     })
     if (!company) {
       return {
-        error: 'Company not found. Please try again.',
+        error: 'Penyedia kerja tidak ditemukan. Silakan coba lagi.',
       }
     }
 
     const request = await prisma.requestVerified.findUnique({ where: { id } })
     if (!request) {
       return {
-        error: 'Request verified not found. Please try again.',
+        error: 'Permintaan verifikasi tidak ditemukan. Silakan coba lagi.',
       }
     }
 
@@ -294,49 +272,11 @@ export const deleteRequestVerified = async (id: string, companyId: string) => {
 
     await prisma.requestVerified.delete({ where: { id } })
 
-    return { success: `Request ${company.companyName} verified successfully!` }
+    return { success: `Permintaan verifikasi ${company.companyName} berhasil!` }
   } catch {
     return {
       error:
-        'An error occurred while prosessing the request verified. Please try again.',
+        'Terjadi kesalahan saat memproses permintaan verifikasi. Silakan coba lagi.',
     }
-  }
-}
-
-
-export const createContent = async (
-  type: 'news' | 'article',
-  title: string,
-  content: string,
-  thumbnail?: File // Accept File instead of string URL
-) => {
-  try {
-    const slug = title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '')
-
-    // ✅ Upload thumbnail if provided
-    let thumbnailUrl = ''
-    if (thumbnail) {
-      const uploadedFile = await saveFile('uploads/thumbnails', thumbnail)
-      thumbnailUrl = uploadedFile.src // Store the file URL in DB
-    }
-
-    // ✅ Save content to the database
-    if (type === 'news') {
-      await prisma.news.create({
-        data: { title, content, thumbnail: thumbnailUrl, slug },
-      })
-    } else {
-      await prisma.article.create({
-        data: { title, content, thumbnail: thumbnailUrl, slug },
-      })
-    }
-
-    return { success: `${type.charAt(0).toUpperCase() + type.slice(1)} created successfully!` }
-  } catch (error) {
-    console.error(`Error creating ${type}:`, error)
-    return { error: `An error occurred while creating the ${type}. Please try again.` }
   }
 }

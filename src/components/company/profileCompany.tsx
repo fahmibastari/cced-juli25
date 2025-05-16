@@ -18,6 +18,8 @@ import { useState } from 'react'
 import { createRequestVerified } from '@/actions/company-action'
 import { FormError } from '../auth/form-error'
 import { FormSuccess } from '../auth/form-succsess'
+import { signOut } from 'next-auth/react'
+
 
 interface ProfileCompanyProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,15 +36,15 @@ const ProfileCompany = ({ data }: ProfileCompanyProps) => {
   // Hapus useEffect yang ada
 
   const handleAjukan = async () => {
-    const res = await createRequestVerified(data.company.id)
-    setErrorMessage(res?.error ?? '')
-    setSuccessMessage(res?.success ?? '')
-
-    // Langsung set waiting ke true saat berhasil request
+    const res = await createRequestVerified(data.company.id);
+    setErrorMessage(res?.error ?? '');
+    setSuccessMessage(res?.success ?? '');
+  
     if (res?.success) {
-      setCheckIsWaiting(true)
+      setCheckIsWaiting(true);
     }
-  }
+  };
+  
   return (
     <div className='max-w-4xl mx-auto p-6'>
       <Card className='mb-6'>
@@ -56,7 +58,7 @@ const ProfileCompany = ({ data }: ProfileCompanyProps) => {
                 fill
               />
             </div>
-            <div>
+            <div className='max-w-[600px]'>
               <CardTitle className='text-xl font-bold text-green-800 mb-3'>
                 {data.company.companyName || 'Fullname'}
               </CardTitle>
@@ -86,104 +88,112 @@ const ProfileCompany = ({ data }: ProfileCompanyProps) => {
           )}
         </CardHeader>
       </Card>
+      <div className='mb-6 flex justify-end'>
+  <Button
+    onClick={() => signOut({ callbackUrl: '/' })}
+    variant='destructive'
+    className='text-sm font-semibold'
+  >
+    Logout
+  </Button>
+</div>
+<Card className='mb-6'>
+  <CardHeader>
+    <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
+      Informasi Pribadi
+    </CardTitle>
+  </CardHeader>
+  <CardContent className='mb-3 text-sm font-semibold text-gray-800'>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Nama Lengkap:</span>
+      <span className='text-gray-600'>{data.fullname || '-'}</span>
+    </div>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Email:</span>
+      <span className='text-gray-600'>{data.email || '-'}</span>
+    </div>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Peran:</span>
+      <span className='text-gray-600'>
+        {data.role.toLowerCase() || '-'}
+      </span>
+    </div>
+  </CardContent>
+</Card>
 
-      <Card className='mb-6'>
-        <CardHeader>
-          <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
-            Personal Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent className='mb-3 text-sm font-semibold text-gray-800'>
-          <div className='flex items-center gap-3 mb-2'>
-            <span className='text-gray-900'>Fullname:</span>
-            <span className='text-gray-600'>{data.fullname || '-'}</span>
-          </div>
-          <div className='flex items-center gap-3 mb-2'>
-            <span className='text-gray-900'>Email:</span>
-            <span className='text-gray-600'>{data.email || '-'}</span>
-          </div>
-          <div className='flex items-center gap-3 mb-2'>
-            <span className='text-gray-900'>Role:</span>
-            <span className='text-gray-600'>
-              {data.role.toLowerCase() || '-'}
-            </span>
-          </div>
-        </CardContent>
-      </Card>
+<Card className='mb-6'>
+  <CardHeader>
+    <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
+      Informasi Penyedia Kerja
+    </CardTitle>
+  </CardHeader>
+  <CardContent className='mb-3 text-sm font-semibold text-gray-800'>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Nama Penyedia Kerja:</span>
+      <span className='text-gray-600'>
+        {data.company.companyName || '-'}
+      </span>
+    </div>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Industri:</span>
+      <span className='text-gray-600'>
+        {data.company.industry || '-'}
+      </span>
+    </div>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Status Kepemilikan:</span>
+      <span className='text-gray-600'>
+        {data.company.ownership || '-'}
+      </span>
+    </div>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Nomor Telepon:</span>
+      <span className='text-gray-600'>{data.company.phone || '-'}</span>
+    </div>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Nomor Telepon Penyedia Kerja:</span>
+      <span className='text-gray-600'>
+        {data.company.companyPhone || '-'}
+      </span>
+    </div>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Website Penyedia Kerja:</span>
+      <span className='text-gray-600'>
+        <a href={`https://${data.company.website}`}>
+          {data.company.website || '-'}
+        </a>
+      </span>
+    </div>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Alamat Penyedia Kerja:</span>
+      <span className='text-gray-600'>{data.company.address || '-'}</span>
+    </div>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Kota:</span>
+      <span className='text-gray-600'>{data.company.city || '-'}</span>
+    </div>
+  </CardContent>
+</Card>
 
-      <Card className='mb-6'>
-        <CardHeader>
-          <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
-            Company Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent className='mb-3 text-sm font-semibold text-gray-800'>
-          <div className='flex items-center gap-3 mb-2'>
-            <span className='text-gray-900'>Nama Perusahaan:</span>
-            <span className='text-gray-600'>
-              {data.company.companyName || '-'}
-            </span>
-          </div>
-          <div className='flex items-center gap-3 mb-2'>
-            <span className='text-gray-900'>Industry:</span>
-            <span className='text-gray-600'>
-              {data.company.industry || '-'}
-            </span>
-          </div>
-          <div className='flex items-center gap-3 mb-2'>
-            <span className='text-gray-900'>Status Kepemilikan:</span>
-            <span className='text-gray-600'>
-              {data.company.ownership || '-'}
-            </span>
-          </div>
-          <div className='flex items-center gap-3 mb-2'>
-            <span className='text-gray-900'>Nomor Telepon:</span>
-            <span className='text-gray-600'>{data.company.phone || '-'}</span>
-          </div>
-          <div className='flex items-center gap-3 mb-2'>
-            <span className='text-gray-900'>Nomor Telepon Perusahaan:</span>
-            <span className='text-gray-600'>
-              {data.company.companyPhone || '-'}
-            </span>
-          </div>
-          <div className='flex items-center gap-3 mb-2'>
-            <span className='text-gray-900'>Website Perusahaan:</span>
-            <span className='text-gray-600'>
-              <a href={`https://${data.company.website}`}>
-                {data.company.website || '-'}
-              </a>
-            </span>
-          </div>
-          <div className='flex items-center gap-3 mb-2'>
-            <span className='text-gray-900'>Alamat Perusahaan:</span>
-            <span className='text-gray-600'>{data.company.address || '-'}</span>
-          </div>
-          <div className='flex items-center gap-3 mb-2'>
-            <span className='text-gray-900'>Kota:</span>
-            <span className='text-gray-600'>{data.company.city || '-'}</span>
-          </div>
-        </CardContent>
-      </Card>
+<Card className='mb-6'>
+  <CardHeader>
+    <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
+      Dokumen Verifikasi
+    </CardTitle>
+  </CardHeader>
+  <CardContent className='mb-3 text-sm font-semibold text-gray-800'>
+    Tidak Ada Dokumen
+  </CardContent>
+</Card>
 
-      <Card className='mb-6'>
-        <CardHeader>
-          <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
-            Dokumen Verifikasi
-          </CardTitle>
-        </CardHeader>
-        <CardContent className='mb-3 text-sm font-semibold text-gray-800'>
-          Tidak Ada Dokumen
-        </CardContent>
-      </Card>
-
-      <CardFooter className='text-center pt-6 border-t'>
-        <Link
-          href={`/dashboard`}
-          className='text-lg font-medium text-green-600 hover:text-green-700 hover:underline'
-        >
-          Kembali ke Dashboard
-        </Link>
-      </CardFooter>
+<CardFooter className='text-center pt-6 border-t'>
+  <Link
+    href={`/dashboard`}
+    className='text-lg font-medium text-green-600 hover:text-green-700 hover:underline'
+  >
+    Kembali ke Dashboard
+  </Link>
+</CardFooter>
     </div>
   )
 }

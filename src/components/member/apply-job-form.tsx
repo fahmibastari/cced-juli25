@@ -42,7 +42,7 @@ const ApplyJobForm = () => {
   const form = useForm<z.infer<typeof JobApplicationSchema>>({
     resolver: zodResolver(JobApplicationSchema),
     defaultValues: {
-      resumeMember: '',
+      resumeMember: 'null',
     },
   })
 
@@ -92,7 +92,7 @@ const ApplyJobForm = () => {
                 {job?.title}
               </h2>
               <p className='text-sm text-gray-500 pt-3'>
-                Dibuat oleh : {job?.company?.companyName || 'Perusahaan'}
+                Dibuat oleh : {job?.company?.companyName || 'Penyedia Kerja'}
               </p>
             </div>
           </div>
@@ -105,7 +105,7 @@ const ApplyJobForm = () => {
               <h3 className='mb-3 text-lg font-semibold text-gray-800'>
                 Deskripsi Pekerjaan
               </h3>
-              <p className='text-gray-600'>{job?.description || 'Deskripsi'}</p>
+              <p className='text-gray-600 whitespace-pre-wrap'>{job?.description || 'Deskripsi'}</p>
             </section>
 
             <section>
@@ -139,7 +139,7 @@ const ApplyJobForm = () => {
 
             <section>
               <h3 className='mb-3 text-lg font-semibold text-gray-800'>
-                Skills
+                Keahlian
               </h3>
               <ul className='list-disc space-y-2 pl-6 text-gray-700'>
                 {job?.skills ? (
@@ -147,17 +147,17 @@ const ApplyJobForm = () => {
                     <li key={index}>{item}</li>
                   ))
                 ) : (
-                  <p>Tidak ada skills</p>
+                  <p>Tidak ada keahlian</p>
                 )}
               </ul>
             </section>
 
             <section>
               <h3 className='mb-3 text-lg font-semibold text-gray-800'>
-                Deadline
+                Tenggat Waktu
               </h3>
               <p className='text-gray-600'>
-                {job?.deadline?.toLocaleDateString('id-ID') || 'Deadline'}
+                {job?.deadline?.toLocaleDateString('id-ID') || 'Tenggat Waktu'}
               </p>
             </section>
 
@@ -174,25 +174,6 @@ const ApplyJobForm = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
             <div className='space-y-6'>
-              <FormField
-                control={form.control}
-                name='resumeMember'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Resume Anda</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        {...field}
-                        value={field.value ?? ''} // Add a null check here
-                        disabled={form.formState.isSubmitting}
-                        placeholder='Ceritakan tentang diri Anda'
-                        className='border-2 border-gray-100 shadow-sm h-[216px]'
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
               {errorMessage && <FormError message={errorMessage} />}
               {successMessage && <FormSuccess message={successMessage} />}
@@ -205,10 +186,10 @@ const ApplyJobForm = () => {
                 {isPending ? (
                   <div className='flex items-center justify-center gap-2'>
                     <BeatLoader />
-                    Processing...
+                    Memproses...
                   </div>
                 ) : (
-                  'Apply Job!'
+                  'Lamar lowongan!'
                 )}
               </Button>
             </div>
@@ -220,7 +201,7 @@ const ApplyJobForm = () => {
           href='/dashboard'
           className='text-green-600 hover:text-green-700 font-medium'
         >
-          Back to Dashboard
+          Kembali ke Dashboard
         </Link>
       </CardFooter>
     </Card>

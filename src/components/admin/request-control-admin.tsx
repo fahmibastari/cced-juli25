@@ -54,7 +54,7 @@ const RequestControl = ({ request }: RequestControlProps) => {
         <TableHeader>
           <TableRow>
             <TableHead>ID</TableHead>
-            <TableHead>Nama Perusahaan</TableHead>
+            <TableHead>Nama Penyedia Kerja</TableHead>
             <TableHead>Dibuat</TableHead>
             <TableHead>Diubah</TableHead>
             <TableHead className='text-right'>Action</TableHead>

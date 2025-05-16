@@ -8,18 +8,18 @@ export const newVerification = async (token: string) => {
   const existingToken = await getVerificationTokenByToken(token)
 
   if (!existingToken) {
-    return { error: 'Invalid token!' }
+    return { error: 'Token tidak valid!' }
   }
 
   const hasExpired = new Date(existingToken.expires) < new Date()
   if (hasExpired) {
-    return { error: 'Token has expired!' }
+    return { error: 'Token telah kedaluwarsa!' }
   }
 
   const existingUser = await getUserByEmail(existingToken.email)
 
   if (!existingUser) {
-    return { error: 'User not found!' }
+    return { error: 'Pencari kerja tidak ditemukan!' }
   }
 
   await prisma.user.update({
@@ -38,5 +38,5 @@ export const newVerification = async (token: string) => {
     },
   })
 
-  return { success: 'Email verified!' }
+  return { success: 'Email berhasil diverifikasi!' }
 }

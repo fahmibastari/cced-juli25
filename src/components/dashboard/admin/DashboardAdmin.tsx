@@ -20,21 +20,21 @@ const DashboardAdmin = async () => {
       <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
         <DasboardCard
           title='Total Pengguna'
-          description='Perusahaan terdaftar'
+          description='Penyedia kerja terdaftar'
           content={users?.length || 0}
           href='/admin/users'
         />
 
         <DasboardCard
-          title='Total Perusahaan'
-          description='Perusahaan terdaftar'
+          title='Total Penyedia Kerja'
+          description='Penyedia kerja terdaftar'
           content={companies?.length || 0}
           href='/admin/companies'
         />
 
         <DasboardCard
-          title='Total Member'
-          description='Pengguna terdaftar'
+          title='Total Pencari Kerja'
+          description='Pencari kerja terdaftar'
           content={members?.length || 0}
           href='/admin/members'
         />
@@ -54,8 +54,8 @@ const DashboardAdmin = async () => {
         />
 
         <DasboardCard
-          title='Total Content'
-          description='Content aktif'
+          title='Total Konten'
+          description='Konten aktif'
           content={
             (contents?.news?.length || 0) + (contents?.article?.length || 0)
           }

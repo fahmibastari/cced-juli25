@@ -12,7 +12,7 @@ const RoleGate = async ({ children, accessRole }: RoleGateProps) => {
   if (role !== accessRole) {
     return (
       <div className='w-full h-screen flex items-center justify-center'>
-        <FormError message="You don't have access to this page" />
+        <FormError message="Anda tidak diizinkan mengakses halaman ini" />
       </div>
     )
   }

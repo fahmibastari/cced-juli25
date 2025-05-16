@@ -27,16 +27,19 @@ export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
   const [isPending, setIsPending] = useState(false)
+
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: '',
-      password: '12345678',
+      password: '',
     },
   })
+
   function handleClickShowPassword() {
     setShowPassword(!showPassword)
   }
+
   const onSubmit = (data: z.infer<typeof signInSchema>) => {
     setErrorMessage('')
     setSuccessMessage('')
@@ -49,20 +52,22 @@ export default function LoginPage() {
       })
     })
   }
+
   return (
-    <CardWrapper
-      headerLabel='👋Hello and Welcome Back!'
-      description='Login to your account'
-      paragraphSwitchButton="Don't have an account? "
-      switchButtonLabel='Sign Up'
-      switchButtonHref='/register'
-    >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-          <div className='space-y-4'>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
+      <CardWrapper
+        headerLabel="Selamat Datang!"
+        description="Masuk menggunakan akun yang sudah kamu daftarkan"
+        paragraphSwitchButton="Belum punya akun? "
+        switchButtonLabel="Daftar"
+        switchButtonHref="/register"
+        className="max-w-md w-full"
+      >
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
-              name='email'
+              name="email"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
@@ -70,69 +75,70 @@ export default function LoginPage() {
                     <Input
                       {...field}
                       disabled={form.formState.isSubmitting}
-                      placeholder='Enter an email address'
-                      className='border-2 border-gray-100 shadow-sm'
-                      type='email'
+                      placeholder="Masukkan alamat email"
+                      type="email"
+                      className="border-2 border-gray-200 shadow-sm focus:border-green-500 focus:ring-green-500"
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <div className='relative'>
-              <FormField
-                control={form.control}
-                name='password'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        disabled={form.formState.isSubmitting}
-                        placeholder='Password'
-                        className='border-2 border-gray-100 shadow-sm'
-                        type={showPassword ? 'text' : 'password'}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button
-                type='button'
-                variant='ghost'
-                size='icon'
-                className='absolute right-2 top-3/4 -translate-y-1/2'
-                onClick={handleClickShowPassword}
-              >
-                {showPassword ? (
-                  <EyeOffIcon className='h-4 w-4' />
-                ) : (
-                  <EyeIcon className='h-4 w-4' />
-                )}
-              </Button>
+
+            <div className="flex items-center space-x-2 w-full">
+
+<FormField
+  control={form.control}
+  name="password"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Password</FormLabel>
+      <div className="flex items-center w-[350px] space-x-2">
+        <FormControl>
+          <Input
+            {...field}
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Password"
+            className="flex-grow" // input memenuhi sisa ruang
+          />
+        </FormControl>
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          onClick={handleClickShowPassword}
+          aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
+        >
+          {showPassword ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+        </Button>
+      </div>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+
             </div>
-            <div className='flex justify-end'>
-              <Button
-                variant='link'
-                className='p-0 text-green-500 hover:text-green-600'
-              >
-                <Link href={'/forgot-password'}>Forgot Password?</Link>
-              </Button>
+
+            <div className="flex justify-end">
+              <Link href="/forgot-password" className="text-sm text-green-600 hover:text-green-700 font-medium">
+                Lupa Password?
+              </Link>
             </div>
+
             {errorMessage && <FormError message={errorMessage} />}
             {successMessage && <FormSuccess message={successMessage} />}
+
             <Button
-              type='submit'
+              type="submit"
               disabled={form.formState.isSubmitting || isPending}
-              className='w-full bg-green-500 text-white hover:bg-green-600'
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-md shadow-sm transition"
             >
-              {isPending ? 'Loading...' : 'Sign In'}
+              {isPending ? 'Loading...' : 'Masuk'}
             </Button>
-          </div>
-        </form>
-      </Form>
-    </CardWrapper>
+          </form>
+        </Form>
+      </CardWrapper>
+    </div>
   )
 }

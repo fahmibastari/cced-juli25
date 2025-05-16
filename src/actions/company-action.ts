@@ -16,7 +16,7 @@ export async function addNewJob(formData: z.infer<typeof JobSchema>) {
 
     if (!user?.id) {
       return {
-        error: 'User is not authenticated or does not belong to a company!',
+        error: 'Pencari kerja tidak terautentikasi atau tidak tergabung dalam penyedia kerja!',
       }
     }
 
@@ -24,7 +24,7 @@ export async function addNewJob(formData: z.infer<typeof JobSchema>) {
 
     if (!validatedFields.success) {
       return {
-        error: 'Invalid fields!',
+        error: 'Bidang tidak valid!',
         details: validatedFields.error.errors,
       }
     }
@@ -39,6 +39,8 @@ export async function addNewJob(formData: z.infer<typeof JobSchema>) {
       type,
       salary,
       deadline,
+      employmentType,
+      workTime,
     } = validatedFields.data
 
     const newJob = await prisma.job.create({
@@ -53,16 +55,18 @@ export async function addNewJob(formData: z.infer<typeof JobSchema>) {
         status: status ?? null,
         type: type ?? null,
         deadline: deadline ?? null,
+        employmentType: formData.employmentType,  // Pastikan ini ditambahkan
+        workTime: formData.workTime,              // Pastikan ini ditambahkan
       },
     })
 
     return {
-      success: 'Job successfully added!',
+      success: 'Lowongan berhasil ditambahkan!',
       data: newJob,
     }
   } catch {
     return {
-      error: 'An error occurred while creating the job.',
+      error: 'Terjadi kesalahan saat membuat lowongan.',
     }
   }
 }
@@ -71,11 +75,11 @@ export async function deleteJob(id: string) {
   try {
     await prisma.job.delete({ where: { id } })
     return {
-      success: 'Job successfully deleted!',
+      success: 'Lowongan berhasil dihapus!',
     }
   } catch {
     return {
-      error: 'An error occurred while deleting the job.',
+      error: 'Terjadi kesalahan saat menghapus lowongan.',
     }
   }
 }
@@ -89,7 +93,7 @@ export async function updateJob(
 
     if (!user?.id) {
       return {
-        error: 'User is not authenticated or does not belong to a company!',
+        error: 'Pencari kerja tidak terautentikasi atau tidak tergabung dalam penyedia kerja!',
       }
     }
 
@@ -97,7 +101,7 @@ export async function updateJob(
 
     if (!validatedFields.success) {
       return {
-        error: 'Invalid fields!',
+        error: 'Bidang tidak valid!',
         details: validatedFields.error.errors,
       }
     }
@@ -127,41 +131,40 @@ export async function updateJob(
         status: status ?? null,
         type: type ?? null,
         deadline: deadline ?? null,
+        employmentType: formData.employmentType,  // Pastikan ini ditambahkan
+        workTime: formData.workTime, 
       },
     })
 
     return {
-      success: 'Job successfully updated!',
+      success: 'Lowongan berhasil diperbarui!',
       data: newJob,
     }
   } catch {
     return {
-      error: 'An error occurred while updating the job.',
+      error: 'Terjadi kesalahan saat memperbarui lowongan.',
     }
   }
 }
 
 export async function getJob(id: string) {
-  try {
-    const data = await prisma.job.findUnique({
-      where: { id: id },
-      include: {
-        jobApplication: {
-          include: {
-            member: {
-              include: {
-                user: true,
-              },
+  const data = await prisma.job.findUnique({
+    where: { id },
+    include: {
+      jobApplication: {
+        include: {
+          member: {
+            include: {
+              user: true,
             },
           },
         },
-        company: true,
       },
-    })
-    return { data }
-  } catch (error) {
-    console.error('An error occurred while fetching the job:', error)
-  }
+      company: true,
+    },
+  })
+
+  return { data } // ✅ ini saja cukup!
 }
 
 export async function getDetailJobApplicant(id: string) {
@@ -183,7 +186,7 @@ export async function getDetailJobApplicant(id: string) {
     })
     return { data }
   } catch (error) {
-    console.error('An error occurred while fetching the job:', error)
+    console.error('Terjadi kesalahan saat mengambil lowongan:', error)
   }
 }
 
@@ -196,7 +199,7 @@ export async function updateDetailJobApplicant(
 
     if (!validatedFields.success) {
       return {
-        error: 'Invalid fields!',
+        error: 'Bidang tidak valid!',
         details: validatedFields.error.errors,
       }
     }
@@ -208,9 +211,9 @@ export async function updateDetailJobApplicant(
         notes: data.notes,
       },
     })
-    return { success: 'Job successfully updated!', data: data.notes }
+    return { success: 'Lowongan berhasil diperbarui!', data: data.notes }
   } catch {
-    return { error: 'An error occurred while updating the job.' }
+    return { error: 'Terjadi kesalahan saat memperbarui lowongan.' }
   }
 }
 
@@ -250,10 +253,10 @@ export const createRequestVerified = async (companyId: string) => {
       },
     })
     return {
-      success: 'Request verified successfully!, please wait for admin approval',
+      success: 'Permintaan verifikasi berhasil!, harap tunggu persetujuan admin',
     }
   } catch {
-    return { error: 'An error occurred while creating the request verified.' }
+    return { error: 'Terjadi kesalahan saat membuat permintaan verifikasi.' }
   }
 }
 
@@ -281,10 +284,10 @@ export const updateLogoCompany = async (
       },
     })
 
-    return { success: 'Logo successfully updated!' }
+    return { success: 'Logo berhasil diperbarui!' }
   } catch (err) {
-    console.error('Error during update:', err)
-    return { error: 'An error occurred while updating the logo.' }
+    console.error('Kesalahan saat pembaruan:', err)
+    return { error: 'Terjadi kesalahan saat memperbarui logo.' }
   }
 }
 
@@ -298,7 +301,7 @@ export async function updateCompanyPersonalInformation(
 
     if (!validatedFields.success) {
       return {
-        error: 'Invalid fields!',
+        error: 'Bidang tidak valid!',
         details: validatedFields.error.errors,
       }
     }
@@ -342,8 +345,8 @@ export async function updateCompanyPersonalInformation(
       },
     })
 
-    return { success: 'Company successfully updated!' }
+    return { success: 'Penyedia kerja berhasil diperbarui!' }
   } catch {
-    return { error: 'An error occurred while updating the company.' }
+    return { error: 'Terjadi kesalahan saat memperbarui penyedia kerja.' }
   }
 }

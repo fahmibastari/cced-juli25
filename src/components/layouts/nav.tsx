@@ -19,11 +19,12 @@ const Nav = ({ isLoggedIn }: NavProps) => {
       {/* Header Container */}
       <div className='flex justify-between items-center px-6 py-4'>
         {/* Logo */}
-        <div className='text-2xl font-bold'>
-          <Link href={'/'} className='text-[#025908] hover:text-[#2a7a2f]'>
-            CCED
-          </Link>
-        </div>
+<div className='text-2xl font-bold'>
+  <Link href={'/'} className='text-[#025908] hover:text-[#2a7a2f]'>
+    <img src='/LOGO-CCED.png' alt='Logo CCED' className='h-10' /> {/* Menambahkan logo */}
+  </Link>
+</div>
+
 
         {/* Mobile Menu Button */}
         <button

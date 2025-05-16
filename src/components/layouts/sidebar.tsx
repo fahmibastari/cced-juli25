@@ -26,7 +26,7 @@ const Sidebar = () => {
   return (
     <div className='w-64 bg-white shadow-lg'>
       <h1 className='text-center text-xl md:text-2xl lg:text-3xl font-bold text-[#025908] mt-9 mb-8'>
-        Admin Panel
+        Halaman Admin
       </h1>
       <hr className='mb-4' />
       <nav className='p-4 mb-20 flex flex-col gap-1'>

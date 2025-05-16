@@ -96,8 +96,7 @@ const MembersControl = ({ members }: MembersControlProps) => {
                 <TableCell className='text-right'>
                   <ButtonAction
                     id={member.id}
-                    handleClickDelete={() => handleClickDelete(member.id)}
-                  />
+                    handleClickDelete={() => handleClickDelete(member.id)} isVerified={false}                  />
                 </TableCell>
               </TableRow>
             ))

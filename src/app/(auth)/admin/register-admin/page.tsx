@@ -21,7 +21,7 @@ export default function Page() {
   if (!token) {
     return (
       <div className='w-full h-screen flex items-center justify-center'>
-        <FormError message='You are not allowed to access this page' />
+        <FormError message='Anda tidak diizinkan mengakses halaman ini' />
       </div>
     )
   }
@@ -29,7 +29,7 @@ export default function Page() {
   if (valid) {
     return (
       <div className='w-full h-screen flex items-center justify-center'>
-        <FormError message='Something Went Wrong! Check your Access Token' />
+        <FormError message='Terjadi kesalahan! Periksa Token Akses Anda' />
       </div>
     )
   }

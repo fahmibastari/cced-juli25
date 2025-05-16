@@ -116,7 +116,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0]
-      const maxSize = 100 * 1024 // 100 KB
+      const maxSize = 2 * 1024 * 1024; // 2 MB = 2 * 1024 * 1024 bytes
       const validTypes = ['image/png', 'image/webp', 'image/jpeg', 'image/jpg']
   
       if (!validTypes.includes(file.type)) {
@@ -125,7 +125,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
       }
   
       if (file.size > maxSize) {
-        setErrorMessage('Ukuran file maksimal 100 KB.')
+        setErrorMessage('Ukuran file maksimal 2 MB.')
         return
       }
   
@@ -139,104 +139,102 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
 
   return (
     <CardWrapper
-      headerLabel='Register'
-      description='Fill the form below to create an account'
-      paragraphSwitchButton='Already have an account? '
-      switchButtonLabel='Sign In'
-      switchButtonHref='/login'
-      size='w-full max-w-4xl'
+      headerLabel="Daftar Akun"
+      description="Isi formulir di bawah ini untuk membuat akun penyedia kerja"
+      paragraphSwitchButton="Sudah punya akun? "
+      switchButtonLabel="Masuk"
+      switchButtonHref="/login"
+      className="max-w-4xl mx-auto px-4"
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-6'>
-          {/* Logo Upload Section */}
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          {/* Logo Upload */}
           <div>
-            <FormLabel>Logo Perusahaan</FormLabel>
-            <div className='mt-2 cursor-pointer rounded-lg border-2 border-dashed p-4 text-center'>
+            <FormLabel>Logo Penyedia Kerja</FormLabel>
+            <div className="mt-2 cursor-pointer rounded-lg border-2 border-dashed p-4 text-center hover:border-green-500 transition">
               <input
-                type='file'
-                accept='.png,.webp,.jpg,.jpeg'
-                className='hidden'
-                id='logo-upload'
+                type="file"
+                accept=".png,.webp,.jpg,.jpeg"
+                className="hidden"
+                id="logo-upload"
                 onChange={handleFileChange}
               />
-              <label htmlFor='logo-upload' className='cursor-pointer'>
-                <div className='flex flex-col items-center w-full h-40 justify-center gap-8'>
-                  <ImagePlus className='h-10 w-10 text-gray-400' />
-                  <div className='text-sm text-gray-600'>
-                    Set logo perusahaan. Hanya file berformat *.png, *.webp ,*.jpg dan *.jpeg
-                    dengan ukuran maksimal 100 KB.
+              <label htmlFor="logo-upload" className="cursor-pointer">
+                <div className="flex flex-col items-center w-full h-40 justify-center gap-8">
+                  <ImagePlus className="h-10 w-10 text-gray-400" />
+                  <div className="text-sm text-gray-600">
+                    Logo Penyedia Kerja. Hanya file *.png, *.webp, *.jpg, *.jpeg dengan maksimal 2 MB.
                   </div>
                   {logoFile && (
-                    <div className='text-sm text-green-600'>
-                      File terpilih: {logoFile.name}
-                    </div>
+                    <div className="text-sm text-green-600">File terpilih: {logoFile.name}</div>
                   )}
                 </div>
               </label>
             </div>
           </div>
 
+          {/* Berkas Upload */}
           <div>
-            <FormLabel>Berkas Perusahaan (PDF/Word/Gambar)</FormLabel>
-            <div className='mt-2 cursor-pointer rounded-lg border-2 border-dashed p-4 text-center'>
+            <FormLabel>Berkas Penyedia Kerja (PDF/Word/Gambar)*</FormLabel>
+            <div className="mt-2 cursor-pointer rounded-lg border-2 border-dashed p-4 text-center hover:border-green-500 transition">
               <input
-                type='file'
-                accept='.pdf,.doc,.docx,.png,.jpg,.jpeg,.webp'
-                className='hidden'
-                id='berkas-upload'
+                type="file"
+                accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.webp"
+                className="hidden"
+                id="berkas-upload"
                 onChange={handleBerkasChange}
               />
-              <label htmlFor='berkas-upload' className='cursor-pointer'>
-                <div className='flex flex-col items-center w-full h-40 justify-center gap-8'>
-                  <ImagePlus className='h-10 w-10 text-gray-400' />
-                  <div className='text-sm text-gray-600'>
-                    Upload PDF, Word, atau Gambar (berkas pendukung perusahaan)
+              <label htmlFor="berkas-upload" className="cursor-pointer">
+                <div className="flex flex-col items-center w-full h-40 justify-center gap-8">
+                  <ImagePlus className="h-10 w-10 text-gray-400" />
+                  <div className="text-sm text-gray-600">
+                    Upload PDF, Word, atau Gambar (Berkas Penyedia Kerja Terverifikasi)
                   </div>
                   {berkasFile && (
-                    <div className='text-sm text-green-600'>
-                      File terpilih: {berkasFile.name}
-                    </div>
+                    <div className="text-sm text-green-600">File terpilih: {berkasFile.name}</div>
                   )}
                 </div>
               </label>
             </div>
           </div>
 
-          {/* Two Column Layout */}
-          <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
-            <div className='space-y-4'>
+          {/* Two Columns Form */}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+            <div className="space-y-4">
+              {/* Nama Perusahaan */}
               <FormField
                 control={form.control}
-                name='companyName'
+                name="companyName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nama Perusahaaan</FormLabel>
+                    <FormLabel>Nama Perusahaan*</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         disabled={form.formState.isSubmitting}
-                        placeholder='Nama Perusahaan'
-                        className='border-2 border-gray-100 shadow-sm'
-                        type='text'
+                        placeholder="Nama Penyedia Kerja"
+                        className="w-full border-2 border-gray-100 rounded-md shadow-sm p-2"
+                        type="text"
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              {/* Bidang Industri */}
               <FormField
                 control={form.control}
-                name='industry'
+                name="industry"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Bidang Industry</FormLabel>
+                    <FormLabel>Bidang Industri*</FormLabel>
                     <FormControl>
                       <select
                         {...field}
                         disabled={form.formState.isSubmitting}
-                        className='w-full border-2 border-gray-100 bg-white shadow-sm rounded-md p-2'
+                        className="w-full border-2 border-gray-100 bg-white shadow-sm rounded-md p-2"
                       >
-                        <option value=''>Pilih Bidang Industry</option>
+                        <option value=''>Pilih Bidang Industri</option>
                         {sector.map((industry, idx) => (
                           <option key={idx} value={industry}>
                             {industry}
@@ -248,61 +246,63 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                   </FormItem>
                 )}
               />
-            <FormField
-              control={form.control}
-              name='ownership'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Kepemilikan Perusahaan</FormLabel>
-                  <FormControl>
-                    <select
-                      {...field}
-                      disabled={form.formState.isSubmitting}
-                      className='w-full border-2 border-gray-100 bg-white shadow-sm rounded-md p-2'
-                    >
-                      <option value=''>Pilih Kepemilikan</option>
-                      <option value='Perusahaan kecil'>Perusahaan kecil</option>
-                      <option value='Perusahaan menengah'>Perusahaan menengah</option>
-                      <option value='Perusahaan besar'>Perusahaan besar</option>
-                    </select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
+              {/* Kepemilikan */}
               <FormField
                 control={form.control}
-                name='phone'
+                name="ownership"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nomor Telephone</FormLabel>
+                    <FormLabel>Kepemilikan Penyedia Kerja*</FormLabel>
+                    <FormControl>
+                      <select
+                        {...field}
+                        disabled={form.formState.isSubmitting}
+                        className="w-full border-2 border-gray-100 bg-white shadow-sm rounded-md p-2"
+                      >
+                        <option value="">Pilih Kepemilikan</option>
+                        <option value="Perusahaan kecil">Perusahaan Kecil</option>
+                        <option value="Perusahaan menengah">Perusahaan Menengah</option>
+                        <option value="Perusahaan besar">Perusahaan Besar</option>
+                      </select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/* Nomor Telepon */}
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nomor Telepon*</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         disabled={form.formState.isSubmitting}
-                        placeholder='Nomor Telephone'
-                        className='border-2 border-gray-100 shadow-sm'
-                        type='text'
+                        placeholder="Nomor Telepon"
+                        className="w-full border-2 border-gray-100 rounded-md shadow-sm p-2"
+                        type="text"
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              {/* Nomor Telepon Perusahaan */}
               <FormField
                 control={form.control}
-                name='companyPhone'
+                name="companyPhone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nomor Telephone Perusahaan</FormLabel>
+                    <FormLabel>Nomor Telepon Perusahaan*</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         disabled={form.formState.isSubmitting}
-                        placeholder='Nomor Telephone Perusahaan'
-                        className='border-2 border-gray-100 shadow-sm'
-                        type='text'
+                        placeholder="Nomor Telepon Perusahaan"
+                        className="w-full border-2 border-gray-100 rounded-md shadow-sm p-2"
+                        type="text"
                       />
                     </FormControl>
                     <FormMessage />
@@ -310,57 +310,61 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 )}
               />
             </div>
-            <div className='space-y-4'>
+
+            <div className="space-y-4">
+              {/* Website */}
               <FormField
                 control={form.control}
-                name='website'
+                name="website"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Website Perusahaan</FormLabel>
+                    <FormLabel>Website Penyedia Kerja</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         disabled={form.formState.isSubmitting}
-                        placeholder='Website Perusahaan'
-                        className='border-2 border-gray-100 shadow-sm'
-                        type='text'
+                        placeholder="Website Penyedia Kerja"
+                        className="w-full border-2 border-gray-100 rounded-md shadow-sm p-2"
+                        type="text"
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              {/* Email Publik */}
               <FormField
                 control={form.control}
-                name='publicMail'
+                name="publicMail"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Alamat Email Public</FormLabel>
+                    <FormLabel>Email Publik</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         disabled={form.formState.isSubmitting}
-                        placeholder='Alamat Email Public'
-                        className='border-2 border-gray-100 shadow-sm'
-                        type='text'
+                        placeholder="Alamat Email Publik"
+                        className="w-full border-2 border-gray-100 rounded-md shadow-sm p-2"
+                        type="email"
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              {/* Biodata */}
               <FormField
                 control={form.control}
-                name='bio'
+                name="bio"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Biodata Perusahaan</FormLabel>
+                    <FormLabel>Biodata Penyedia Kerja</FormLabel>
                     <FormControl>
                       <Textarea
                         {...field}
                         disabled={form.formState.isSubmitting}
-                        placeholder='Biodata Perusahaan'
-                        className='border-2 border-gray-100 shadow-sm h-[216px]'
+                        placeholder="Biodata Penyedia Kerja"
+                        className="w-full border-2 border-gray-100 rounded-md shadow-sm p-2 h-48 resize-none"
                       />
                     </FormControl>
                     <FormMessage />
@@ -370,26 +374,26 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
             </div>
           </div>
 
-          {/* Error and Success Messages */}
+          {/* Error and Success */}
           {errorMessage && <FormError message={errorMessage} />}
           {successMessage && <FormSuccess message={successMessage} />}
 
-          {/* Action Buttons */}
-          <div className='flex justify-between pt-4'>
+          {/* Buttons */}
+          <div className="flex space-x-6 pt-6">
             <Button
-              type='button'
+              type="button"
               disabled={form.formState.isSubmitting || isPending}
-              className='w-full bg-slate-500 text-white hover:bg-slate-600 mx-6'
+              className="flex-1 bg-slate-500 text-white hover:bg-slate-600"
               onClick={onBack}
             >
-              {isPending ? 'Loading...' : 'Kembali'}
+              {isPending ? "Loading..." : "Kembali"}
             </Button>
             <Button
-              type='submit'
+              type="submit"
               disabled={form.formState.isSubmitting || isPending}
-              className='w-full bg-green-500 text-white hover:bg-green-600 mx-6'
+              className="flex-1 bg-green-500 text-white hover:bg-green-600"
             >
-              {isPending ? 'Loading...' : 'Daftar'}
+              {isPending ? "Loading..." : "Daftar"}
             </Button>
           </div>
         </form>

@@ -57,12 +57,12 @@ const RegisterAdminForm = () => {
   }
   return (
     <CardWrapper
-      headerLabel='Register Admin'
-      description='Fill the form below to create an account'
-      paragraphSwitchButton='Already have an account? '
-      switchButtonLabel='Sign In'
-      switchButtonHref='/login'
-    >
+  headerLabel='Daftar'
+  description='Isi formulir di bawah ini untuk membuat akun'
+  paragraphSwitchButton='Sudah punya akun? '
+  switchButtonLabel='Masuk'
+  switchButtonHref='/login'
+>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-6'>
           <div className='space-y-6'>
@@ -71,12 +71,12 @@ const RegisterAdminForm = () => {
               name='username'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>username</FormLabel>
+                  <FormLabel>Username</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       disabled={form.formState.isSubmitting}
-                      placeholder='Enter your username'
+                      placeholder='Masukkan Username'
                       className='border-2 border-gray-100 shadow-sm'
                       type='text'
                     />
@@ -95,7 +95,7 @@ const RegisterAdminForm = () => {
                     <Input
                       {...field}
                       disabled={form.formState.isSubmitting}
-                      placeholder='Enter your fullname'
+                      placeholder='Masukkan nama lengkap kamu'
                       className='border-2 border-gray-100 shadow-sm'
                       type='text'
                     />
@@ -115,7 +115,7 @@ const RegisterAdminForm = () => {
                     <Input
                       {...field}
                       disabled={form.formState.isSubmitting}
-                      placeholder='Enter an email address'
+                      placeholder='Masukkan alamat email'
                       className='border-2 border-gray-100 shadow-sm'
                       type='email'
                     />
@@ -164,7 +164,7 @@ const RegisterAdminForm = () => {
                 name='confirmPassword'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
+                    <FormLabel>Konfirmasi Password</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -206,7 +206,7 @@ const RegisterAdminForm = () => {
                   Processing...
                 </div>
               ) : (
-                'Register'
+                'Daftar'
               )}
             </Button>
           </div>

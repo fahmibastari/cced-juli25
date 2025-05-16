@@ -45,16 +45,16 @@ const ResetPasswordForm = () => {
           setSuccess(data.success)
         })
         .catch(() => {
-          setError('Something went wrong!')
+          setError('Terjadi kesalahan!')
         })
     })
   }
   return (
     <CardWrapper
       headerLabel='Reset Password'
-      description='Reset Your Password'
-      paragraphSwitchButton='Make sure you have reset your passwordber the password?'
-      switchButtonLabel='Back to Login'
+      description='Reset Password Anda'
+      paragraphSwitchButton='Pastikan Anda telah mereset password Anda'
+      switchButtonLabel='Kembali ke Login'
       switchButtonHref='/login'
     >
       <Form {...form}>

@@ -12,12 +12,12 @@ export const applyJob = async (
   value: z.infer<typeof JobApplicationSchema>
 ) => {
   try {
-    // Validate inputs
+    // Validasi input
     if (!jobId || !userId) {
-      return { error: 'Missing required parameters' }
+      return { error: 'Parameter yang dibutuhkan hilang' }
     }
 
-    // Validate form data
+    // Validasi data form
     const validatedFields = JobApplicationSchema.safeParse(value)
     if (!validatedFields.success) {
       const errorMessages = validatedFields.error.issues
@@ -27,35 +27,31 @@ export const applyJob = async (
     }
 
     const { data } = validatedFields
-    const { notes, resumeMember } = data
+    const { notes } = data
 
-    if (!resumeMember?.trim()) {
-      return { error: 'Please provide your resume' }
-    }
-
-    // Check if job exists
+    // Cek apakah lowongan ada
     const job = await prisma.job.findUnique({
       where: { id: jobId },
     })
 
     if (!job) {
-      return { error: 'Job not found' }
+      return { error: 'Lowongan tidak ditemukan' }
     }
 
-    // Check if member exists
+    // Cek apakah pencari kerja ada
     const user = await prisma.user.findUnique({
       where: { id: userId },
     })
 
     if (!user) {
-      return { error: 'Member not found' }
+      return { error: 'Pencari kerja tidak ditemukan' }
     }
 
     const member = await prisma.member.findUnique({
       where: { userId: user.id },
     })
 
-    // Check if application already exists
+    // Cek apakah aplikasi sudah ada
     const existingApplication = await prisma.jobApplication.findFirst({
       where: {
         jobId,
@@ -64,26 +60,26 @@ export const applyJob = async (
     })
 
     if (existingApplication) {
-      return { error: 'You have already applied for this job' }
+      return { error: 'Anda sudah melamar untuk lowongan ini' }
     }
 
-    // Create job application
+    // Buat aplikasi lowongan
     await prisma.jobApplication.create({
       data: {
         jobId,
         memberId: member?.id ?? '',
         notes: notes || 'seleksi berkas',
-        resumeMember: resumeMember,
+        resumeMember: "null",
       },
     })
 
     return {
-      success: 'Job application submitted successfully!',
+      success: 'Aplikasi lowongan berhasil diajukan!',
     }
   } catch {
     return {
       error:
-        'An error occurred while submitting the job application. Please try again later.',
+        'Terjadi kesalahan saat mengajukan aplikasi lowongan. Silakan coba lagi nanti.',
     }
   }
 }
@@ -128,7 +124,7 @@ export async function updateMemberPersonalInformation(
 
     if (!validatedFields.success) {
       return {
-        error: 'Invalid fields!',
+        error: 'Bidang tidak valid!',
         details: validatedFields.error.errors,
       }
     }
@@ -184,37 +180,38 @@ export async function updateMemberPersonalInformation(
       },
     })
     return {
-      success: 'Member successfully updated!',
+      success: 'Pencari kerja berhasil diperbarui!',
     }
   } catch {
     return {
-      error: 'An error occurred while updating the member. Please try again.',
+      error: 'Terjadi kesalahan saat memperbarui pencari kerja. Silakan coba lagi.',
     }
   }
 }
+
 export const updateCvMember = async (id: string, cv: File) => {
   try {
     if (!cv) {
-      return { error: 'CV file is required' };
+      return { error: 'File CV diperlukan' };
     }
 
-    // Save the file and get the file URL
+    // Menyimpan file dan mendapatkan URL file
     const cvFile = await saveFile('member-cvs', cv);
     if (!cvFile) {
-      return { error: 'CV file is invalid or could not be saved' };
+      return { error: 'File CV tidak valid atau tidak bisa disimpan' };
     }
 
-    // Update the `cv` column in the `member` table where userId = id
+    // Memperbarui kolom `cv` di tabel `member` berdasarkan userId = id
     await prisma.member.update({
-      where: { userId: id }, // Ensure `userId` is the correct field
-      data: { cv: cvFile.src }, // Store the file URL in the `cv` column
+      where: { userId: id }, // Pastikan `userId` adalah field yang benar
+      data: { cv: cvFile.src }, // Menyimpan URL file di kolom `cv`
     });
 
-    return { success: 'CV successfully updated!' };
+    return { success: 'CV berhasil diperbarui!' };
   } catch (err) {
-    console.error('Error during CV update:', err);
+    console.error('Terjadi kesalahan saat memperbarui CV:', err);
     return {
-      error: 'An unexpected error occurred while updating the profile CV.',
+      error: 'Terjadi kesalahan tak terduga saat memperbarui CV profil.',
     };
   }
 };
@@ -226,27 +223,27 @@ export const updateImageMember = async (
 ) => {
   try {
     if (!image) {
-      return { error: 'Image file is required' }
+      return { error: 'File gambar diperlukan' }
     }
 
     const imageFile = await saveFile('member-images', image)
     if (!imageFile) {
-      return { error: 'Image file is invalid or could not be saved' }
+      return { error: 'File gambar tidak valid atau tidak bisa disimpan' }
     }
 
-    // Check if an existing image exists
+    // Mengecek apakah gambar yang sudah ada ada
     const existingImage = await prisma.file.findUnique({
       where: { id: idFile },
     })
 
-    // Delete the existing image if it exists
+    // Menghapus gambar yang sudah ada jika ada
     if (existingImage) {
       await prisma.file.delete({
         where: { id: idFile },
       })
     }
 
-    // Update user image reference in the database
+    // Memperbarui referensi gambar pengguna di database
     await prisma.user.update({
       where: { id },
       data: {
@@ -254,11 +251,11 @@ export const updateImageMember = async (
       },
     })
 
-    return { success: 'Profile image successfully updated!' }
+    return { success: 'Gambar profil berhasil diperbarui!' }
   } catch (err) {
-    console.error('Error during image update:', err)
+    console.error('Terjadi kesalahan saat memperbarui gambar:', err)
     return {
-      error: 'An unexpected error occurred while updating the profile image.',
+      error: 'Terjadi kesalahan tak terduga saat memperbarui gambar profil.',
     }
   }
 }

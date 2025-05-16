@@ -12,7 +12,7 @@ export default async function Page() {
     return (
       <RoleGate accessRole={Role.COMPANY}>
         <div className='w-full h-screen flex items-center justify-center'>
-          <FormError message='Something Went Wrong!' />
+          <FormError message='Terdapat Kesalahan!' />
         </div>
       </RoleGate>
     )

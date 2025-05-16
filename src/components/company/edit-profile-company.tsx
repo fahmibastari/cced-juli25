@@ -27,6 +27,7 @@ import * as z from 'zod'
 import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea'
 import Link from 'next/link'
+import sector from '@/data/industrySector'
 
 interface EditProfileCompanyProps {
   data: any
@@ -45,16 +46,16 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0]
-      const maxSize = 100 * 1024 // 100 KB
-      const validTypes = ['image/png', 'image/webp','image/jpg','image/jpeg']
+      const maxSize = 2 * 1024 * 1024; // 2MB
+    const validTypes = ['image/png', 'image/webp', 'image/jpg', 'image/jpeg'];
 
       if (!validTypes.includes(file.type)) {
-        setErrorMessageLogo('Hanya file PNG,JPG,JPEG dan WebP yang diperbolehkan.')
+        setErrorMessageLogo('Hanya file dengan format PNG, JPG, JPEG, dan WebP yang diperbolehkan.')
         return
       }
 
       if (file.size > maxSize) {
-        setErrorMessageLogo('Ukuran file maksimal 100 KB.')
+        setErrorMessageLogo('Ukuran file maksimal 2MB.')
         return
       }
 
@@ -87,7 +88,7 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
       setSuccessMessageLogo(response?.success ?? '')
       setErrorMessageLogo(response?.error ?? '')
     } catch (err) {
-      console.error('Error updating logo:', err)
+      console.error('Terjadi kesalahan saat memperbarui logo:', err)
       setErrorMessageLogo('Terjadi kesalahan saat memperbarui logo.')
       setSuccessMessageLogo('')
     } finally {
@@ -125,9 +126,9 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
           setIsPending(false)
         })
         .catch((err) => {
-          console.error('Error updating personal information:', err)
+          console.error('Terjadi kesalahan saat memperbarui informasi pribadi:', err)
           setErrorMessagePersonal(
-            'Terjadi kesalahan saat memperbarui informasi personal.'
+            'Terjadi kesalahan saat memperbarui informasi pribadi.'
           )
           setSuccessMessagePersonal('')
           setIsPending(false)
@@ -138,14 +139,14 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
   return (
     <div className='max-w-6xl mx-auto p-8 w-full'>
       <h1 className='text-3xl font-bold text-green-700 mb-6'>
-        Edit Profile Company
+        Edit Profil Penyedia Kerja
       </h1>
 
       {/* section edit logo */}
       <Card className='shadow-lg'>
         <CardHeader>
           <p className='text-lg font-semibold text-green-700 mb-4'>
-            Edit Logo Perusahaan
+            Edit Logo Penyedia Kerja
           </p>
           {errorMessageLogo && <FormError message={errorMessageLogo} />}
           {successMessageLogo && <FormSuccess message={successMessageLogo} />}
@@ -154,7 +155,7 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
           <div>
             <div className='mb-4 flex justify-between'>
               <p className='text-md font-medium text-gray-700 mb-4'>
-                Logo Perusahaan
+                Logo Penyedia Kerja
               </p>
               <Button onClick={handleEditLogo} disabled={isPending}>
                 Simpan Perubahan
@@ -181,8 +182,7 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                   <ImagePlus className='h-12 w-12 text-gray-400' />
                 )}
                 <div className='text-sm text-gray-600'>
-                  Set logo perusahaan. Hanya file berformat *.png,*.jpg,*.jpeg dan *.webp
-                  dengan ukuran maksimal 100 KB.
+                  Tentukan logo Penyedia Kerja. Hanya file berformat *.png,*.jpg,*.jpeg, dan *.webp dengan ukuran maksimal 2MB.
                 </div>
                 {logoFile && (
                   <div className='text-sm text-green-600'>
@@ -206,7 +206,7 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
       <Card className='shadow-lg'>
         <CardHeader>
           <p className='text-lg font-semibold text-green-700 mb-4'>
-            Edit Personal Information
+            Edit Informasi Pribadi
           </p>
           {errorMessagePersonal && <FormError message={errorMessagePersonal} />}
           {successMessagePersonal && (
@@ -222,7 +222,7 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
             >
               <div className='mb-4 flex justify-between'>
                 <p className='text-md font-medium text-gray-700 mb-4'>
-                  Personal Information
+                  Informasi Pribadi
                 </p>
                 <Button type='submit' disabled={isPending}>
                   Simpan Perubahan
@@ -235,12 +235,12 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                     name='username'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Username</FormLabel>
+                        <FormLabel>Nama Pengguna</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             disabled={formPersonal.formState.isSubmitting}
-                            placeholder='Username'
+                            placeholder='Nama Pengguna'
                             className='border-2 border-gray-100 shadow-sm'
                             type='text'
                           />
@@ -259,7 +259,7 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                           <Input
                             {...field}
                             disabled={formPersonal.formState.isSubmitting}
-                            placeholder='fullname'
+                            placeholder='Nama Lengkap'
                             className='border-2 border-gray-100 shadow-sm'
                             type='text'
                           />
@@ -273,12 +273,12 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                     name='companyName'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nama Perusahaaan</FormLabel>
+                        <FormLabel>Nama Penyedia Kerja</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             disabled={formPersonal.formState.isSubmitting}
-                            placeholder='Nama Perusahaan'
+                            placeholder='Nama Penyedia Kerja'
                             className='border-2 border-gray-100 shadow-sm'
                             type='text'
                           />
@@ -292,15 +292,20 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                     name='industry'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Bidang Industry</FormLabel>
+                        <FormLabel>Bidang Industri</FormLabel>
                         <FormControl>
-                          <Input
-                            {...field}
-                            disabled={formPersonal.formState.isSubmitting}
-                            placeholder='Bidang Industry'
-                            className='border-2 border-gray-100 shadow-sm'
-                            type='text'
-                          />
+                        <select
+                        {...field}
+                        disabled={formPersonal.formState.isSubmitting}
+                        className='w-full border-2 border-gray-100 bg-white shadow-sm rounded-md p-2'
+                      >
+                        <option value=''>Pilih Bidang Industri</option>
+                        {sector.map((industry, idx) => (
+                          <option key={idx} value={industry}>
+                            {industry}
+                          </option>
+                        ))}
+                      </select>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -311,16 +316,19 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                     name='ownership'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Kepemilikan Perusahaan</FormLabel>
+                        <FormLabel>Kepemilikan Penyedia Kerja</FormLabel>
                         <FormControl>
-                          <Input
-                            {...field}
-                            disabled={formPersonal.formState.isSubmitting}
-                            placeholder='Kepemilikan Perusahaan'
-                            className='border-2 border-gray-100 shadow-sm'
-                            type='text'
-                          />
-                        </FormControl>
+                      <select
+                        {...field}
+                        disabled={formPersonal.formState.isSubmitting}
+                        className="w-full border-2 border-gray-100 bg-white shadow-sm rounded-md p-2"
+                      >
+                        <option value="">Pilih Kepemilikan</option>
+                        <option value="Perusahaan kecil">Perusahaan Kecil</option>
+                        <option value="Perusahaan menengah">Perusahaan Menengah</option>
+                        <option value="Perusahaan besar">Perusahaan Besar</option>
+                      </select>
+                    </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -330,12 +338,12 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                     name='phone'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nomor Telephone</FormLabel>
+                        <FormLabel>Nomor Telepon</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             disabled={formPersonal.formState.isSubmitting}
-                            placeholder='Nomor Telephone'
+                            placeholder='Nomor Telepon'
                             className='border-2 border-gray-100 shadow-sm'
                             type='text'
                           />
@@ -349,12 +357,12 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                     name='companyPhone'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nomor Telephone Perusahaan</FormLabel>
+                        <FormLabel>Nomor Telepon Penyedia Kerja</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             disabled={formPersonal.formState.isSubmitting}
-                            placeholder='Nomor Telephone Perusahaan'
+                            placeholder='Nomor Telepon Penyedia Kerja'
                             className='border-2 border-gray-100 shadow-sm'
                             type='text'
                           />
@@ -370,12 +378,12 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                     name='website'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Website Perusahaan</FormLabel>
+                        <FormLabel>Website Penyedia Kerja</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             disabled={formPersonal.formState.isSubmitting}
-                            placeholder='Website Perusahaan'
+                            placeholder='Website Penyedia Kerja'
                             className='border-2 border-gray-100 shadow-sm'
                             type='text'
                           />
@@ -389,12 +397,12 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                     name='publicMail'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Alamat Email Public</FormLabel>
+                        <FormLabel>Alamat Email Publik</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             disabled={formPersonal.formState.isSubmitting}
-                            placeholder='Alamat Email Public'
+                            placeholder='Alamat Email Publik'
                             className='border-2 border-gray-100 shadow-sm'
                             type='text'
                           />
@@ -432,7 +440,7 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                           <Input
                             {...field}
                             disabled={formPersonal.formState.isSubmitting}
-                            placeholder='kota Anda'
+                            placeholder='Kota Anda'
                             className='border-2 border-gray-100 shadow-sm'
                             type='text'
                           />
@@ -446,12 +454,12 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
                     name='bio'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Biodata Perusahaan</FormLabel>
+                        <FormLabel>Biodata Penyedia Kerja</FormLabel>
                         <FormControl>
                           <Textarea
                             {...field}
                             disabled={formPersonal.formState.isSubmitting}
-                            placeholder='Biodata Perusahaan'
+                            placeholder='Biodata Penyedia Kerja'
                             className='border-2 border-gray-100 shadow-sm h-[216px]'
                           />
                         </FormControl>
@@ -469,7 +477,7 @@ const EditProfileCompany = ({ data }: EditProfileCompanyProps) => {
             href='/dashboard'
             className='text-green-600 hover:text-green-700 font-medium'
           >
-            Back to Dashboard
+            Kembali ke Dashboard
           </Link>
         </CardFooter>
       </Card>

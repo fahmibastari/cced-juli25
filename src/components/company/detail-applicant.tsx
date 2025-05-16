@@ -98,6 +98,20 @@
       })
     }
     const notesData = ['seleksi berkas', 'dalam komunikasi', 'belum sesuai']
+    const getAge = (birthDate: string | Date): number => {
+      const birth = new Date(birthDate);
+      const today = new Date();
+      let age = today.getFullYear() - birth.getFullYear();
+      const m = today.getMonth() - birth.getMonth();
+    
+      // Jika belum lewat bulan ulang tahun, kurangi usia satu tahun
+      if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+        age--;
+      }
+    
+      return age;
+    };
+    
     return (
       <div className='max-w-4xl mx-auto p-6'>
         <Card className='mb-6'>
@@ -146,7 +160,7 @@
                       name='notes'
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Notes</FormLabel>
+                          <FormLabel>Catatan</FormLabel>
                           <FormControl>
                             <Select
                               disabled={isPending}
@@ -154,7 +168,7 @@
                               value={field.value || ''}
                             >
                               <SelectTrigger>
-                                <SelectValue placeholder='Select The Notes' />
+                                <SelectValue placeholder='Pilih Catatan' />
                               </SelectTrigger>
                               <SelectContent>
                                 {notesData.map((note) => (
@@ -184,10 +198,10 @@
                       {isPending ? (
                         <div className='flex items-center justify-center gap-2'>
                           <BeatLoader />
-                          Processing...
+                          Memproses...
                         </div>
                       ) : (
-                        'Update Notes'
+                        'Perbarui Catatan'
                       )}
                     </Button>
                   </div>
@@ -198,137 +212,128 @@
         </Card>
 
         <Card className='mb-6'>
-          <CardHeader>
-            <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
-              Personal Information
-            </CardTitle>
-          </CardHeader>
-          <CardContent className='mb-3 text-sm font-semibold text-gray-800'>
-            <div className='flex items-center gap-3 mb-2'>
-              <span className='text-gray-900'>Fullname:</span>
-              <span className='text-gray-600'>
-                {detailData?.member.user.fullname || '-'}
-              </span>
-            </div>
-            <div className='flex items-center gap-3 mb-2'>
-              <span className='text-gray-900'>Email:</span>
-              <span className='text-gray-600'>
-                {detailData?.member.user.email || '-'}
-              </span>
-            </div>
-            <div className='flex items-center gap-3 mb-2'>
-              <span className='text-gray-900'>Role:</span>
-              <span className='text-gray-600'>
-                {detailData?.member.user.role || '-'}
-              </span>
-            </div>
-            <div className='flex items-center gap-3 mb-2'>
-              <span className='text-gray-900'>Status:</span>
-              <span className='text-gray-600'>
-                {detailData?.member.memberType.toLowerCase() || '-'}
-              </span>
-            </div>
-            <div className='flex items-center gap-3 mb-2'>
-              <span className='text-gray-900'>NIM:</span>
-              <span className='text-gray-600'>
-                {detailData?.member.nim || '-'}
-              </span>
-            </div>
-            <div className='flex items-center gap-3 mb-2'>
-              <span className='text-gray-900'>Nomor Telfon:</span>
-              <span className='text-gray-600'>
-                {detailData?.member.phone || '-'}
-              </span>
-            </div>
-            <div className='flex items-center gap-3 mb-2'>
-              <span className='text-gray-900'>Address:</span>
-              <span className='text-gray-600'>
-                {detailData?.member.address || '-'}
-              </span>
-            </div>
-            <div className='flex items-center gap-3 mb-2'>
-              <span className='text-gray-900'>Kota:</span>
-              <span className='text-gray-600'>
-                {detailData?.member.city || '-'}
-              </span>
-            </div>
-            <div className='flex items-center gap-3 mb-2'>
-              <span className='text-gray-900'>Tanggal Lahir:</span>
-              <span className='text-gray-600'>
-              {detailData?.member?.birthDate ? new Date(detailData.member.birthDate).toLocaleDateString('id-ID') : '-'}
+  <CardHeader>
+    <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
+      Informasi Pribadi
+    </CardTitle>
+  </CardHeader>
+  <CardContent className='mb-3 text-sm font-semibold text-gray-800'>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Nama Lengkap:</span>
+      <span className='text-gray-600'>
+        {detailData?.member.user.fullname || '-'}
+      </span>
+    </div>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Email:</span>
+      <span className='text-gray-600'>
+        {detailData?.member.user.email || '-'}
+      </span>
+    </div>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Peran:</span>
+      <span className='text-gray-600'>
+        {detailData?.member.user.role || '-'}
+      </span>
+    </div>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Status:</span>
+      <span className='text-gray-600'>
+        {detailData?.member.memberType.toLowerCase() || '-'}
+      </span>
+    </div>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>NIM:</span>
+      <span className='text-gray-600'>
+        {detailData?.member.nim || '-'}
+      </span>
+    </div>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Nomor Telepon:</span>
+      <span className='text-gray-600'>
+        {detailData?.member.phone || '-'}
+      </span>
+    </div>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Alamat:</span>
+      <span className='text-gray-600'>
+        {detailData?.member.address || '-'}
+      </span>
+    </div>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Kota:</span>
+      <span className='text-gray-600'>
+        {detailData?.member.city || '-'}
+      </span>
+    </div>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Tanggal Lahir:</span>
+      <span className='text-gray-600'>
+        {detailData?.member?.birthDate
+          ? `${new Date(detailData?.member.birthDate).toLocaleDateString('id-ID')} (${getAge(detailData?.member.birthDate)} tahun)`
+          : '-'}
+      </span>
+    </div>
 
-              </span>
-            </div>
-            <div className='flex items-center gap-3 mb-2'>
-              <span className='text-gray-900'>Jenis Kelamin:</span>
-              <span className='text-gray-600'>
-                {detailData?.member.gender || '-'}
-              </span>
-            </div>
-          </CardContent>
-        </Card>
+    <div className='flex items-center gap-3 mb-2'>
+      <span className='text-gray-900'>Jenis Kelamin:</span>
+      <span className='text-gray-600'>
+        {detailData?.member.gender || '-'}
+      </span>
+    </div>
+  </CardContent>
+</Card>
 
-        <Card className='mb-6'>
-          <CardHeader>
-            <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
-              Resume Pendaftaran
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {detailData?.member?.resume ? (
-              <p>{detailData?.member?.resume}</p>
-            ) : (
-              <p>{detailData?.resumeMember}</p>
-            )}
-          </CardContent>
-        </Card>
 
-        <Card className='mb-6'>
-          <CardHeader>
-            <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
-              Skills
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {detailData?.member?.skills?.length > 0 ? (
-              <ul className='list-disc space-y-2 pl-6 text-gray-700'>
-                {detailData?.member?.skills?.map((skill: string) => (
-                  <li key={skill}>{skill}</li>
-                ))}
-              </ul>
-            ) : (
-              <p>Tidak ada skill</p>
-            )}
-          </CardContent>
-        </Card>
 
-        <Card className='mb-6'>
-          <CardHeader>
-            <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
-              Interests
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {detailData?.member?.interests?.length > 0 ? (
-              <ul className='list-disc space-y-2 pl-6 text-gray-700'>
-                {detailData?.member?.interests?.map((skill: string) => (
-                  <li key={skill}>{skill}</li>
-                ))}
-              </ul>
-            ) : (
-              <p>Tidak ada ketertarikan</p>
-            )}
-          </CardContent>
-        </Card>
 
-        <CardFooter className='text-center pt-6 border-t'>
-          <Link
-            href={`/company/detail-job?token=${detailData?.jobId || ''}`}
-            className='text-lg font-medium text-green-600 hover:text-green-700 hover:underline'
-          >
-            Kembali ke Detail Job
-          </Link>
-        </CardFooter>
+<Card className='mb-6'>
+  <CardHeader>
+    <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
+      Keahlian
+    </CardTitle>
+  </CardHeader>
+  <CardContent>
+    {detailData?.member?.skills?.length > 0 ? (
+      <ul className='list-disc space-y-2 pl-6 text-gray-700'>
+        {detailData?.member?.skills?.map((skill: string) => (
+          <li key={skill}>{skill}</li>
+        ))}
+      </ul>
+    ) : (
+      <p>Tidak ada keahlian</p>
+    )}
+  </CardContent>
+</Card>
+
+<Card className='mb-6'>
+  <CardHeader>
+    <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
+      Ketertarikan
+    </CardTitle>
+  </CardHeader>
+  <CardContent>
+    {detailData?.member?.interests?.length > 0 ? (
+      <ul className='list-disc space-y-2 pl-6 text-gray-700'>
+        {detailData?.member?.interests?.map((interest: string) => (
+          <li key={interest}>{interest}</li>
+        ))}
+      </ul>
+    ) : (
+      <p>Tidak ada ketertarikan</p>
+    )}
+  </CardContent>
+</Card>
+
+<CardFooter className='text-center pt-6 border-t'>
+  <Link
+    href={`/company/detail-job?token=${detailData?.jobId || ''}`}
+    className='text-lg font-medium text-green-600 hover:text-green-700 hover:underline'
+  >
+    Kembali ke Detail Lowongan
+  </Link>
+</CardFooter>
+
       </div>
     )
   }
