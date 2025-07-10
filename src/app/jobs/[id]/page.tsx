@@ -2,29 +2,30 @@ import { notFound } from 'next/navigation'
 import prisma from '@/lib/prisma'
 import JobDetailPublic from '@/components/public/JobDetailPublic'
 
-interface Props {
-  params: {
-    id: string
-  }
-}
 
-export default async function JobDetailPage({ params }: { params: { id: string } }) {
-  const { id } = params
-
+// jangan define PageProps sendiri — biarkan inference native NextJS
+export default async function Page({ params }: any) {
   const job = await prisma.job.findUnique({
-    where: { id },
+    where: { id: params.id },
     include: {
-      company: {
-        include: { logo: true },
+      company: { 
+        select: {
+          industry: true,
+        },
+        include: { 
+          logo: true 
+        } 
       },
+      posterFile: true,
     },
   })
 
-  if (!job || job.status !== 'aktif') return notFound()
+  if (!job) return notFound()
+  return <JobDetailPublic job={job} />
+}
 
-  return (
-    <main className="min-h-screen bg-white text-gray-800 px-4">
-      <JobDetailPublic job={job} />
-    </main>
-  )
+
+// wajib define ini di dynamic route
+export async function generateStaticParams() {
+  return []
 }

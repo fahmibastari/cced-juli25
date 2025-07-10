@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { Card, CardContent, CardFooter, CardHeader } from '../ui/card'
-import { startTransition, useRef, useState } from 'react'
+import { startTransition, useEffect, useRef, useState } from 'react'
 import { ImagePlus, X } from 'lucide-react'
 import { Button } from '../ui/button'
 import { FormError } from '../auth/form-error'
@@ -16,7 +16,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
-import { updateMemberSchema } from '@/lib/zod'
+import { useForm as useFormExperience } from 'react-hook-form';
+import { updateMemberSchema, experienceSchema } from '@/lib/zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { Input } from '../ui/input'
@@ -32,13 +33,85 @@ import {
   updateImageMember,
   updateCvMember,
   updateMemberPersonalInformation,
+  addExperienceMember,
+  updateExperienceMember,
+  deleteExperienceMember
 } from '@/actions/member-action'
 import { Textarea } from '../ui/textarea'
+import ChangePasswordForm from './ChangePasswordForm'
 
 interface EditProfileMemberProps {
   data: any
 }
+function ExperienceForm({
+  onClose,
+  onSubmit,
+  defaultValues = {
+    position: "",
+    company: "",
+    startDate: "",
+    endDate: "",
+    isCurrentJob: false,
+    description: ""
+  }
+}: {
+  onClose: () => void,
+  onSubmit: (values: any) => void,
+  defaultValues?: any
+}) {
+  const { register, handleSubmit, formState: { errors }, watch } = useFormExperience({
+    resolver: zodResolver(experienceSchema),
+    defaultValues
+  });
 
+  const isCurrentJob = watch("isCurrentJob");
+  
+
+  return (
+    <form
+      className="mt-4 p-4 bg-gray-50 rounded border space-y-3"
+      onSubmit={handleSubmit((data) => onSubmit(data))}
+    >
+      <div>
+        <label className="block text-sm font-medium">Posisi/Jabatan</label>
+        <Input {...register("position")} placeholder="Contoh: Software Engineer" />
+        {errors.position && <span className="text-xs text-red-600">{errors.position.message as string}</span>}
+      </div>
+      <div>
+        <label className="block text-sm font-medium">Nama Perusahaan</label>
+        <Input {...register("company")} placeholder="Contoh: PT. Maju Jaya" />
+        {errors.company && <span className="text-xs text-red-600">{errors.company.message as string}</span>}
+      </div>
+      <div className="flex gap-4">
+        <div className="flex-1">
+          <label className="block text-sm font-medium">Tanggal Mulai</label>
+          <Input type="date" {...register("startDate")} />
+          {errors.startDate && <span className="text-xs text-red-600">{errors.startDate.message as string}</span>}
+        </div>
+        <div className="flex-1">
+          <label className="block text-sm font-medium">Tanggal Selesai</label>
+          <Input type="date" {...register("endDate")} disabled={isCurrentJob} />
+          {errors.endDate && <span className="text-xs text-red-600">{errors.endDate.message as string}</span>}
+        </div>
+      </div>
+      <div>
+        <label className="flex items-center gap-2">
+          <input type="checkbox" {...register("isCurrentJob")} />
+          Masih Bekerja di sini
+        </label>
+      </div>
+      <div>
+        <label className="block text-sm font-medium">Deskripsi</label>
+        <Textarea {...register("description")} placeholder="Ceritakan tugas utama atau pencapaianmu..." />
+        {errors.description && <span className="text-xs text-red-600">{errors.description.message as string}</span>}
+      </div>
+      <div className="flex gap-2 mt-2">
+        <Button type="submit">Simpan</Button>
+        <Button type="button" variant="outline" onClick={onClose}>Batal</Button>
+      </div>
+    </form>
+  );
+}
 const EditProfileMember = ({ data }: EditProfileMemberProps) => {
   const [errorMessageImage, setErrorMessageImage] = useState('')
   const [successMessageImage, setSuccessMessageImage] = useState('')
@@ -59,12 +132,57 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
   const [srcCv, setSrcCv] = useState<string | null>(data?.cv?.src || null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const gender = ['Laki-laki', 'Perempuan']
-  const dataMemberType = [
-    'Alumni Unila',
-    'Mahasiswa Unila',
-    'Alumni Non Unila',
-    'Mahasiswa Non Unila',
-  ]
+  const [showExperienceForm, setShowExperienceForm] = useState(false)
+const [editingExperience, setEditingExperience] = useState<any>(null)
+const [errorMessageExperience, setErrorMessageExperience] = useState('')
+const [successMessageExperience, setSuccessMessageExperience] = useState('')
+const [experiences, setExperiences] = useState(data.member?.experience || [])
+
+
+const handleEditExperience = (exp: any) => {
+  setEditingExperience(exp)
+  setShowExperienceForm(true)
+}
+
+const handleDeleteExperience = async (id: string) => {
+  setErrorMessageExperience('')
+  setSuccessMessageExperience('')
+  const res = await deleteExperienceMember(id)
+  if (res.error) setErrorMessageExperience(res.error ?? "")
+  else {
+    setSuccessMessageExperience(res.success ?? "")
+    setExperiences(experiences.filter((e: any) => e.id !== id))
+  }
+}
+
+const handleAddOrUpdateExperience = async (values: any) => {
+  setErrorMessageExperience('')
+  setSuccessMessageExperience('')
+  if (editingExperience) {
+    // Edit
+    const res = await updateExperienceMember(editingExperience.id, values)
+    if (res.error) setErrorMessageExperience(res.error ?? "")
+    else {
+      setSuccessMessageExperience(res.success ?? "")
+      setExperiences(experiences.map((e: any) =>
+        e.id === editingExperience.id ? { ...e, ...values } : e
+      ))
+      setEditingExperience(null)
+      setShowExperienceForm(false)
+    }
+  } else {
+    // Add
+    const res = await addExperienceMember(data.member.id, values)
+    if (res.error) setErrorMessageExperience(res.error ?? "")
+    else {
+      setSuccessMessageExperience(res.success ?? "")
+      setExperiences([...experiences, { ...values, id: Math.random().toString() }]) // id random dummy
+      setShowExperienceForm(false)
+    }
+  }
+}
+
+  
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -189,18 +307,58 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
   const formPersonal = useForm<z.infer<typeof updateMemberSchema>>({
     resolver: zodResolver(updateMemberSchema),
     defaultValues: {
-      username: data.username || '',
-      fullname: data.fullname || '',
-      memberType: data.member.memberType || '',
-      nim: data.member.nim || '',
-      phone: data.member.phone || '',
-      address: data.member.address || '',
-      city: data.member.city || '',
-      birthDate: data.member.birthDate || null,
-      gender: data.member.gender || '',
-      about: data.member.about || '',
+      username: '',
+      fullname: '',
+      memberType: '',
+      nim: '',
+      phone: '',
+      address: '',
+      city: '',
+      birthDate: null,
+      gender: '',
+      about: '',
+      studyLevel: data.member?.studyLevel || '', // Tambah ini
+      major: data.member?.major || '',           // Tambah ini
     },
-  })
+  })  
+  
+  const mapDbMemberTypeToString = (type?: string) => {
+    if (!type) return ''
+    return type.toLowerCase()
+  }
+  
+  
+  const mapDbGenderToString = (gender?: string) => {
+    if (!gender) return ''
+    return gender.toLowerCase()
+  }
+  
+  
+  
+  useEffect(() => {
+    if (data) {
+      formPersonal.reset({
+        username: data.username || '',
+        fullname: data.fullname || '',
+        memberType: data.member?.memberType || '',
+        nim: data.member?.nim || '',
+        phone: data.member?.phone || '',
+        address: data.member?.address || '',
+        city: data.member?.city || '',
+        birthDate: data.member?.birthDate || null,
+        gender: data.member?.gender || '',
+        about: data.member?.about || '',
+        studyLevel: data.member?.studyLevel || '',
+        major: data.member?.major || '',
+      })
+    }
+  }, [data, formPersonal])
+  
+  useEffect(() => {
+    setExperiences(data.member?.experience || [])
+  }, [data.member?.experience])
+  
+  
 
   const formResume = useForm<z.infer<typeof updateMemberSchema>>({
     resolver: zodResolver(updateMemberSchema),
@@ -215,6 +373,13 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
       skills: data.skills || [],
     },
   })
+  
+  useEffect(() => {
+    if (data.skills) {
+      formSkills.reset({ skills: data.skills })
+    }
+  }, [data.skills, formSkills])
+  
 
   const formInterests = useForm<z.infer<typeof updateMemberSchema>>({
     resolver: zodResolver(updateMemberSchema),
@@ -222,6 +387,16 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
       interests: data.interests || [],
     },
   })
+  console.log('Interests dari data:', data.interests)
+console.log('Skills dari data:', data.skills)
+
+  
+  useEffect(() => {
+    if (data.interests) {
+      formInterests.reset({ interests: data.interests })
+    }
+  }, [data.interests, formInterests])
+  
 
   const onSubmitPersonal = (value: z.infer<typeof updateMemberSchema>) => {
     setErrorMessagePersonal('')
@@ -408,39 +583,29 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
               </div>
               <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                 <div className='space-y-4'>
-                  <FormField
-                    control={formPersonal.control}
-                    name='memberType'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Status Pencari Kerja</FormLabel>
-                        <FormControl>
-                          <Select
-                            disabled={isPending}
-                            onValueChange={field.onChange}
-                            value={field.value || ''}
-                          >
-                            <SelectTrigger>
-                              <SelectValue
-                                placeholder={field.value || 'Pilih Status'}
-                              />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {dataMemberType.map((data) => (
-                                <SelectItem
-                                  key={data}
-                                  value={data.toLowerCase()}
-                                >
-                                  {data}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                <FormField
+  control={formPersonal.control}
+  name="memberType"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Status Pencari Kerja</FormLabel>
+      <FormControl>
+        <select
+          {...field}
+          disabled={formPersonal.formState.isSubmitting}
+          className="border-2 border-gray-100 shadow-sm rounded px-3 py-2 w-full"
+        >
+          <option value="">Pilih Status</option>
+          <option value="alumni unila">Alumni UNILA</option>
+          <option value="mahasiswa unila">Mahasiswa UNILA</option>
+          <option value="alumni non unila">Alumni Non UNILA</option>
+          <option value="mahasiswa non unila">Mahasiswa Non UNILA</option>
+        </select>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
                   <FormField
                     control={formPersonal.control}
                     name='username'
@@ -480,24 +645,80 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
                     )}
                   />
                   <FormField
-                    control={formPersonal.control}
-                    name='nim'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>NPM Unila</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            disabled={formPersonal.formState.isSubmitting}
-                            placeholder='NPM Unila'
-                            className='border-2 border-gray-100 shadow-sm'
-                            type='text'
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+  control={formPersonal.control}
+  name="nim"
+  render={({ field }) => {
+    // Ambil nilai memberType dari form
+    const memberTypeValue = formPersonal.watch('memberType')
+    // Disable jika memberType termasuk non UNILA
+    const isDisabled =
+      memberTypeValue === 'alumni non unila' || memberTypeValue === 'mahasiswa non unila'
+
+    return (
+      <FormItem>
+        <FormLabel>NPM Unila</FormLabel>
+        <FormControl>
+          <Input
+            {...field}
+            disabled={formPersonal.formState.isSubmitting || isDisabled}
+            placeholder="NPM Unila"
+            className="border-2 border-gray-100 shadow-sm"
+            type="text"
+          />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    )
+  }}
+/>
+
+                  <FormField
+  control={formPersonal.control}
+  name="studyLevel"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Jenjang Studi</FormLabel>
+      <FormControl>
+        <select
+          {...field}
+          disabled={formPersonal.formState.isSubmitting}
+          className="border-2 border-gray-100 shadow-sm rounded px-3 py-2 w-full"
+        >
+          <option value="">Pilih Jenjang Studi</option>
+          <option value="SMP">SMP</option>
+          <option value="SMA">SMA/SMK Sederajat</option>
+          <option value="D3">D3</option>
+          <option value="S1">S1</option>
+          <option value="S2">S2</option>
+          <option value="S3">S3</option>
+        </select>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+
+<FormField
+  control={formPersonal.control}
+  name="major"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Jurusan</FormLabel>
+      <FormControl>
+        <Input
+          {...field}
+          disabled={formPersonal.formState.isSubmitting}
+          placeholder="Masukkan jurusan"
+          className="border-2 border-gray-100 shadow-sm"
+          type="text"
+        />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
                   <FormField
                     control={formPersonal.control}
                     name='phone'
@@ -518,38 +739,26 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
                     )}
                   />
                   <FormField
-                    control={formPersonal.control}
-                    name='gender'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Jenis Kelamin</FormLabel>
-                        <FormControl>
-                          <Select
-                            disabled={isPending}
-                            onValueChange={field.onChange}
-                            value={field.value || ''}
-                          >
-                            <SelectTrigger>
-                              <SelectValue
-                                placeholder={field.value || 'Pilih Jenis Kelamin'}
-                              />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {gender.map((note) => (
-                                <SelectItem
-                                  key={note}
-                                  value={note.toLowerCase()}
-                                >
-                                  {note}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+  control={formPersonal.control}
+  name="gender"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Jenis Kelamin</FormLabel>
+      <FormControl>
+        <select
+          {...field}
+          disabled={formPersonal.formState.isSubmitting}
+          className="border-2 border-gray-100 shadow-sm rounded px-3 py-2 w-full"
+        >
+          <option value="">Pilih Jenis Kelamin</option>
+          <option value="laki-laki">Laki-laki</option>
+          <option value="perempuan">Perempuan</option>
+        </select>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
                 </div>
                 <div className='space-y-4'>
                   <FormField
@@ -643,6 +852,72 @@ const EditProfileMember = ({ data }: EditProfileMemberProps) => {
           </Link>
         </CardFooter>
       </Card>
+
+      {/* Komponen Ubah Kata Sandi */}
+      <Card className="shadow-lg mt-8">
+        <CardHeader>
+          <p className="text-lg font-semibold text-green-700 mb-4">
+            Ubah Kata Sandi
+          </p>
+        </CardHeader>
+        <CardContent>
+          <ChangePasswordForm userId={data.id} />
+        </CardContent>
+      </Card>
+
+      <Card className="shadow-lg mt-8">
+  <CardHeader>
+    <p className="text-lg font-semibold text-green-700 mb-4">
+      Pengalaman Kerja
+    </p>
+    {errorMessageExperience && <FormError message={errorMessageExperience} />}
+    {successMessageExperience && <FormSuccess message={successMessageExperience} />}
+  </CardHeader>
+  <CardContent>
+    {experiences.length > 0 ? (
+      <div className="space-y-4 mb-6">
+        {experiences.map((exp: any) => (
+          <div key={exp.id} className="border p-4 rounded shadow flex flex-col gap-1">
+            <div className="flex flex-col md:flex-row md:justify-between">
+              <div>
+                <span className="font-semibold">{exp.position || '-'}</span>
+                <span className="ml-2 text-gray-500">@ {exp.company || '-'}</span>
+              </div>
+              <div className="text-gray-600 text-sm">
+                {exp.startDate ? new Date(exp.startDate).toLocaleDateString() : ''} - {exp.endDate ? new Date(exp.endDate).toLocaleDateString() : (exp.isCurrentJob ? 'Sekarang' : '')}
+              </div>
+            </div>
+            {exp.description && (
+              <div className="mt-1 text-sm text-gray-700">{exp.description}</div>
+            )}
+            <div className="flex gap-2 mt-2">
+              <Button size="sm" onClick={() => handleEditExperience(exp)}>Edit</Button>
+              <Button size="sm" variant="destructive" onClick={() => handleDeleteExperience(exp.id)}>Hapus</Button>
+            </div>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p className="text-gray-500">Belum ada pengalaman kerja.</p>
+    )}
+
+    <Button className="my-4" onClick={() => {
+      setEditingExperience(null)
+      setShowExperienceForm(true)
+    }}>
+      + Tambah Pengalaman
+    </Button>
+
+    {showExperienceForm && (
+      <ExperienceForm
+        onClose={() => setShowExperienceForm(false)}
+        onSubmit={handleAddOrUpdateExperience}
+        defaultValues={editingExperience}
+      />
+    )}
+  </CardContent>
+</Card>
+
 
       {/* section Interets data */}
       <Card className='shadow-lg'>

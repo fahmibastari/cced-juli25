@@ -2,6 +2,11 @@ export const publicRoutes = [
   '/',
   '/new-verification',
   '/reset-password',
+  '/register',
+  '/login',
+  '/forgot-password',
+  '/reset-password',
+  '/jobs',
   '/api/get-news',
 ]
 
@@ -15,7 +20,7 @@ export const aboutPrefix = '/about'
 
 export const apiPublicPrefix = '/api/public'
 
-export const authRoutes = ['/login', '/register', 'logout', '/forgot-password']
+export const authRoutes = ['/login', '/register', '/logout', '/forgot-password']
 
 export const apiAuthPrefix = '/api/auth'
 

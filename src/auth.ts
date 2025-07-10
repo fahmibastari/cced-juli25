@@ -25,15 +25,44 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (token.role && session.user) {
         session.user.role = token.role as Role
       }
+      // force "as any" for ALL
+      const t = token as any
+      // @ts-ignore
+      session.user.fullname = t.fullname
+      // @ts-ignore
+      session.user.img = t.img
+      // @ts-ignore
+      session.user.studylevel = t.studylevel
+      // @ts-ignore
+      session.user.major = t.major
+      // @ts-ignore
+      session.user.companyLogo = t.companyLogo
+
       return session
-    },
+    }
+    
+    ,
     async jwt({ token }) {
       if (!token.sub) return token
 
-      const user = await getUserById(token.sub)
+      // Perbaiki dengan type assertion biar TypeScript aman
+      const user = await getUserById(token.sub) as {
+        id: string
+        fullname?: string | null
+        image?: string | null
+        member?: { studyLevel?: string | null, major?: string | null }
+        role: Role
+      }
       if (!user) return token
 
       token.role = user.role
+      token.fullname = user.fullname
+      token.img = user.image // string|null sesuai hasil flatten
+      token.studylevel = user.member?.studyLevel ?? null
+      token.major = user.member?.major ?? null
+      token.companyLogo = (user as any).company?.logo?.src ?? null
+
+      
 
       return token
     },

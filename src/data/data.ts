@@ -35,10 +35,21 @@ export const getJobById = async (companyId: string) => {
           notes: true,
         },
       },
+      posterFile: {
+        select: {
+          name: true, // ✅ tambahkan ini
+        },
+      },
+      company: {
+        include: {
+          logo: true, // untuk konsistensi
+        },
+      },
     },
   })
   return jobs
 }
+
 
 export async function getJobs() {
   try {
@@ -51,25 +62,47 @@ export async function getJobs() {
       },
       include: {
         jobApplication: true,
+        posterFile: true,
         company: {
           include: {
-            logo: true,  // Include the logo file
+            logo: true,
+            
           },
         },
       },
     });
 
-    // Map over the jobs to include the company logo URL
-    const jobsWithLogo = data.map(job => ({
+    const jobsWithExtras = data.map((job) => ({
       ...job,
-      companyLogoUrl: job.company.logo ? job.company.logo.src : null, // Add logo URL if available
+
+      companyName: job.company?.companyName ?? 'Nama Perusahaan',
+      companyLogoUrl: job.company?.logo?.src || undefined,
+      industry: job.company?.industry ?? 'Tidak Diketahui', 
+
+      // Struktur ulang company agar sesuai expected type
+      company: {
+        companyName: job.company?.companyName,
+        logo: job.company?.logo ? { src: job.company.logo.src } : undefined,
+        industry: job.company?.industry || 'Tidak Diketahui', 
+      },
+
+      // Tambahkan posterFile jika tersedia
+      posterFile: job.posterFile
+        ? {
+            name: job.posterFile.name,
+            src: job.posterFile.src, // src = relative path ke public
+          }
+        : null,
     }));
 
-    return { data: jobsWithLogo };
+    return { data: jobsWithExtras };
   } catch (error) {
     console.error('An error occurred while fetching the job:', error);
+    return { data: [] };
   }
 }
+
+
 
 
 export async function getMemberById(id: string) {

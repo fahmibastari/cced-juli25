@@ -18,7 +18,7 @@ import { FormError } from '../form-error'
 import { FormSuccess } from '../form-succsess'
 import { Button } from '@/components/ui/button'
 import { useSearchParams } from 'next/navigation'
-import { changePassword } from '@/actions/change-password'
+import { changePasswordForUser, changePasswordWithToken } from '@/actions/change-password'
 import { CardWrapper } from '../card-wrapper'
 
 const ResetPasswordForm = () => {
@@ -39,7 +39,7 @@ const ResetPasswordForm = () => {
     setError('')
     setSuccess('')
     startTransition(() => {
-      changePassword(data, token)
+      changePasswordWithToken(data, token)
         .then((data) => {
           setError(data.error)
           setSuccess(data.success)

@@ -1,57 +1,32 @@
-import { Button } from '@/components/ui/button'
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from '@/components/ui/navigation-menu'
-import { signOut } from 'next-auth/react'
-import Link from 'next/link'
+// DesktopNav.tsx
+import Link from "next/link";
+import UserDropdown from './UserDropdown'; // Import komponen baru
+import { Button } from "@react-email/components";
 
 interface DesktopNavProps {
-  isLoggedIn: boolean
+  items: { label: string; href: string }[];
+  user?: any;
+  feedbacks?: any[];
 }
 
-const DesktopNav = ({ isLoggedIn }: DesktopNavProps) => {
-  const logout = async () => {
-    await signOut()
-  }
+const DesktopNav = ({ items, user, feedbacks = [] }: DesktopNavProps) => {
   return (
-    <div className="hidden md:flex md:mx-16 md:flex-wrap items-center justify-between px-4 py-4">
-  {/* Auth Links */}
-  <div className="flex items-center gap-6 px-4">
-    {!isLoggedIn ? (
-      <>
-        <Button
-          asChild
-          variant="outline"
-          className="text-green-800 font-semibold hover:bg-green-100 transition duration-300"
+    <div className="hidden md:flex gap-6 items-center">
+      {/* Menu links */}
+      {items.map((item) => (
+        <Link
+          key={item.href}
+          href={item.href}
+          className="font-semibold text-green-800 px-4 py-2 rounded-xl hover:bg-green-50/80 transition-all"
         >
-          <Link href="/register">Daftar</Link>
-        </Button>
-        <Button
-          asChild
-          variant="solid"
-          className="bg-green-800 text-white font-semibold hover:bg-green-700 transition duration-300"
-        >
-          <Link href="/login">Login</Link>
-        </Button>
-      </>
-    ) : (
-      <Button
-        asChild
-        variant="default"
-        className="font-semibold hover:bg-green-100 transition duration-300"
-      >
-        <Link href="/dashboard">Dashboard</Link>
-      </Button>
-    )}
-  </div>
-</div>
+          {item.label}
+        </Link>
+      ))}
 
-  )
-}
+      {/* User dropdown */}
+      {user && <UserDropdown user={user} feedbacks={feedbacks} />}
+    </div>
+  );
+};
 
-export default DesktopNav
+export default DesktopNav;

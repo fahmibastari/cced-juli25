@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { User } from 'lucide-react'
+import { User, Building2 } from 'lucide-react'
 import Link from 'next/link'
 
 interface HeaderCompanyProps {
@@ -11,37 +11,63 @@ interface HeaderCompanyProps {
 
 const HeaderCompany = ({ companyName, industri, logo }: HeaderCompanyProps) => {
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between bg-gray-100 p-4 rounded-md shadow-sm">
-      {/* Left: Logo and Company Info */}
-      <div className="flex items-center gap-4 mb-4 md:mb-0">
-        <Link href="/company/profile" className="flex-shrink-0">
-          <Avatar className="h-16 w-16">
-            <AvatarImage src={logo} alt={`${companyName} Logo`} className="object-cover" />
+    <header
+      className="
+        w-full rounded-2xl mb-6
+        flex flex-col md:flex-row items-center justify-between gap-4
+        px-6 py-4
+        backdrop-blur-xl
+        bg-white/60
+        border border-white/50 shadow-lg
+        transition
+      "
+      style={{
+        background: 'rgba(255,255,255,0.7)',
+        WebkitBackdropFilter: 'blur(20px)',
+        backdropFilter: 'blur(20px)',
+      }}
+    >
+      {/* Kiri: Logo dan info */}
+      <div className="flex items-center gap-4 w-full md:w-auto">
+        <Link href="/company/profile" className="block group relative">
+          <Avatar className="h-16 w-16 border-2 border-green-400 group-hover:border-green-600 transition-all duration-150 shadow-md">
+            <AvatarImage src={logo} alt={companyName} className="object-cover" />
             <AvatarFallback>
-              <User className="h-10 w-10" />
+              <Building2 className="h-10 w-10 text-green-800" />
             </AvatarFallback>
           </Avatar>
         </Link>
-        <div>
-          <h2 className="text-xl font-bold text-gray-900">{companyName || 'Penyedia Kerja'}</h2>
-          <p className="text-sm text-gray-600">Bidang Industri: {industri || 'Industri'}</p>
+        <div className="min-w-0 flex flex-col gap-1">
+          <h2 className="text-xl md:text-2xl font-bold text-green-900 truncate">
+            {companyName || 'Penyedia Kerja'}
+          </h2>
+          <span className="text-sm text-gray-500 font-medium">
+            <span className="font-semibold text-green-800">Industri:</span> {industri || '-'}
+          </span>
         </div>
       </div>
-
-      {/* Right: Buttons */}
-      <div className="flex items-center space-x-4">
-        <Button variant="outline" size="sm">
-          <Link href="/company/edit-profile-company" className="block px-4 py-1">
-            Edit Profil Penyedia Kerja
-          </Link>
-        </Button>
-        <Button variant="outline" size="sm" className="bg-green-500 text-white hover:bg-green-600">
-          <Link href="/company/add-job" className="block px-4 py-1">
+      {/* Kanan: Tombol */}
+      <div className="flex-shrink-0 w-full md:w-auto flex items-center justify-end gap-2">
+        <Link href="/company/edit-profile-company" className="block">
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full px-5 py-2 text-green-800 font-semibold border-green-200 hover:border-green-400 hover:bg-green-50 transition shadow"
+          >
+            Edit Profil
+          </Button>
+        </Link>
+        <Link href="/company/add-job" className="block">
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full px-5 py-2 bg-green-500 text-white font-semibold hover:bg-green-600 border-0 shadow"
+          >
             Tambah Lowongan
-          </Link>
-        </Button>
+          </Button>
+        </Link>
       </div>
-    </div>
+    </header>
   )
 }
 

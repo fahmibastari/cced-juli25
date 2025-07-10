@@ -2,8 +2,7 @@
 
 import { saveFile } from '@/lib/file-handler'
 import prisma from '@/lib/prisma'
-import { JobApplicationSchema, updateMemberSchema } from '@/lib/zod'
-import { Gender, MemberType } from '@prisma/client'
+import { JobApplicationSchema, updateMemberSchema, experienceSchema } from '@/lib/zod'
 import * as z from 'zod'
 
 export const applyJob = async (
@@ -99,7 +98,11 @@ export const getDetailUserMemberFull = async (id: string) => {
               include: {
                 job: {
                   include: {
-                    company: true,
+                    company: {
+                      include: {
+                        logo: true, // ✅ logo perusahaan
+                      },
+                    },
                   },
                 },
               },
@@ -113,6 +116,7 @@ export const getDetailUserMemberFull = async (id: string) => {
     return null
   }
 }
+
 
 export async function updateMemberPersonalInformation(
   formData: z.infer<typeof updateMemberSchema>,
@@ -142,41 +146,31 @@ export async function updateMemberPersonalInformation(
       resume,
       skills,
       interests,
+      studyLevel,
+      major,
     } = validatedFields.data
 
     await prisma.user.update({
-      where: { id: id },
-      data: {
-        username: username,
-        fullname: fullname,
-      },
+      where: { id },
+      data: { username, fullname },
     })
-    const kelamin = gender === 'laki-laki' ? Gender.MALE : Gender.FEMALE
-    let dataMemberType = null
-    if (memberType === 'alumni unila') {
-      dataMemberType = MemberType.ALUMNI_UNILA
-    } else if (memberType === 'alumni non unila') {
-      dataMemberType = MemberType.ALUMNI_NON_UNILA
-    } else if (memberType === 'mahasiswa non unila') {
-      dataMemberType = MemberType.MAHASISWA_NON_UNILA
-    } else {
-      dataMemberType = MemberType.MAHASISWA_UNILA
-    }
 
     await prisma.member.update({
       where: { id: idMember },
       data: {
-        phone: phone,
-        address: address,
-        city: city,
-        birthDate: birthDate,
-        gender: kelamin,
-        about: about,
-        memberType: dataMemberType,
-        nim: nim,
-        resume: resume,
-        skills: skills,
-        interests: interests,
+        phone,
+        address,
+        city,
+        birthDate,
+        gender,
+        about,
+        memberType,
+        nim,
+        resume,
+        skills,
+        interests,
+        studyLevel: studyLevel || '',
+        major: major || '',
       },
     })
     return {
@@ -259,4 +253,96 @@ export const updateImageMember = async (
     }
   }
 }
+
+export const addExperienceMember = async (
+  memberId: string,
+  value: z.infer<typeof experienceSchema>
+) => {
+  try {
+    const validated = experienceSchema.safeParse(value)
+    if (!validated.success) {
+      return { error: validated.error.errors.map((e) => e.message).join(', ') }
+    }
+    const {
+      position, company, startDate, endDate, isCurrentJob, description,
+    } = validated.data
+    await prisma.experience.create({
+      data: {
+        memberId,
+        position,
+        company,
+        startDate: new Date(startDate),
+        endDate: endDate ? new Date(endDate) : null,
+        isCurrentJob: isCurrentJob || false,
+        description,
+      },
+    })
+    return { success: 'Pengalaman berhasil ditambahkan!' }
+  } catch (err) {
+    return { error: 'Gagal menambah pengalaman kerja. Silakan coba lagi.' }
+  }
+}
+
+export const updateExperienceMember = async (
+  id: string,
+  value: z.infer<typeof experienceSchema>
+) => {
+  try {
+    const validated = experienceSchema.safeParse(value)
+    if (!validated.success) {
+      return { error: validated.error.errors.map((e) => e.message).join(', ') }
+    }
+    const {
+      position, company, startDate, endDate, isCurrentJob, description,
+    } = validated.data
+    await prisma.experience.update({
+      where: { id },
+      data: {
+        position,
+        company,
+        startDate: new Date(startDate),
+        endDate: endDate ? new Date(endDate) : null,
+        isCurrentJob: isCurrentJob || false,
+        description,
+      },
+    })
+    return { success: 'Pengalaman berhasil diubah!' }
+  } catch (err) {
+    return { error: 'Gagal mengubah pengalaman kerja. Silakan coba lagi.' }
+  }
+}
+
+export const deleteExperienceMember = async (id: string) => {
+  try {
+    await prisma.experience.delete({ where: { id } })
+    return { success: 'Pengalaman berhasil dihapus!' }
+  } catch (err) {
+    return { error: 'Gagal menghapus pengalaman kerja. Silakan coba lagi.' }
+  }
+}
+
+export async function markNotesAsRead(jobAppId: string) {
+  try {
+    const updated = await prisma.jobApplication.update({
+      where: { id: jobAppId },
+      data: { notesReadAt: new Date() },
+    })
+    console.log('notesReadAt after update:', updated.notesReadAt); // Tambahkan ini!
+    return { success: true, notesReadAt: updated.notesReadAt }
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : String(error) }
+  }
+}
+
+// actions/member-action.ts
+export const getUnreadFeedbacks = async (userId: string) => {
+  // Ambil detail user lengkap + jobApplication
+  const user = await getDetailUserMemberFull(userId);
+  if (!user?.member?.jobApplication) return [];
+  // Filter feedback yang belum dibaca
+  return user.member.jobApplication.filter((ja: any) =>
+    ja.notes && (!ja.notesReadAt || new Date(ja.notesUpdatedAt) > new Date(ja.notesReadAt))
+  );
+};
+
 

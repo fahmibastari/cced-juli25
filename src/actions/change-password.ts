@@ -1,13 +1,16 @@
+// actions/change-password.ts
 'use server'
+
+import prisma from '@/lib/prisma'
+import bcryptjs from 'bcryptjs'
+import * as z from 'zod'
 import { getPasswordResetTokenByToken } from '@/data/reset-password'
 import { getUserByEmail } from '@/data/user'
-import prisma from '@/lib/prisma'
 import { resetPasswordSchema } from '@/lib/zod'
-import * as z from 'zod'
-import bcryptjs from 'bcryptjs'
 
-export const changePassword = async (
-  data: z.infer<typeof resetPasswordSchema>,
+// Fungsi untuk reset password menggunakan token
+export const changePasswordWithToken = async (
+  data: z.infer<typeof resetPasswordSchema>, 
   token: string | null
 ) => {
   const validateField = resetPasswordSchema.safeParse(data)
@@ -40,19 +43,70 @@ export const changePassword = async (
   }
 
   await prisma.user.update({
-    where: {
-      id: user.id,
-    },
-    data: {
-      password: await bcryptjs.hash(password, 10),
-    },
+    where: { id: user.id },
+    data: { password: await bcryptjs.hash(password, 10) },
   })
 
   await prisma.passwordResetToken.delete({
-    where: {
-      id: existingToken.id,
-    },
+    where: { id: existingToken.id },
   })
 
   return { success: 'Kata Sandi Berhasil Diubah!' }
+}
+
+// Fungsi baru untuk ubah kata sandi pengguna yang sudah login
+export const changePasswordForUser = async (
+  oldPassword: string, 
+  newPassword: string,
+  userId: string
+) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  })
+
+  if (!user) {
+    return { error: 'Pengguna tidak ditemukan' }
+  }
+
+  const isOldPasswordCorrect = await bcryptjs.compare(oldPassword, user.password)
+
+  if (!isOldPasswordCorrect) {
+    return { error: 'Kata sandi lama salah' }
+  }
+
+  const hashedPassword = await bcryptjs.hash(newPassword, 10)
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { password: hashedPassword },
+  })
+
+  return { success: 'Kata sandi berhasil diubah' }
+}
+
+export const changePasswordForAdmin = async (
+  userId: string,
+  newPassword: string
+) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    })
+
+    if (!user) {
+      return { error: 'Pengguna tidak ditemukan' }
+    }
+
+    const hashedPassword = await bcryptjs.hash(newPassword, 10)
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { password: hashedPassword },
+    })
+
+    return { success: 'Kata sandi berhasil diubah' }
+  } catch (error) {
+    console.error('Error changing password for admin:', error)
+    return { error: 'Terjadi kesalahan saat mengganti kata sandi pengguna.' }
+  }
 }

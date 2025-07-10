@@ -1,97 +1,45 @@
 'use client'
 
-import * as z from 'zod'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import { useForm } from 'react-hook-form'
-import { forgotPasswordSchema } from '@/lib/zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useState, useTransition } from 'react'
-import { Input } from '@/components/ui/input'
-import { FormError } from '../form-error'
-import { FormSuccess } from '../form-succsess'
 import { Button } from '@/components/ui/button'
-import { reset } from '@/actions/reset'
 import { CardWrapper } from '../card-wrapper'
+import { FaWhatsapp } from 'react-icons/fa' // Import ikon WhatsApp
 
 const ForgotPasswordForm = () => {
-  const [isPending, startTransition] = useTransition()
-  const [error, setError] = useState<string | undefined>()
-  const [success, setSuccess] = useState<string | undefined>()
+  const adminWhatsAppNumber = '6281234567890' // Ganti dengan nomor WhatsApp admin yang valid
 
-  const form = useForm<z.infer<typeof forgotPasswordSchema>>({
-    resolver: zodResolver(forgotPasswordSchema),
-    defaultValues: {
-      email: '',
-    },
-  })
+  const message = `Halo Admin, saya lupa password untuk akun saya. Email saya adalah: `
 
-  const onSubmitForm = (data: z.infer<typeof forgotPasswordSchema>) => {
-    setError('')
-    setSuccess('')
-    startTransition(() => {
-      reset(data)
-        .then((data) => {
-          setError(data.error)
-          setSuccess(data.success)
-        })
-        .catch(() => {
-          setError('Terjadi kesalahan!')
-        })
-    })
-  }
+  const encodedMessage = encodeURIComponent(message)
+
   return (
     <CardWrapper
       headerLabel='Lupa Password'
-      description='Reset Password Anda'
+      description='Halaman Lupa Password.'
       paragraphSwitchButton='Sudah ingat password?'
       switchButtonLabel='Kembali ke Login'
       switchButtonHref='/login'
     >
-      <Form {...form}>
-        <form
-          action=''
-          onSubmit={form.handleSubmit(onSubmitForm)}
-          className='space-y-6 flex flex-col gap-4'
+      {/* Card styling */}
+      <div className="mt-4 text-center">
+        <p className="text-gray-700 mb-6 text-lg font-medium leading-relaxed">
+          Jika Anda lupa password, Anda dapat menghubungi admin melalui WhatsApp untuk reset password.
+        </p>
+        
+        {/* WhatsApp Button */}
+        <a
+          href={`https://wa.me/${adminWhatsAppNumber}?text=${encodedMessage}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block bg-gradient-to-r from-green-400 to-green-600 text-white text-lg font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-2xl transform transition-all duration-300 hover:scale-105"
         >
-          <div className='space-y-4'>
-            <FormField
-              control={form.control}
-              name='email'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder='youremail@gmail.com'
-                      type='email'
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          {error && <FormError message={error} />}
-          {success && <FormSuccess message={success} />}
-          <Button
-            variant={'default'}
-            className='w-full text-center mx-auto'
-            type='submit'
-            disabled={isPending}
-          >
-            Kirim Reset Password
-          </Button>
-        </form>
-      </Form>
+          <FaWhatsapp className="inline-block mr-2" /> Hubungi Admin via WhatsApp
+        </a>
+
+        {/* Additional Information */}
+        <p className="mt-7 text-sm text-gray-600 hover:text-green-500 transition duration-300">
+          Klik tombol di atas untuk menghubungi admin melalui WhatsApp dan meminta reset password.
+        </p>
+      </div>
     </CardWrapper>
   )
 }

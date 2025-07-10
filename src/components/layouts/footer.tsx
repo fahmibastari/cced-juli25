@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { FaInstagram, FaFacebook, FaTwitter, FaMapMarkerAlt } from 'react-icons/fa'
+import { FaInstagram, FaFacebook, FaTwitter, FaMapMarkerAlt, FaYoutube, FaWhatsapp } from 'react-icons/fa'
 import { HiOutlineMail, HiOutlinePhone } from 'react-icons/hi'
 
 const Footer = () => {
@@ -30,11 +30,12 @@ const Footer = () => {
           <ul className="space-y-2 text-neutral-300">
             <li className="flex items-center gap-2">
               <HiOutlineMail className="text-lg" />
-              <Link href="mailto:fahmibastari549@gmail.com" className="hover:underline">fahmibastari549@gmail.com</Link>
+              <Link href="mailto:kemitraan.cced@kpa.unila.ac.id" className="hover:underline">kemitraan.cced@kpa.unila.ac.id</Link>
+
             </li>
             <li className="flex items-center gap-2">
               <HiOutlinePhone className="text-lg" />
-              <Link href="tel:+6281271662745" className="hover:underline">+62 812 7166 2745</Link>
+              <Link href="tel:+6281271662745" className="hover:underline">+62822 8168 6132</Link>
             </li>
           </ul>
         </div>
@@ -45,8 +46,10 @@ const Footer = () => {
           <div className="flex items-start gap-2 text-neutral-300">
             <FaMapMarkerAlt className="text-lg mt-1" />
             <p>
-              UPT Pengembangan Karier & Kewirausahaan<br />
-              Universitas Lampung
+            Gedung Rektorat Lama Lantai 1, Universitas Lampung <br />
+Jl. Profesor Doktor Sumantri Brojonegoro No. 1, <br />
+Gedong Meneng, Kec. Rajabasa, Kota Bandar Lampung, <br />
+Lampung, Indonesia.
             </p>
           </div>
         </div>
@@ -55,14 +58,14 @@ const Footer = () => {
         <div>
           <h3 className="font-semibold text-lg mb-4">Ikuti Kami</h3>
           <div className="flex space-x-4 text-neutral-300">
-            <Link href="https://www.instagram.com/" target="_blank" aria-label="Instagram" className="hover:text-white">
+            <Link href="https://www.instagram.com/cced_unila" target="_blank" aria-label="Instagram" className="hover:text-white">
               <FaInstagram className="text-2xl" />
             </Link>
-            <Link href="https://www.facebook.com/" target="_blank" aria-label="Facebook" className="hover:text-white">
-              <FaFacebook className="text-2xl" />
+            <Link href="https://www.youtube.com/@cced_unila" target="_blank" aria-label="Facebook" className="hover:text-white">
+              <FaYoutube className="text-2xl" />
             </Link>
-            <Link href="https://twitter.com/" target="_blank" aria-label="Twitter" className="hover:text-white">
-              <FaTwitter className="text-2xl" />
+            <Link href="https://s.id/ShintaCCED" target="_blank" aria-label="Twitter" className="hover:text-white">
+              <FaWhatsapp className="text-2xl" />
             </Link>
           </div>
         </div>

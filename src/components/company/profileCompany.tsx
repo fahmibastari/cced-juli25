@@ -33,6 +33,14 @@ const ProfileCompany = ({ data }: ProfileCompanyProps) => {
     data.company.RequestVerified.length > 0
   )
 
+  const InfoRow = ({ label, value }: { label: string; value?: React.ReactNode }) => (
+    <div className="flex flex-col md:flex-row gap-1 md:gap-3">
+      <span className="w-56 font-medium text-gray-900">{label}:</span>
+      <span className="text-gray-700">{value || '-'}</span>
+    </div>
+  );
+  
+
   // Hapus useEffect yang ada
 
   const handleAjukan = async () => {
@@ -46,155 +54,126 @@ const ProfileCompany = ({ data }: ProfileCompanyProps) => {
   };
   
   return (
-    <div className='max-w-4xl mx-auto p-6'>
-      <Card className='mb-6'>
-        <CardHeader>
-          <div className='flex items-center gap-6 mb-4'>
-            <div className='relative w-36 h-36'>
-              <Image
-                src={data.company.logo.src}
-                alt='Profile'
-                className='rounded-full object-cover'
-                fill
-              />
-            </div>
-            <div className='max-w-[600px]'>
-              <CardTitle className='text-xl font-bold text-green-800 mb-3'>
-                {data.company.companyName || 'Fullname'}
-              </CardTitle>
-              <CardDescription className='text-sm text-gray-500'>
-                {data.company.bio || 'about me'}
-              </CardDescription>
-            </div>
-          </div>
-          {data.company.isVerified ? (
-            <StatusVerifikasi type={'verified'} />
-          ) : checkIsWaiting ? (
-            <div className='my-4 w-full flex flex-col gap-4'>
-              <StatusVerifikasi type={'waiting'} />
-              {errorMessage && <FormError message={errorMessage} />}
-              {successMessage && <FormSuccess message={successMessage} />}
-            </div>
+    <div className="max-w-4xl mx-auto p-6 space-y-6">
+  {/* Profil Penyedia */}
+  <Card className="shadow-md border rounded-2xl overflow-hidden">
+    <CardHeader className=" p-6 border-b ">
+      <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
+        <div className="relative w-24 h-24 md:w-36 md:h-36 min-w-[6rem] md:min-w-[9rem] mx-auto md:mx-0">
+          <Image
+            src={data.company.logo.src}
+            alt="Profile"
+            className="rounded-full object-cover"
+            fill
+          />
+        </div>
+        <div className="text-center md:text-left flex-1">
+          <CardTitle className="text-2xl font-bold text-green-800 mb-1">
+            {data.company.companyName || 'Nama Perusahaan'}
+          </CardTitle>
+          <CardDescription className="text-sm text-gray-600">
+            {data.company.bio || 'Tentang perusahaan'}
+          </CardDescription>
+        </div>
+      </div>
+
+      {/* Status Verifikasi */}
+      <div className="mt-4 space-y-4">
+        {data.company.isVerified ? (
+          <StatusVerifikasi type="verified" />
+        ) : checkIsWaiting ? (
+          <>
+            <StatusVerifikasi type="waiting" />
+            {errorMessage && <FormError message={errorMessage} />}
+            {successMessage && <FormSuccess message={successMessage} />}
+          </>
+        ) : (
+          <>
+            <StatusVerifikasi type="" />
+            <Button
+              onClick={handleAjukan}
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-md transition-colors"
+            >
+              Ajukan Verifikasi
+            </Button>
+          </>
+        )}
+      </div>
+      {/* Tombol Logout */}
+  <div className="flex justify-end pt-3">
+    <Button
+      onClick={() => signOut({ callbackUrl: '/' })}
+      variant="destructive"
+      className="text-sm font-semibold"
+    >
+      Logout
+    </Button>
+  </div>
+    </CardHeader>
+  </Card>
+
+  {/* Informasi Pribadi */}
+  <Card className="shadow-sm border rounded-xl">
+    <CardHeader className="p-6 border-b">
+      <CardTitle className="text-2xl font-bold text-green-800">
+        Informasi Pribadi
+      </CardTitle>
+    </CardHeader>
+    <CardContent className="p-6 text-sm text-gray-700 space-y-2">
+      <InfoRow label="Nama Lengkap" value={data.fullname} />
+      <InfoRow label="Email" value={data.email} />
+      <InfoRow label="Peran" value={data.role.toLowerCase()} />
+    </CardContent>
+  </Card>
+
+  {/* Informasi Penyedia Kerja */}
+  <Card className="shadow-sm border rounded-xl">
+    <CardHeader className="p-6 border-b">
+      <CardTitle className="text-2xl font-bold text-green-800">
+        Informasi Penyedia Kerja
+      </CardTitle>
+    </CardHeader>
+    <CardContent className="p-6 text-sm text-gray-700 space-y-2">
+      <InfoRow label="Nama Penyedia Kerja" value={data.company.companyName} />
+      <InfoRow label="Industri" value={data.company.industry} />
+      <InfoRow label="Skala Perusahaan" value={data.company.ownership} />
+      <InfoRow label="Nomor Telepon" value={data.company.phone} />
+      <InfoRow
+        label="Nomor Telepon Penyedia Kerja"
+        value={data.company.companyPhone}
+      />
+      <InfoRow
+        label="Website Penyedia Kerja"
+        value={
+          data.company.website ? (
+            <a
+              href={`https://${data.company.website}`}
+              className="text-green-600 underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {data.company.website}
+            </a>
           ) : (
-            <>
-              <StatusVerifikasi type={''} />
-              <Button
-                onClick={handleAjukan}
-                className='w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-md transition-colors mt-2'
-              >
-                Ajukan Verifikasi
-              </Button>
-            </>
-          )}
-        </CardHeader>
-      </Card>
-      <div className='mb-6 flex justify-end'>
-  <Button
-    onClick={() => signOut({ callbackUrl: '/' })}
-    variant='destructive'
-    className='text-sm font-semibold'
-  >
-    Logout
-  </Button>
+            '-'
+          )
+        }
+      />
+      <InfoRow label="Alamat Penyedia Kerja" value={data.company.address} />
+      <InfoRow label="Kota" value={data.company.city} />
+    </CardContent>
+  </Card>
+
+  {/* Footer */}
+  <CardFooter className="text-center pt-6 border-t">
+    <Link
+      href={`/dashboard`}
+      className="text-lg font-medium text-green-600 hover:text-green-700 hover:underline"
+    >
+      Kembali ke Dashboard
+    </Link>
+  </CardFooter>
 </div>
-<Card className='mb-6'>
-  <CardHeader>
-    <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
-      Informasi Pribadi
-    </CardTitle>
-  </CardHeader>
-  <CardContent className='mb-3 text-sm font-semibold text-gray-800'>
-    <div className='flex items-center gap-3 mb-2'>
-      <span className='text-gray-900'>Nama Lengkap:</span>
-      <span className='text-gray-600'>{data.fullname || '-'}</span>
-    </div>
-    <div className='flex items-center gap-3 mb-2'>
-      <span className='text-gray-900'>Email:</span>
-      <span className='text-gray-600'>{data.email || '-'}</span>
-    </div>
-    <div className='flex items-center gap-3 mb-2'>
-      <span className='text-gray-900'>Peran:</span>
-      <span className='text-gray-600'>
-        {data.role.toLowerCase() || '-'}
-      </span>
-    </div>
-  </CardContent>
-</Card>
-
-<Card className='mb-6'>
-  <CardHeader>
-    <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
-      Informasi Penyedia Kerja
-    </CardTitle>
-  </CardHeader>
-  <CardContent className='mb-3 text-sm font-semibold text-gray-800'>
-    <div className='flex items-center gap-3 mb-2'>
-      <span className='text-gray-900'>Nama Penyedia Kerja:</span>
-      <span className='text-gray-600'>
-        {data.company.companyName || '-'}
-      </span>
-    </div>
-    <div className='flex items-center gap-3 mb-2'>
-      <span className='text-gray-900'>Industri:</span>
-      <span className='text-gray-600'>
-        {data.company.industry || '-'}
-      </span>
-    </div>
-    <div className='flex items-center gap-3 mb-2'>
-      <span className='text-gray-900'>Status Kepemilikan:</span>
-      <span className='text-gray-600'>
-        {data.company.ownership || '-'}
-      </span>
-    </div>
-    <div className='flex items-center gap-3 mb-2'>
-      <span className='text-gray-900'>Nomor Telepon:</span>
-      <span className='text-gray-600'>{data.company.phone || '-'}</span>
-    </div>
-    <div className='flex items-center gap-3 mb-2'>
-      <span className='text-gray-900'>Nomor Telepon Penyedia Kerja:</span>
-      <span className='text-gray-600'>
-        {data.company.companyPhone || '-'}
-      </span>
-    </div>
-    <div className='flex items-center gap-3 mb-2'>
-      <span className='text-gray-900'>Website Penyedia Kerja:</span>
-      <span className='text-gray-600'>
-        <a href={`https://${data.company.website}`}>
-          {data.company.website || '-'}
-        </a>
-      </span>
-    </div>
-    <div className='flex items-center gap-3 mb-2'>
-      <span className='text-gray-900'>Alamat Penyedia Kerja:</span>
-      <span className='text-gray-600'>{data.company.address || '-'}</span>
-    </div>
-    <div className='flex items-center gap-3 mb-2'>
-      <span className='text-gray-900'>Kota:</span>
-      <span className='text-gray-600'>{data.company.city || '-'}</span>
-    </div>
-  </CardContent>
-</Card>
-
-<Card className='mb-6'>
-  <CardHeader>
-    <CardTitle className='text-3xl font-bold text-green-800 mb-3'>
-      Dokumen Verifikasi
-    </CardTitle>
-  </CardHeader>
-  <CardContent className='mb-3 text-sm font-semibold text-gray-800'>
-    Tidak Ada Dokumen
-  </CardContent>
-</Card>
-
-<CardFooter className='text-center pt-6 border-t'>
-  <Link
-    href={`/dashboard`}
-    className='text-lg font-medium text-green-600 hover:text-green-700 hover:underline'
-  >
-    Kembali ke Dashboard
-  </Link>
-</CardFooter>
-    </div>
   )
 }
 
