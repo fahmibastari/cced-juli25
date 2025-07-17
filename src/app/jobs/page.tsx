@@ -15,9 +15,6 @@ export default async function JobsListPage() {
     },
     include: {
       company: {
-        select: {
-          industry: true,
-        },
         include: {
           logo: true,
         },

@@ -37,52 +37,60 @@ interface JobDetailPublicProps {
 const JobDetailPublic = ({ job }: JobDetailPublicProps) => {
   return (
     <Card className="mx-auto w-full max-w-3xl rounded-lg bg-white shadow-xl my-10 px-6">
-      <CardHeader className="border-b pb-6 px-4 sm:px-6 md:px-8">
-  <div className="flex items-center justify-between flex-wrap gap-4">
-    {/* Judul dan Logo */}
-    <div className="flex items-center gap-4 flex-grow min-w-0 max-w-full">
-      <Avatar className="h-16 w-16 flex-shrink-0">
-        <AvatarImage
-          src={job?.company?.logo?.src || '/default-logo.png'}
-          alt={`${job?.company?.companyName || 'Logo'} Logo`}
-          className="object-contain"
-        />
-        <AvatarFallback>
-          <User className="h-10 w-10" />
-        </AvatarFallback>
-      </Avatar>
-      <div className="flex flex-col truncate min-w-0 max-w-[calc(100vw-112px)]">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-green-800 truncate leading-tight">
-          {job?.title}
-        </h2>
-        <p className="text-sm text-gray-500 truncate">
-          Dibuat oleh: {job?.company?.companyName || 'Penyedia Kerja'}
-        </p>
-      </div>
-    </div>
+           <CardHeader className="border-b pb-6 px-4 sm:px-6 md:px-8">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4">
+          {/* Job Title and Company Logo */}
+          <div className="flex items-center gap-4 sm:gap-6 flex-grow min-w-0 max-w-full">
+            <Avatar className="h-16 w-16 flex-shrink-0">
+              <AvatarImage
+                src={job?.company?.logo?.src || '/default-logo.png'}
+                alt={`${job?.company?.companyName || 'Logo'} Logo`}
+                className="object-contain"
+              />
+              <AvatarFallback>
+                <User className="h-10 w-10" />
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col truncate min-w-0 max-w-[calc(100vw-112px)]">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-green-800 truncate leading-tight">
+                {job?.title}
+              </h2>
+              <p className="text-sm text-gray-500 truncate">
+                Dibuat oleh: {job?.company?.companyName || 'Penyedia Kerja'}
+              </p>
+            </div>
+          </div>
 
-    {/* Tombol share */}
-    <div className="flex items-center gap-3 flex-shrink-0">
-      <Button
-        variant="ghost"
-        size="icon"
-        aria-label="Bagikan ke WhatsApp"
-        onClick={() => {
-          const origin = typeof window !== 'undefined' ? window.location.origin : ''
-          const jobId = job.id || ''
-          const jobTitle = job.title || 'Lowongan'
-          const companyName = job.company?.companyName || 'Perusahaan'
-          const jobUrl = `${origin}/jobs/${jobId}`
-          const shareText = `Cek lowongan kerja di *${companyName}*: "${jobTitle}"\n\n${jobUrl}`
-          const waLink = `https://wa.me/?text=${encodeURIComponent(shareText)}`
-          window.open(waLink, '_blank')
-        }}
-      >
-        <Share2 className="h-5 w-5 text-green-700" />
-      </Button>
-    </div>
-  </div>
-</CardHeader>
+          {/* Share and Action Button */}
+          <div className="flex items-center gap-3 flex-shrink-0 sm:mt-0 mt-4">
+            {/* Share Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Bagikan ke WhatsApp"
+              onClick={() => {
+                const origin = typeof window !== 'undefined' ? window.location.origin : ''
+                const jobId = job.id || ''
+                const jobTitle = job.title || 'Lowongan'
+                const companyName = job.company?.companyName || 'Perusahaan'
+                const jobUrl = `${origin}/jobs/${jobId}`
+                const shareText = `Cek lowongan kerja di *${companyName}*: "${jobTitle}"\n\n${jobUrl}`
+                const waLink = `https://wa.me/?text=${encodeURIComponent(shareText)}`
+                window.open(waLink, '_blank')
+              }}
+            >
+              <Share2 className="h-5 w-5 text-green-700" />
+            </Button>
+
+            {/* Apply Button */}
+            <div className="mt-2 sm:mt-0">
+              <Link href="/login" passHref>
+                <Button className="w-full max-w-xs mx-auto">Login untuk Melamar</Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </CardHeader>
 
       {job.posterUrl ? (
   <div className="my-4 rounded-lg overflow-hidden shadow-sm">

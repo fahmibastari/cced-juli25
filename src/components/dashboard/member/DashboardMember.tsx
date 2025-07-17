@@ -279,8 +279,7 @@ export default function DashboardMember({ jobs, user }: DashboardMemberProps) {
           <ScrollArea className={`w-full rounded-md px-4 shadow-sm border ${isDesktop ? 'h-[600px]' : 'h-auto max-h-[60vh]'}`}>
             {selectedJob ? (
               <>
-    {console.log('📦 selectedJob.posterFile:', selectedJob.posterFile)}
-    {console.log('industri', selectedJob.company?.industry)}
+
               <JobDetail
               detailData={{
                 ...selectedJob,

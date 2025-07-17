@@ -102,15 +102,6 @@ const DashboardAdmin = async () => {
         />
         {/* Total Lowongan */}
         <DasboardCard
-          title="Total Lowongan"
-          description="Lowongan aktif"
-          content={0}
-          href="/admin/jobs"
-          icon={<FaBriefcase className="text-white text-4xl" />}
-          className="bg-white"
-        />
-        {/* Total Lowongan */}
-        <DasboardCard
           title="Ganti Password User"
           description="Untuk reset password user"
           href="/admin/passwords"
