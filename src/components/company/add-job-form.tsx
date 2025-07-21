@@ -389,7 +389,7 @@ formData.append('posterUrl', data.posterUrl ?? '')
                 )}
               />
 
-<FormField
+{/* <FormField
   control={form.control}
   name="deadline"
   render={({ field }) => (
@@ -418,8 +418,18 @@ formData.append('posterUrl', data.posterUrl ?? '')
       <FormMessage />
     </FormItem>
   )}
-/>
+/> */}
+<FormLabel>Tanggal</FormLabel>
+<FormItem>
+<FormControl>
+<input 
+      type="datetime-local" 
+      name="deadline"/>
 
+</FormControl>
+</FormItem>
+
+    
     <FormItem>
       <FormLabel>Tipe Apply</FormLabel>
       <Select

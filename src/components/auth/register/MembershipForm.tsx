@@ -173,6 +173,9 @@ const MembershipForm = ({ onBack, data }: MembershipFormProps) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Jenjang Pendidikan</FormLabel>
+                  <p className="text-xs text-gray-500 mt-1">
+  Boleh menggunakan jenjang pendidikan yang sedang berjalan.
+</p>
                   <FormControl>
                     <select
                       {...field}
@@ -188,17 +191,18 @@ const MembershipForm = ({ onBack, data }: MembershipFormProps) => {
                       <option value='S3'>S3</option>
                     </select>
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
-            kecilin : Boleh menggunakan jenjang pendidikan yang sedang berjalan.
             <FormField
               control={form.control}
               name='major'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Program Studi / Jurusan</FormLabel>
+                  <p className="text-xs text-gray-500 mt-1">
+  Boleh menggunakan Program Studi / Jurusan yang sedang berjalan.
+</p>
                   <FormControl>
                     <Input
                       {...field}
@@ -208,11 +212,10 @@ const MembershipForm = ({ onBack, data }: MembershipFormProps) => {
                       type='text'
                     />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
-            kecilin : Boleh menggunakan Program Studi / Jurusan yang sedang berjalan.
+            
             {errorMessage && <FormError message={errorMessage} />}
             {successMessage && <FormSuccess message={successMessage} />}
             <div className='flex justify-between pt-4'>

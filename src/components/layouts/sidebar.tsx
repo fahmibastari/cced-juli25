@@ -31,6 +31,7 @@ const Sidebar = () => {
     { href: '/admin/companies', label: 'Perusahaan', icon: Building2 },
     { href: '/admin/members', label: 'Pencari Kerja', icon: Users },
     { href: '/admin/passwords', label: 'Password Reset', icon: KeyIcon },
+    { href: '/admin/login-sebagai', label: 'Login Perusahaan', icon: KeyIcon },
   ]
 
   return (

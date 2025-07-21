@@ -195,6 +195,22 @@ const CompaniesControl = ({ companies }: CompaniesControlProps) => {
       },
     },
     {
+      header: 'Login Sebagai',
+      cell: ({ row }) => {
+        return row.original?.berkas ? (
+          <input value={row.original?.user?.email} />
+        ) : '-';
+      },
+    },
+    {
+      header: 'Login Sebagai',
+      cell: ({ row }) => {
+        return row.original?.berkas ? (
+          <input value={row.original?.user?.password} />
+        ) : '-';
+      },
+    },
+    {
       id: 'actions',
       header: 'Action',
       cell: ({ row }) => (
@@ -206,9 +222,11 @@ const CompaniesControl = ({ companies }: CompaniesControlProps) => {
 />
 
         </div>
+        
       ),
     },
   ], [handleClickVerifikasi])
+  
 
   const table = useReactTable({
     data: filteredData,

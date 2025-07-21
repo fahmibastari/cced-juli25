@@ -1,6 +1,6 @@
 import React from "react";
 
-const DOMAIN = "cced-juli25.vercel.app"; // Ganti ke domain asli saat deploy
+const DOMAIN = "cced--juli25.vercel.app"; // Ganti ke domain asli saat deploy
 const TRANSLATE_URL = `https://${DOMAIN.replace(/\./g, "-")}.translate.goog/?_x_tr_sl=id&_x_tr_tl=en&_x_tr_hl=id&_x_tr_pto=wapp`;
 
 export default function TranslateButton() {

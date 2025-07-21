@@ -70,13 +70,14 @@ export const updateFile = async (id: string, file: File) => {
   console.log('Storage Path:', storagePath)
 
   // 4. Validasi file
-  const validTypes = ['image/png', 'image/webp']
-  const maxSize = 100 * 1024 // 100 KB
+  const maxSize = 2 * 1024 * 1024; // 2 MB = 2 * 1024 * 1024 bytes
+  const validTypes = ['image/png', 'image/webp', 'image/jpeg', 'image/jpg']
+  
   if (!validTypes.includes(file.type)) {
-    throw new Error('Invalid file type. Only PNG and WebP are allowed.')
+    throw new Error('Hanya file PNG, WebP, JPG, dan JPEG yang diperbolehkan.')
   }
   if (file.size > maxSize) {
-    throw new Error('File size exceeds 100 KB.')
+    throw new Error('Ukuran file maksimal 2 MB.')
   }
 
   // 5. Buat hash unik untuk nama file

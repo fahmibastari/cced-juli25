@@ -14,6 +14,7 @@ import { useMemo, useState } from 'react'
 import { User, Company, File } from '@prisma/client'
 import { FormError } from '../auth/form-error'
 import { FormSuccess } from '../auth/form-succsess'
+import Link from 'next/link'
 
 // ✅ Add these interfaces right after your imports
 interface ExtendedUser extends User {
@@ -142,8 +143,7 @@ const UsersControl = ({ users,authenticatedUser }: UsersControlProps) => {
         <TableCell className="font-medium">{user.email}</TableCell>
 <TableCell>{user.fullname}</TableCell>
 <TableCell>{user.role}</TableCell>
-<TableCell>{user.id}</TableCell>
-        <TableCell className="text-right">
+        <TableCell className="text-right"><Link href={`/admin/login-sebagai/?${user.id}`}>{user.id}</Link>
         </TableCell>
       </TableRow>
     ))
