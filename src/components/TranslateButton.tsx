@@ -1,26 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router"; // Menggunakan useRouter dari Next.js
+import React from "react";
 
 const DOMAIN = "cced--juli25.vercel.app"; // Ganti ke domain asli saat deploy
+const TRANSLATE_URL = `https://${DOMAIN.replace(/\./g, "-")}.translate.goog/?_x_tr_sl=id&_x_tr_tl=en&_x_tr_hl=id&_x_tr_pto=wapp`;
 
 export default function TranslateButton() {
-  const [currentURL, setCurrentURL] = useState(""); // Menyimpan URL halaman saat ini
-  const [isClient, setIsClient] = useState(false); // Untuk memastikan kode hanya dijalankan di sisi klien
-  const [router, setRouter] = useState<any>(null); // State untuk menyimpan router setelah mount
-  const nextRouter = useRouter(); // Mengambil router dari Next.js
-
-  // Hanya jalankan kode ini di sisi klien
-  useEffect(() => {
-    setIsClient(true); // Menandakan bahwa ini dijalankan di sisi klien
-    setRouter(nextRouter); // Set router setelah komponen dimuat
-    setCurrentURL(window.location.href); // Set URL saat ini
-  }, [nextRouter]);
-
-  // Menunggu router untuk dipasang dan memastikan itu berjalan di klien
-  const TRANSLATE_URL = isClient && router
-    ? `https://${DOMAIN.replace(/\./g, "-")}.translate.goog${router.asPath}?_x_tr_sl=id&_x_tr_tl=en&_x_tr_hl=id&_x_tr_pto=wapp&_x_tr_hist=true`
-    : "#"; // Placeholder jika router belum tersedia
-
   return (
     <a
       href={TRANSLATE_URL}
