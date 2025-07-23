@@ -1,9 +1,11 @@
 import React from "react";
 
 const DOMAIN = "cced--juli25.vercel.app"; // Ganti ke domain asli saat deploy
-const TRANSLATE_URL = `https://${DOMAIN}.translate.goog${window.location.pathname}?_x_tr_sl=id&_x_tr_tl=en&_x_tr_hl=id&_x_tr_pto=wapp`;
 
 export default function TranslateButton() {
+  const currentUrl = window.location.href; // Get the current page URL
+  const TRANSLATE_URL = `https://${DOMAIN.replace(/\./g, "-")}.translate.goog/?_x_tr_sl=id&_x_tr_tl=en&_x_tr_hl=id&_x_tr_pto=wapp&u=${encodeURIComponent(currentUrl)}`;
+
   return (
     <a
       href={TRANSLATE_URL}
