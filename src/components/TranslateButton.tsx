@@ -1,7 +1,11 @@
 import React from "react";
 
 const DOMAIN = "cced--juli25.vercel.app"; // Ganti ke domain asli saat deploy
-const TRANSLATE_URL = `https://${DOMAIN.replace(/\./g, "-")}.translate.goog/?_x_tr_sl=id&_x_tr_tl=en&_x_tr_hl=id&_x_tr_pto=wapp`;
+const currentPage = window.location.pathname.split('/').pop() || "home"; // Mengambil bagian terakhir dari URL atau "home" jika tidak ada
+
+const TRANSLATE_URL = `https://${DOMAIN.replace(/\./g, "-")}.translate.goog/${currentPage}?_x_tr_sl=id&_x_tr_tl=en&_x_tr_hl=id&_x_tr_pto=wapp&_x_tr_hist=true`;
+
+console.log(TRANSLATE_URL); // Hasil URL untuk diterapkan pada tombol translate
 
 export default function TranslateButton() {
   return (
