@@ -1,16 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 
 const DOMAIN = "cced--juli25.vercel.app"; // Ganti ke domain asli saat deploy
-const currentPage = window.location.pathname.split('/').pop() || "home"; // Mengambil bagian terakhir dari URL atau "home" jika tidak ada
+const API_KEY = "213974bd-ec20-48e9-8233-9f5835da5b67:fx"; // Ganti dengan API key kamu
 
-const TRANSLATE_URL = `https://${DOMAIN.replace(/\./g, "-")}.translate.goog/${currentPage}?_x_tr_sl=id&_x_tr_tl=en&_x_tr_hl=id&_x_tr_pto=wapp&_x_tr_hist=true`;
+const TranslateButton = () => {
+  const [translatedUrl, setTranslatedUrl] = useState("");
 
-console.log(TRANSLATE_URL); // Hasil URL untuk diterapkan pada tombol translate
+  // Fungsi untuk membuat URL terjemahan
+  const getTranslatedUrl = async () => {
+    const currentPage = window.location.pathname.split("/").pop() || "home"; // Mengambil halaman yang sedang dibuka
+    
+    // Memanggil API DeepL
+    const response = await fetch(`https://api-free.deepl.com/v2/translate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        auth_key: API_KEY,
+        text: currentPage,
+        source_lang: "ID",
+        target_lang: "EN",
+      }),
+    });
 
-export default function TranslateButton() {
+    const data = await response.json();
+    if (data.translations && data.translations[0]) {
+      const translatedText = data.translations[0].text;
+      setTranslatedUrl(`https://${DOMAIN.replace(/\./g, "-")}.translate.goog/${translatedText}?_x_tr_sl=id&_x_tr_tl=en&_x_tr_hl=id&_x_tr_pto=wapp`);
+    }
+  };
+
   return (
     <a
-      href={TRANSLATE_URL}
+      href={translatedUrl || "#"} // Jika URL belum tersedia, tetap tidak mengarah kemana-mana
       target="_blank"
       rel="noopener noreferrer"
       title="Translate to English"
@@ -25,6 +48,7 @@ export default function TranslateButton() {
         focus:outline-none focus:ring-2 focus:ring-blue-300
         select-none
       "
+      onClick={getTranslatedUrl}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -41,4 +65,6 @@ export default function TranslateButton() {
       </svg>
     </a>
   );
-}
+};
+
+export default TranslateButton;
