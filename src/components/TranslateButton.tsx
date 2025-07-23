@@ -3,19 +3,19 @@ import React, { useEffect, useState } from "react";
 const DOMAIN = "cced--juli25.vercel.app"; // Ganti ke domain asli saat deploy
 
 export default function TranslateButton() {
-  const [currentURL, setCurrentURL] = useState(""); // Awalnya kosong, karena tidak bisa akses window di server
+  const [currentURL, setCurrentURL] = useState(""); // Menyimpan URL halaman saat ini
 
   useEffect(() => {
-    // Pastikan kode hanya dijalankan di browser
+    // Periksa jika berada di browser (menghindari error di server-side rendering)
     if (typeof window !== "undefined") {
-      setCurrentURL(window.location.href); // Update URL setelah komponen dirender di browser
+      setCurrentURL(window.location.href); // Ambil URL halaman saat ini
     }
-  }, []); // Hanya dijalankan sekali setelah render di browser
+  }, []);
 
-  // Hanya membuat URL translate jika currentURL sudah tersedia
+  // Pastikan URL translate mengarah ke halaman yang sedang dibuka
   const TRANSLATE_URL = currentURL
-    ? `https://${DOMAIN.replace(/\./g, "-")}.translate.goog/?_x_tr_sl=id&_x_tr_tl=en&_x_tr_hl=id&_x_tr_pto=wapp&u=${encodeURIComponent(currentURL)}`
-    : "#"; // Menampilkan placeholder atau tautan yang tidak valid sebelum currentURL tersedia
+    ? `https://${DOMAIN.replace(/\./g, "-")}.translate.goog/${window.location.pathname}?_x_tr_sl=id&_x_tr_tl=en&_x_tr_hl=id&_x_tr_pto=wapp&_x_tr_hist=true`
+    : "#"; // Menunggu URL halaman sebelum tombol diterjemahkan
 
   return (
     <a
