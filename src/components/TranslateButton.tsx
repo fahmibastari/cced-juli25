@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const DOMAIN = "cced--juli25.vercel.app"; // Ganti ke domain asli saat deploy
+const DOMAIN = "cced-juli25.vercel.app"; // Ganti ke domain asli saat deploy
 const API_KEY = "213974bd-ec20-48e9-8233-9f5835da5b67:fx"; // Ganti dengan API key kamu
 
 const TranslateButton = () => {
