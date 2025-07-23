@@ -19,7 +19,7 @@ export function IndustryCombobox({ value, onChange }: IndustryComboboxProps) {
   useEffect(() => {
     // Jika memilih "Lainnya", kirimkan nilai kosong untuk menandakan "semua industri"
     if (value === 'Lainnya') {
-      onChange('semua') // Ganti dengan 'semua' agar filter tidak terbatas
+      onChange('Semua Bidang') // Gantie dengan 'semua' agar filter tidak terbatas
     }
   }, [value, onChange])
 
@@ -48,7 +48,7 @@ export function IndustryCombobox({ value, onChange }: IndustryComboboxProps) {
                   value={industry}
                   onSelect={(currentValue) => {
                     if (currentValue === 'Lainnya') {
-                      onChange('semua') // Mengirimkan 'semua' untuk menampilkan semua industri
+                      onChange('Semua Bidang') // Mengirimkan 'semua' untuk menampilkan semua industri
                     } else {
                       onChange(currentValue)
                     }

@@ -143,8 +143,7 @@ const UsersControl = ({ users,authenticatedUser }: UsersControlProps) => {
         <TableCell className="font-medium">{user.email}</TableCell>
 <TableCell>{user.fullname}</TableCell>
 <TableCell>{user.role}</TableCell>
-        <TableCell className="text-right"><Link href={`/admin/login-sebagai/?${user.id}`}>{user.id}</Link>
-        </TableCell>
+        <TableCell><Link href={`/admin/login-sebagai/?${user.id}`}>{user.id}</Link></TableCell>
       </TableRow>
     ))
   )}

@@ -59,13 +59,30 @@ function ExperienceForm({
   onSubmit: (values: any) => void,
   defaultValues?: any
 }) {
-  const { register, handleSubmit, formState: { errors }, watch } = useFormExperience({
+  const { register, handleSubmit, formState: { errors }, watch, setValue, reset } = useFormExperience({
     resolver: zodResolver(experienceSchema),
     defaultValues
   });
 
   const isCurrentJob = watch("isCurrentJob");
-  
+
+  // Gunakan useEffect untuk memperbarui nilai form setiap kali defaultValues berubah (misalnya, saat editingExperience dipilih)
+  useEffect(() => {
+    if (defaultValues) {
+      reset(defaultValues); // Reset form dengan nilai default yang diterima
+    }
+  }, [defaultValues, reset]);
+
+  // Menggunakan useEffect untuk memperbarui nilai `endDate` saat isCurrentJob berubah menjadi true
+  useEffect(() => {
+    if (isCurrentJob) {
+      // Set endDate to "Sekarang" when isCurrentJob is true
+      const currentDate = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+      setValue("endDate", currentDate);  // Update the value of endDate
+    } else {
+      setValue("endDate", "");  // Reset endDate if not a current job
+    }
+  }, [isCurrentJob, setValue]);
 
   return (
     <form
@@ -112,6 +129,7 @@ function ExperienceForm({
     </form>
   );
 }
+
 const EditProfileMember = ({ data }: EditProfileMemberProps) => {
   const [errorMessageImage, setErrorMessageImage] = useState('')
   const [successMessageImage, setSuccessMessageImage] = useState('')
@@ -140,49 +158,48 @@ const [experiences, setExperiences] = useState(data.member?.experience || [])
 
 
 const handleEditExperience = (exp: any) => {
-  setEditingExperience(exp)
-  setShowExperienceForm(true)
-}
+  setEditingExperience(exp);
+  setShowExperienceForm(true);  // Show the form for editing
+};
 
 const handleDeleteExperience = async (id: string) => {
-  setErrorMessageExperience('')
-  setSuccessMessageExperience('')
-  const res = await deleteExperienceMember(id)
-  if (res.error) setErrorMessageExperience(res.error ?? "")
+  setErrorMessageExperience('');
+  setSuccessMessageExperience('');
+  const res = await deleteExperienceMember(id);
+  if (res.error) setErrorMessageExperience(res.error ?? "");
   else {
-    setSuccessMessageExperience(res.success ?? "")
-    setExperiences(experiences.filter((e: any) => e.id !== id))
+    setSuccessMessageExperience(res.success ?? "");
+    setExperiences(experiences.filter((e: any) => e.id !== id));
   }
-}
+};
+
 
 const handleAddOrUpdateExperience = async (values: any) => {
-  setErrorMessageExperience('')
-  setSuccessMessageExperience('')
+  setErrorMessageExperience('');
+  setSuccessMessageExperience('');
   if (editingExperience) {
-    // Edit
-    const res = await updateExperienceMember(editingExperience.id, values)
-    if (res.error) setErrorMessageExperience(res.error ?? "")
+    // Edit pengalaman kerja
+    const res = await updateExperienceMember(editingExperience.id, values);
+    if (res.error) setErrorMessageExperience(res.error ?? '');
     else {
-      setSuccessMessageExperience(res.success ?? "")
+      setSuccessMessageExperience(res.success ?? '');
       setExperiences(experiences.map((e: any) =>
         e.id === editingExperience.id ? { ...e, ...values } : e
-      ))
-      setEditingExperience(null)
-      setShowExperienceForm(false)
+      ));
+      setEditingExperience(null);
+      setShowExperienceForm(false);  // Close form after update
     }
   } else {
-    // Add
-    const res = await addExperienceMember(data.member.id, values)
-    if (res.error) setErrorMessageExperience(res.error ?? "")
+    // Menambahkan pengalaman kerja baru
+    const res = await addExperienceMember(data.member.id, values);
+    if (res.error) setErrorMessageExperience(res.error ?? '');
     else {
-      setSuccessMessageExperience(res.success ?? "")
-      setExperiences([...experiences, { ...values, id: Math.random().toString() }]) // id random dummy
-      setShowExperienceForm(false)
+      setSuccessMessageExperience(res.success ?? '');
+      setExperiences([...experiences, { ...values, id: Math.random().toString() }]);  // Dummy ID
+      setShowExperienceForm(false);  // Close form after adding
     }
   }
-}
-
-  
+};
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -884,8 +901,15 @@ console.log('Skills dari data:', data.skills)
                 <span className="ml-2 text-gray-500">@ {exp.company || '-'}</span>
               </div>
               <div className="text-gray-600 text-sm">
-                {exp.startDate ? new Date(exp.startDate).toLocaleDateString() : ''} - {exp.endDate ? new Date(exp.endDate).toLocaleDateString() : (exp.isCurrentJob ? 'Sekarang' : '')}
-              </div>
+  {exp.startDate ? new Date(exp.startDate).toLocaleDateString() : ''} - 
+  {exp.isCurrentJob 
+    ? 'Sekarang'  // Jika isCurrentJob dicentang, tampilkan 'Sekarang'
+    : exp.endDate 
+      ? new Date(exp.endDate).toLocaleDateString()  // Tampilkan endDate jika ada
+      : '' // Jika tidak ada endDate dan bukan pekerjaan sekarang, kosongkan
+  }
+</div>
+
             </div>
             {exp.description && (
               <div className="mt-1 text-sm text-gray-700">{exp.description}</div>
@@ -909,12 +933,20 @@ console.log('Skills dari data:', data.skills)
     </Button>
 
     {showExperienceForm && (
-      <ExperienceForm
-        onClose={() => setShowExperienceForm(false)}
-        onSubmit={handleAddOrUpdateExperience}
-        defaultValues={editingExperience}
-      />
-    )}
+  <ExperienceForm
+    onClose={() => setShowExperienceForm(false)}
+    onSubmit={handleAddOrUpdateExperience}
+    defaultValues={editingExperience || {
+      position: '',
+      company: '',
+      startDate: '',
+      endDate: '',
+      isCurrentJob: false,
+      description: ''
+    }}
+  />
+)}
+
   </CardContent>
 </Card>
 

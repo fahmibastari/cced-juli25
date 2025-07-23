@@ -211,7 +211,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 name="companyName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nama Perusahaan*</FormLabel>
+                    <FormLabel>*Nama Perusahaan</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -231,7 +231,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
   name="industry"
   render={({ field }) => (
     <FormItem>
-      <FormLabel>Bidang Industri*</FormLabel>
+      <FormLabel>*Bidang Industri</FormLabel>
       <FormControl>
         <IndustryCombobox value={field.value} onChange={field.onChange} />
       </FormControl>
@@ -248,7 +248,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 name="ownership"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Skala Perusahaan*</FormLabel>
+                    <FormLabel>*Skala Perusahaan</FormLabel>
                     <FormControl>
                       <select
                         {...field}
@@ -272,7 +272,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nomor Telepon*</FormLabel>
+                    <FormLabel>*Nomor Telepon</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -292,7 +292,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 name="companyPhone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nomor Telepon Perusahaan*</FormLabel>
+                    <FormLabel>*Nomor Telepon Perusahaan</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -315,7 +315,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 name="website"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Website Penyedia Kerja</FormLabel>
+                    <FormLabel>*Website Penyedia Kerja</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -335,7 +335,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 name="publicMail"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email Publik</FormLabel>
+                    <FormLabel>*Email Publik</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -355,7 +355,7 @@ const DetailCompanyForm = ({ onBack, data }: CompanyFormProps) => {
                 name="bio"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Biodata Perusahaan</FormLabel>
+                    <FormLabel>*Biodata Perusahaan</FormLabel>
                     <FormControl>
                       <Textarea
                         {...field}

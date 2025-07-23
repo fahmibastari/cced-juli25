@@ -255,17 +255,22 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
 </Card>
 
 
-  {/* Pengalaman Kerja Card */}
-  <Card className='bg-white shadow-lg rounded-lg border p-6 mb-6'>
-    <CardHeader>
-      <CardTitle className='text-2xl font-bold text-green-800 mb-1'>
-        Pengalaman Kerja
-      </CardTitle>
-    </CardHeader>
-    <CardContent>
-      {data.member?.experience?.length > 0 ? (
-        <ul className='space-y-4'>
-          {data.member.experience.map((exp: any) => (
+<Card className='bg-white shadow-lg rounded-lg border p-6 mb-6'>
+  <CardHeader>
+    <CardTitle className='text-2xl font-bold text-green-800 mb-1'>
+      Pengalaman Kerja
+    </CardTitle>
+  </CardHeader>
+  <CardContent>
+    {data.member?.experience?.length > 0 ? (
+      <ul className='space-y-4'>
+        {data.member.experience
+          .sort((a: any, b: any) => {
+            const dateA = new Date(a.startDate);
+            const dateB = new Date(b.startDate);
+            return dateB.getTime() - dateA.getTime(); // Mengurutkan dari yang terbaru
+          })
+          .map((exp: any) => (
             <li key={exp.id} className="border-b pb-2">
               <div className="flex justify-between items-center">
                 <div>
@@ -281,12 +286,13 @@ const ProfileMember = ({ data }: ProfileMemberProps) => {
               {exp.description && <p className="text-gray-700 mt-1">{exp.description}</p>}
             </li>
           ))}
-        </ul>
-      ) : (
-        <p className='text-gray-500 italic'>Belum ada pengalaman kerja</p>
-      )}
-    </CardContent>
-  </Card>
+      </ul>
+    ) : (
+      <p className='text-gray-500 italic'>Belum ada pengalaman kerja</p>
+    )}
+  </CardContent>
+</Card>
+
 
 
        {/* Resume Card */}

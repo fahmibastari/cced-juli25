@@ -16,9 +16,14 @@ const ChangePasswordForm = ({ userId }: { userId: string }) => {
   const [error, setError] = useState<string | undefined>()
   const [success, setSuccess] = useState<string | undefined>()
 
-  // Inisialisasi useForm
+  // Inisialisasi useForm dengan defaultValues
   const methods = useForm({
     resolver: zodResolver(changePasswordSchema),
+    defaultValues: {
+      oldPassword: '',
+      newPassword: '',
+      confirmPassword: '',
+    }
   })
 
   const { control, handleSubmit, formState: { errors } } = methods
@@ -42,14 +47,10 @@ const ChangePasswordForm = ({ userId }: { userId: string }) => {
     <div className="mt-8">
       <Card className="shadow-lg">
         <CardHeader>
-          <p className="text-lg font-semibold text-green-700 mb-4">
-            Ubah Kata Sandi
-          </p>
           {error && <FormError message={error} />}
           {success && <FormSuccess message={success} />}
         </CardHeader>
         <CardContent>
-          {/* Membungkus form dengan FormProvider */}
           <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-6">
@@ -64,6 +65,7 @@ const ChangePasswordForm = ({ userId }: { userId: string }) => {
                           {...field}
                           type="password"
                           placeholder="Kata Sandi Lama"
+                          value={field.value || ''}  // Menyediakan nilai default
                         />
                       </FormControl>
                       <FormMessage />
@@ -81,6 +83,7 @@ const ChangePasswordForm = ({ userId }: { userId: string }) => {
                           {...field}
                           type="password"
                           placeholder="Kata Sandi Baru"
+                          value={field.value || ''}  // Menyediakan nilai default
                         />
                       </FormControl>
                       <FormMessage />
@@ -98,6 +101,7 @@ const ChangePasswordForm = ({ userId }: { userId: string }) => {
                           {...field}
                           type="password"
                           placeholder="Konfirmasi Kata Sandi Baru"
+                          value={field.value || ''}  // Menyediakan nilai default
                         />
                       </FormControl>
                       <FormMessage />

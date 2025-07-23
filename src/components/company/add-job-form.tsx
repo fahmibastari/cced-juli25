@@ -83,13 +83,14 @@ const AddJob = () => {
       if (Array.isArray(value)) {
         formData.append(key, JSON.stringify(value))
       } else if (value instanceof Date) {
-        formData.append(key, value.toISOString())
+        // Ubah waktu ke waktu lokal sebelum dikirim ke backend
+        formData.append(key, value.toLocaleString()); // Menggunakan waktu lokal
       } else if (typeof value === 'string' || typeof value === 'number') {
         formData.append(key, value.toString())
       } else {
         formData.append(key, '')
       }
-    })
+    });
     
 
 const fileInput = document.querySelector('input[name="posterFile"]') as HTMLInputElement
@@ -105,9 +106,9 @@ formData.append('posterUrl', data.posterUrl ?? '')
 
     
   
-    const result = await addNewJob(formData)
-    setSuccessMessage(result?.success ?? '')
-    setErrorMessage(result?.error ?? '')
+const result = await addNewJob(formData);
+setSuccessMessage(result?.success ?? '');
+setErrorMessage(result?.error ?? '');
   }
   
 
@@ -133,7 +134,7 @@ formData.append('posterUrl', data.posterUrl ?? '')
                 name='title'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Judul</FormLabel>
+                    <FormLabel>*Judul</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -209,7 +210,7 @@ formData.append('posterUrl', data.posterUrl ?? '')
                 name='status'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Status Lowongan</FormLabel>
+                    <FormLabel>*Status Lowongan</FormLabel>
                     <Select
                       disabled={isPending}
                       onValueChange={field.onChange}
@@ -236,7 +237,7 @@ formData.append('posterUrl', data.posterUrl ?? '')
   name="employmentType"
   render={({ field }) => (
     <FormItem>
-      <FormLabel>Status Pegawai</FormLabel>
+      <FormLabel>*Status Pegawai</FormLabel>
       <Select
         disabled={form.formState.isSubmitting}
         onValueChange={field.onChange}
@@ -261,7 +262,7 @@ formData.append('posterUrl', data.posterUrl ?? '')
   name="workTime"
   render={({ field }) => (
     <FormItem>
-      <FormLabel>Waktu Kerja</FormLabel>
+      <FormLabel>*Waktu Kerja</FormLabel>
       <Select
         disabled={form.formState.isSubmitting}
         onValueChange={field.onChange}
@@ -389,47 +390,61 @@ formData.append('posterUrl', data.posterUrl ?? '')
                 )}
               />
 
-{/* <FormField
+<FormField
   control={form.control}
   name="deadline"
   render={({ field }) => (
     <FormItem>
-      <FormLabel>Tanggal</FormLabel>
+      <FormLabel>Tanggal dan Waktu</FormLabel>
       <FormControl>
-        <Input
-          {...field}
-          value={
-            field.value
-              ? new Date(field.value).toISOString().split("T")[0] // Pastikan field.value adalah tanggal yang valid
-              : ""
-          }
-          onChange={(e) => {
-            // Pastikan nilai yang dimasukkan valid sebagai tanggal sebelum diproses
-            const newDate = new Date(e.target.value);
-            if (!isNaN(newDate.getTime())) {
-              field.onChange(newDate);
+        <div className="flex space-x-2">
+          {/* Input Tanggal */}
+          <Input
+            {...field}
+            value={
+              field.value
+                ? field.value.toISOString().split("T")[0] // Ambil hanya bagian tanggal (YYYY-MM-DD)
+                : ""
             }
-          }}
-          disabled={form.formState.isSubmitting}
-          className="border-2 border-gray-100 shadow-sm"
-          type="date"
-        />
+            onChange={(e) => {
+              const newDate = new Date(e.target.value); // Hanya ubah tanggal
+              if (!isNaN(newDate.getTime())) {
+                field.onChange(newDate);
+              }
+            }}
+            disabled={form.formState.isSubmitting}
+            className="border-2 border-gray-100 shadow-sm"
+            type="date"
+          />
+          {/* Input Jam */}
+          <Input
+            {...field}
+            value={
+              field.value
+                ? field.value.toTimeString().split(" ")[0].substring(0, 5) // Ambil hanya waktu (HH:mm)
+                : ""
+            }
+            onChange={(e) => {
+              const newTime = e.target.value;
+              const [hours, minutes] = newTime.split(":").map(Number);
+              const dateTime = new Date(field.value || new Date()); // fallback jika value kosong
+              dateTime.setHours(hours);
+              dateTime.setMinutes(minutes);
+              field.onChange(dateTime);
+            }}
+            disabled={form.formState.isSubmitting}
+            className="border-2 border-gray-100 shadow-sm"
+            type="time"
+          />
+        </div>
       </FormControl>
       <FormMessage />
     </FormItem>
   )}
-/> */}
-<FormLabel>Tanggal</FormLabel>
-<FormItem>
-<FormControl>
-<input 
-      type="datetime-local" 
-      name="deadline"/>
+/>
 
-</FormControl>
-</FormItem>
 
-    
+
     <FormItem>
       <FormLabel>Tipe Apply</FormLabel>
       <Select

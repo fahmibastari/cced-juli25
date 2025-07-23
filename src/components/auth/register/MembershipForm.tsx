@@ -153,7 +153,7 @@ const MembershipForm = ({ onBack, data }: MembershipFormProps) => {
               name='phone'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nomor Telepon</FormLabel>
+                  <FormLabel>*Nomor Telepon</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -172,7 +172,7 @@ const MembershipForm = ({ onBack, data }: MembershipFormProps) => {
               name='studyLevel'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Jenjang Pendidikan</FormLabel>
+                  <FormLabel>*Jenjang Pendidikan</FormLabel>
                   <p className="text-xs text-gray-500 mt-1">
   Boleh menggunakan jenjang pendidikan yang sedang berjalan.
 </p>
@@ -199,7 +199,7 @@ const MembershipForm = ({ onBack, data }: MembershipFormProps) => {
               name='major'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Program Studi / Jurusan</FormLabel>
+                  <FormLabel>*Program Studi / Jurusan</FormLabel>
                   <p className="text-xs text-gray-500 mt-1">
   Boleh menggunakan Program Studi / Jurusan yang sedang berjalan.
 </p>

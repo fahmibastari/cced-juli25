@@ -46,14 +46,14 @@ export default function DashboardMember({ jobs, user }: DashboardMemberProps) {
   const [tab, setTab] = useState<'list' | 'detail'>('list')
   const [isDesktop, setIsDesktop] = useState(false)
   const [filterStatus, setFilterStatus] = useState<'semua' | 'aktif' | 'nonaktif'>('semua')
-  const [filterIndustry, setFilterIndustry] = useState<string>('semua') // Industry filter state
+  const [filterIndustry, setFilterIndustry] = useState<string>('Semua Bidang') // Industry filter state
   const [searchTerm, setSearchTerm] = useState('')
   const [isApplying, setIsApplying] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
   const router = useRouter()
   const [tempFilterStatus, setTempFilterStatus] = useState<'semua' | 'aktif' | 'nonaktif'>('semua')
-  const [tempFilterIndustry, setTempFilterIndustry] = useState<string>('semua') // Temporary industry filter
+  const [tempFilterIndustry, setTempFilterIndustry] = useState<string>('Semua Bidang') // Temporary industry filter
   const [tempSearchTerm, setTempSearchTerm] = useState('')
 
   
@@ -125,7 +125,7 @@ export default function DashboardMember({ jobs, user }: DashboardMemberProps) {
       job.location?.toLowerCase().includes(searchLower)
   
       const matchIndustry =
-      filterIndustry === 'semua' || job.company?.industry === filterIndustry // Filter by industry
+      filterIndustry === 'Semua Bidang' || job.company?.industry === filterIndustry // Filter by industry
 
     return matchStatus && matchSearch && matchIndustry
   })

@@ -178,7 +178,7 @@ const EditJob = () => {
                 name='title'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Judul Pekerjaan</FormLabel>
+                    <FormLabel>*Judul</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -253,7 +253,7 @@ const EditJob = () => {
                 name='status'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Status Lowongan</FormLabel>
+                    <FormLabel>*Status Lowongan</FormLabel>
                     <Select
                       disabled={isPending}
                       onValueChange={field.onChange}
@@ -279,7 +279,7 @@ const EditJob = () => {
   name="employmentType"
   render={({ field }) => (
     <FormItem>
-      <FormLabel>Status Pegawai</FormLabel>
+      <FormLabel>*Status Pegawai</FormLabel>
       <Select
         disabled={form.formState.isSubmitting}
         onValueChange={field.onChange}
@@ -304,7 +304,7 @@ const EditJob = () => {
   name="workTime"
   render={({ field }) => (
     <FormItem>
-      <FormLabel>Waktu Kerja</FormLabel>
+      <FormLabel>*Waktu Kerja</FormLabel>
       <Select
         disabled={form.formState.isSubmitting}
         onValueChange={field.onChange}
@@ -559,31 +559,55 @@ const EditJob = () => {
     <FormItem>
       <FormLabel>Tenggat Waktu</FormLabel>
       <FormControl>
-        <Input
-          {...field}
-          value={
-            field.value
-              ? new Date(field.value).toISOString().split('T')[0] // Convert if valid
-              : '' // Set to empty string if invalid or empty
-          }
-          onChange={(e) => {
-            const newDate = new Date(e.target.value);
-            if (!isNaN(newDate.getTime())) {
-              field.onChange(newDate); // Ensure the date is valid
-            } else {
-              field.onChange(null); // If invalid date, set to null
+        <div className="flex space-x-2">
+          {/* Input Tanggal */}
+          <Input
+            {...field}
+            value={
+              field.value
+                ? new Date(field.value).toISOString().split('T')[0] // Ambil tanggal (YYYY-MM-DD)
+                : ''
             }
-          }}
-          disabled={form.formState.isSubmitting}
-          className="border-2 border-gray-100 shadow-sm"
-          type="date"
-        />
+            onChange={(e) => {
+              const newDate = new Date(e.target.value);
+              if (!isNaN(newDate.getTime())) {
+                field.onChange(newDate); // Mengupdate tanggal
+              }
+            }}
+            disabled={form.formState.isSubmitting}
+            className="border-2 border-gray-100 shadow-sm"
+            type="date"
+          />
+          
+          {/* Input Jam */}
+          <Input
+            {...field}
+            value={
+              field.value
+                ? new Date(field.value).toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  }).substring(0, 5) // Ambil jam dan menit (HH:mm)
+                : ''
+            }
+            onChange={(e) => {
+              const newTime = e.target.value; // Mendapatkan waktu yang diinput
+              const [hours, minutes] = newTime.split(':').map(Number);
+              const dateTime = new Date(field.value || new Date()); // Jika kosong, gunakan waktu sekarang
+              dateTime.setHours(hours);
+              dateTime.setMinutes(minutes);
+              field.onChange(dateTime); // Mengupdate objek Date dengan jam dan menit baru
+            }}
+            disabled={form.formState.isSubmitting}
+            className="border-2 border-gray-100 shadow-sm"
+            type="time"
+          />
+        </div>
       </FormControl>
       <FormMessage />
     </FormItem>
   )}
 />
-
 
               {errorMessage && <FormError message={errorMessage} />}
               {successMessage && <FormSuccess message={successMessage} />}
